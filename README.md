@@ -60,7 +60,7 @@ The following table illustrates the `R` tile at location `CC`, under all eight o
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | ![RACC](assets/RACC.png)     | ![RBCC](assets/RBCC.png)     |![RCCC](assets/RCCC.png)      |![RDCC](assets/RDCC.png)     | ![RACC](assets/RECC.png)     | ![RFCC](assets/RFCC.png)     |![RGCC](assets/RGCC.png)      |![RHCC](assets/RHCC.png)     |
 
-Notice that there are often many ways to encode the placement of a piece.  For example, the piece placement `RDCC` could  equivalently be encoded as `REEA`.   Notice that of the above tile placements, only `RCCC` and `RGCC` are legal first moves for blue (which must start with a piece covering the square `AA`).   The only other legal placement of the `R` piece in an opening move for blue is `RAAA` (not shown).
+Notice that there are often many ways to encode the placement of a piece.  For example, the piece placement `RDCC` could  equivalently be encoded as `REEA`.   Notice that of the above tile placements, only `RCCC` and `RFCC` are legal first moves for blue (which must start with a piece covering the square `AA`).   The only other legal placements of the `R` piece in an opening move for blue are `RAAA` and `RHAA` (not shown).
 
 The following encodes and illustrates the game depicted in Figure 5 of the  [rules](http://www.boardgamecapital.com/game_rules/blokus.pdf):
 
