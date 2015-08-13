@@ -13,5 +13,5 @@ contact details: 0451379907
 
 member: Faizan Siddiqui
 uid: u5800002
-role: tbd
+role: To be determined
 contact details: 0422360250
