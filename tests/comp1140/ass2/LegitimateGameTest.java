@@ -13,7 +13,7 @@ public class LegitimateGameTest {
     private static String[] game = {
             "RCCC", // legitimate start
             "RCAA", // illegal start, off board
-            "RBTA", // illegal start; must play into blue corner  first
+            "RBTA", // legitimate start; first play may go into any corner
             "SHDD", // illegal start; not placed in corner
             "SHZZ", // illegal start; not on board
             "SZDD", // illegal start; invalid rotation
@@ -33,12 +33,12 @@ public class LegitimateGameTest {
         assertTrue("Incorrectly rejected start with spaces: " + game[6], BlokGame.legitimateGame(game[6]));
         assertTrue("Incorrectly rejected start without spaces: " + game[7], BlokGame.legitimateGame(game[7]));
         assertTrue("Incorrectly rejected start with multiple spaces: " + game[8], BlokGame.legitimateGame(game[8]));
+        assertTrue("Incorrectly rejected start into legitimate corner: " + game[2], BlokGame.legitimateGame(game[2]));
     }
 
     @Test
     public void testBadStart() {
         assertFalse("Incorrectly accepted off board start: " + game[1], BlokGame.legitimateGame(game[1]));
-        assertFalse("Incorrectly accepted start into wrong corner: " + game[2], BlokGame.legitimateGame(game[2]));
         assertFalse("Incorrectly accepted start not in corner: " + game[3], BlokGame.legitimateGame(game[3]));
         assertFalse("Incorrectly accepted off board start: " + game[4], BlokGame.legitimateGame(game[4]));
         assertFalse("Incorrectly accepted start with invalid rotation: " + game[5], BlokGame.legitimateGame(game[5]));
