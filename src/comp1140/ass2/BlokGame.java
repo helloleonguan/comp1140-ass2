@@ -25,8 +25,28 @@ public class BlokGame {
      * order specified in the rules of the game, and the scores should be made according to the rules.
      */
     public static int[] scoreGame(String game) {
-        /* FIXME */
-        return null;
+        int[] scores = new int[4];
+        String[] tilesPLaced = game.split("\\s+");
+        int n = 0;
+        final int totalScore = 89; // best score if one placed all tiles on board.
+        for (String s : tilesPLaced) {
+            if (s.charAt(0) != '.') {
+                // scores[n%4] +=  || getScore for each tile -- Character.toString(s.charAt(0));
+            }
+
+            if (79<n && n<84) {
+                if (scores[n%4] == totalScore) // placed all tiles.
+                    scores[n%4] += 15;
+                if (s.charAt(0) == 'A') // monomino tile bonus.
+                    scores[n%4] += 5;
+            }
+            n++;
+        }
+
+        for (int i = 0; i < 4; i ++) {
+            scores[i] -= 89; // convert the score according to the rules.
+        }
+        return scores;
     }
 
     /**
