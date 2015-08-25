@@ -8,7 +8,6 @@ import java.util.Vector;
  * Created by steveb on 12/08/2015.
  */
 public class BlokGame {
-
     /**
      * Parse a string representing a game state and determine whether it is legitimate.  The game may be in progress
      * (ie incomplete).
@@ -17,6 +16,7 @@ public class BlokGame {
      * assignment description and the rules of the game.
      */
     public static boolean legitimateGame(String game) {
+        Tiles tileSet = new Tiles();
         /* FIXME */
         int[] squares = new int[400];
         boolean legit = true;
@@ -25,7 +25,7 @@ public class BlokGame {
         int encodingpart = 0;
         int turn = 0;
         char currentByte;
-        ArrayList<Point> piece = new ArrayList<Point>();
+        ArrayList<Point> piece = null;
         int x=0,y = 0;
         while (legit){
             if(index == length)break;
@@ -36,7 +36,7 @@ public class BlokGame {
                         encodingpart = 4;
                         break;
                     }
-                    //TODO
+                    piece = (ArrayList<Point>) tileSet.Pieces.get(currentByte-'A').clone();
                     break;
                 case 1: //Rotate each square in ArrayList as required
                     if((currentByte-'A')>3){
