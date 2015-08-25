@@ -14,62 +14,67 @@ import java.util.ArrayList;
  */
 public class Tiles {
     public ArrayList<ArrayList<Point>> Pieces = new ArrayList<ArrayList<Point>>();
+    public ArrayList<Point> Corners = new ArrayList<Point>();
     public Tiles(){
+        Corners.add(new Point(0,0));
+        Corners.add(new Point(19,0));
+        Corners.add(new Point(19,19));
+        Corners.add(new Point(0,19));
         ArrayList<Point> Piece = new ArrayList<Point>();
         Piece.add(new Point(0,0));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //A
         Piece.clear();
 
         Piece.add(new Point(0, 0));
         Piece.add(new Point(0, 1));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //B
         Piece.clear();
 
         Piece.add(new Point(0, 0));
         Piece.add(new Point(0, 1));
         Piece.add(new Point(0, 2));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //C
         Piece.clear();
 
         Piece.add(new Point(0, 0));
         Piece.add(new Point(0, 1));
         Piece.add(new Point(1, 1));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //D
         Piece.clear();
 
         Piece.add(new Point(0, 0));
         Piece.add(new Point(0, 1));
         Piece.add(new Point(0, 2));
         Piece.add(new Point(0, 3));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //E
         Piece.clear();
 
         Piece.add(new Point(0, 0));
         Piece.add(new Point(0, 1));
         Piece.add(new Point(0, 2));
         Piece.add(new Point(-1, 2));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //F
         Piece.clear();
 
         Piece.add(new Point(0, 0));
         Piece.add(new Point(0, 1));
         Piece.add(new Point(0, 2));
         Piece.add(new Point(1, 1));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //G
         Piece.clear();
 
         Piece.add(new Point(0, 0));
         Piece.add(new Point(0, 1));
         Piece.add(new Point(1, 0));
         Piece.add(new Point(1, 1));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //H
         Piece.clear();
 
         Piece.add(new Point(0, 0));
         Piece.add(new Point(2, 1));
         Piece.add(new Point(1, 0));
         Piece.add(new Point(1, 1));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //I
         Piece.clear();
 
         Piece.add(new Point(0, 0));
@@ -77,7 +82,7 @@ public class Tiles {
         Piece.add(new Point(0, 2));
         Piece.add(new Point(0, 3));
         Piece.add(new Point(0, 4));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //J
         Piece.clear();
 
         Piece.add(new Point(0,0));
@@ -85,7 +90,7 @@ public class Tiles {
         Piece.add(new Point(0, 2));
         Piece.add(new Point(0, 3));
         Piece.add(new Point(-1, 3));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //K
         Piece.clear();
 
         Piece.add(new Point(0,0));
@@ -93,7 +98,7 @@ public class Tiles {
         Piece.add(new Point(0, 2));
         Piece.add(new Point(-1, 2));
         Piece.add(new Point(-1, 3));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //L
         Piece.clear();
 
         Piece.add(new Point(0,0));
@@ -101,7 +106,7 @@ public class Tiles {
         Piece.add(new Point(0, 2));
         Piece.add(new Point(-1, 2));
         Piece.add(new Point(-1, 1));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //M
         Piece.clear();
 
         Piece.add(new Point(0, 0));
@@ -109,7 +114,7 @@ public class Tiles {
         Piece.add(new Point(1, 1));
         Piece.add(new Point(1, 2));
         Piece.add(new Point(0, 2));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //N
         Piece.clear();
 
         Piece.add(new Point(0, 0));
@@ -117,7 +122,7 @@ public class Tiles {
         Piece.add(new Point(0, 2));
         Piece.add(new Point(0, 3));
         Piece.add(new Point(1, 1));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //O
         Piece.clear();
 
         Piece.add(new Point(0,0));
@@ -125,7 +130,7 @@ public class Tiles {
         Piece.add(new Point(0, 2));
         Piece.add(new Point(-1, 2));
         Piece.add(new Point(1, 2));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //P
         Piece.clear();
 
         Piece.add(new Point(0,0));
@@ -133,7 +138,7 @@ public class Tiles {
         Piece.add(new Point(0, 2));
         Piece.add(new Point(1, 2));
         Piece.add(new Point(2, 2));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //Q
         Piece.clear();
 
         Piece.add(new Point(0, 0));
@@ -141,7 +146,7 @@ public class Tiles {
         Piece.add(new Point(1, 1));
         Piece.add(new Point(2, 1));
         Piece.add(new Point(2, 2));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //R
         Piece.clear();
 
         Piece.add(new Point(0, 0));
@@ -149,7 +154,7 @@ public class Tiles {
         Piece.add(new Point(1, 1));
         Piece.add(new Point(2, 1));
         Piece.add(new Point(2, 2));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //S
         Piece.clear();
 
         Piece.add(new Point(0,0));
@@ -157,7 +162,7 @@ public class Tiles {
         Piece.add(new Point(1, 1));
         Piece.add(new Point(2, 1));
         Piece.add(new Point(1, 2));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //T
         Piece.clear();
 
         Piece.add(new Point(0,0));
@@ -165,7 +170,7 @@ public class Tiles {
         Piece.add(new Point(0, 1));
         Piece.add(new Point(1, 1));
         Piece.add(new Point(0, 2));
-        Pieces.add((ArrayList<Point>) Piece.clone());
+        Pieces.add((ArrayList<Point>) Piece.clone()); //U
         Piece.clear();
     }
 }

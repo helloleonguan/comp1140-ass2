@@ -16,6 +16,7 @@ public class BlokGame {
      * assignment description and the rules of the game.
      */
     public static boolean legitimateGame(String game) {
+        game = game.replaceAll(" ","");
         Tiles tileSet = new Tiles();
         /* FIXME */
         int[] squares = new int[400];
@@ -24,34 +25,39 @@ public class BlokGame {
         int index = 0;
         int encodingpart = 0;
         int turn = 0;
-        char currentByte;
         ArrayList<Point> piece = null;
         int x=0,y = 0;
         while (legit){
-            if(index == length)break;
-            currentByte = game.charAt(index);
+            if(index >= length){
+                if(encodingpart!=4)
+                break;
+            }
             switch (encodingpart){
                 case 0: //Check if pass otherwise encode piece as ArrayList of points
-                    if(currentByte=='.'){
+                    if(game.charAt(index)=='.'){
                         encodingpart = 4;
                         break;
                     }
-                    piece = (ArrayList<Point>) tileSet.Pieces.get(currentByte-'A').clone();
+                    piece = new ArrayList<Point>();
+                    for (Point p : tileSet.Pieces.get(game.charAt(index)-'A')){
+                        piece.add(new Point(p.x,p.y));
+                    }
+                    //piece = (ArrayList<Point>) tileSet.Pieces.get(game.charAt(index)-'A').clone();
                     break;
                 case 1: //Rotate each square in ArrayList as required
-                    if((currentByte-'A')>3){
+                    if((game.charAt(index)-'A')>3){
                         for (Point p : piece){
                             p.x = -(p.x);
                         }
                     }
-                    switch((currentByte-'A') % 4 ){
+                    switch((game.charAt(index)-'A') % 4 ){
                         case 0:
                             break;
                         case 1:
                             for (Point p : piece){
                                 int temp = p.x;
-                                p.x = p.y;
-                                p.y = -temp;
+                                p.x = -p.y;
+                                p.y = temp;
                             }
                             break;
                         case 2:
@@ -63,20 +69,36 @@ public class BlokGame {
                         case 3:
                             for (Point p : piece){
                                 int temp = p.x;
-                                p.x = -(p.y);
-                                p.y = temp;
+                                p.x = (p.y);
+                                p.y = -temp;
                             }
                             break;
                     }
                     break;
                 case 2: //Encode horizontal co-ordinate of origin
-                    x = currentByte - 'A';
+                    x = game.charAt(index) - 'A';
                     break;
                 case 3: //Encode vertical co-ordinate of origin
-                    y = currentByte - 'A';
+                    y = game.charAt(index) - 'A';
                     break;
                 case 4: //Check for legitimacy of game state
-                    boolean cornerTouch = false; //If at least one part of the block is diagonal to an owned piece
+                    ArrayList<Point> absPiece = new ArrayList<Point>();
+                    for (Point p : piece){
+                        absPiece.add(new Point(p.x + x,p.y+y));
+                    }
+                    boolean cornerTouch = (index< 20); //If at least one part of the block is diagonal to an owned piece
+                    if(index < 20){
+                        boolean inCorner = false;
+                        for (Point p : absPiece){
+                            if (tileSet.Corners.get(turn).x == p.x && tileSet.Corners.get(turn).y == p.y) {
+                                inCorner = true;
+                            }
+                        }
+                        if (!inCorner){
+                            legit = false;
+                            break;
+                        }
+                    }
                     for (Point p : piece){
                         Point ap = new Point(p.x+x,p.y+y); //Location of individual square on game board
                         if (ap.x < 0 || ap.x > 19 || ap.y < 0 || ap.y > 19){ //If piece is placed out of bounds
@@ -130,14 +152,15 @@ public class BlokGame {
                                     break;
                                 }
                             }
-                            if(ap.x<19 && ap.y<19) {//Check if same colour piece to left
-                                if (squares[(20 * (ap.y - 1)) + ap.x - 1] == turn + 1) {
+                            if(ap.x>0 && ap.y>0) {//Check if same colour piece to bottom-right
+                                if (squares[(20 * (ap.y + 1)) + ap.x + 1] == turn + 1) {
                                     cornerTouch = true;
                                     break;
                                 }
                             }
                         }
                     }
+                    if(!legit)return false;
                     for (Point p : piece){
                         Point ap = new Point(p.x+x,p.y+y); //Location of individual square on game board
                         squares[(20 * ap.y) + ap.x] = turn + 1; //Store piece on game board
@@ -145,6 +168,7 @@ public class BlokGame {
                     if (!cornerTouch) legit = false;
                     turn = (turn + 1) % 4;
                     encodingpart = -1;
+                    index--;
                     break;
                 case 5: //Encoding players pass
                     encodingpart = -1;
