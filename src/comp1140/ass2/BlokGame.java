@@ -189,13 +189,15 @@ public class BlokGame {
      * order specified in the rules of the game, and the scores should be made according to the rules.
      */
     public static int[] scoreGame(String game) {
+        Tiles tile = new Tiles();
+
         int[] scores = new int[4];
         String[] tilesPLaced = game.split("\\s+");
         int n = 0;
         final int totalScore = 89; // best score if one placed all tiles on board.
         for (String s : tilesPLaced) {
             if (s.charAt(0) != '.') {
-                // scores[n%4] +=  || getScore for each tile -- Character.toString(s.charAt(0));
+                scores[n % 4] += tile.Pieces.get(convertToIndex(Character.toString(s.charAt(0)))).size();
             }
 
             if (79<n && n<84) {
@@ -211,6 +213,34 @@ public class BlokGame {
             scores[i] -= 89; // convert the score according to the rules.
         }
         return scores;
+    }
+
+    private static int convertToIndex (String s) {
+        int num = 0;
+        switch (s) {
+            case "A" : num = 0 ; break;
+            case "B" : num = 1 ; break;
+            case "C" : num = 2 ; break;
+            case "D" : num = 3 ; break;
+            case "E" : num = 4 ; break;
+            case "F" : num = 5 ; break;
+            case "G" : num = 6 ; break;
+            case "H" : num = 7 ; break;
+            case "I" : num = 8 ; break;
+            case "J" : num = 9 ; break;
+            case "K" : num = 10 ; break;
+            case "L" : num = 11 ; break;
+            case "M" : num = 12 ; break;
+            case "N" : num = 13 ; break;
+            case "O" : num = 14 ; break;
+            case "P" : num = 15 ; break;
+            case "Q" : num = 16 ; break;
+            case "R" : num = 17 ; break;
+            case "S" : num = 18 ; break;
+            case "T" : num = 19 ; break;
+            case "U" : num = 20 ; break;
+        }
+        return num;
     }
 
     /**
