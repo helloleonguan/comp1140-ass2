@@ -250,6 +250,9 @@ public class BlokGame {
      */
     public static String makeMove(String game) {
         /* FIXME */
+        /*given a game state, we need a function that lists all possible locations where a player can place a block
+        * this includes space and availability of blocks, but also that it is touching the corner of the player's other blocks
+        * since we don't need to make a good move, we should just choose any move at random, or the "biggest possible block */
         return null;
     }
 }
