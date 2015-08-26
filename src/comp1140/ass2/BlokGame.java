@@ -90,7 +90,7 @@ public class BlokGame {
                     if(index < 20){
                         boolean inCorner = false;
                         for (Point p : absPiece){
-                            if (tileSet.Corners.get(turn).x == p.x && tileSet.Corners.get(turn).y == p.y) {
+                            if (tileSet.Corners.contains(p)) {
                                 inCorner = true;
                             }
                         }
@@ -164,6 +164,14 @@ public class BlokGame {
                     for (Point p : piece){
                         Point ap = new Point(p.x+x,p.y+y); //Location of individual square on game board
                         squares[(20 * ap.y) + ap.x] = turn + 1; //Store piece on game board
+                    }
+                    System.out.print("Turn: ");
+                    System.out.println(turn);
+                    for (int i = 0; i < 20; i++) {
+                        for (int j = 0; j < 20; j++) {
+                            System.out.print(squares[i+20*j]);
+                        }
+                        System.out.println();
                     }
                     if (!cornerTouch) legit = false;
                     turn = (turn + 1) % 4;
