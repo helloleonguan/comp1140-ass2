@@ -35,7 +35,7 @@ public class BlokGame {
             switch (encodingpart){
                 case 0: //Check if pass otherwise encode piece as ArrayList of points
                     if(game.charAt(index)=='.'){
-                        encodingpart = 4;
+                        encodingpart = 5;
                         break;
                     }
                     piece = new ArrayList<Point>();
@@ -152,7 +152,7 @@ public class BlokGame {
                                     break;
                                 }
                             }
-                            if(ap.x>0 && ap.y>0) {//Check if same colour piece to bottom-right
+                            if(ap.x<19 && ap.y<19) {//Check if same colour piece to bottom-right
                                 if (squares[(20 * (ap.y + 1)) + ap.x + 1] == turn + 1) {
                                     cornerTouch = true;
                                     break;
@@ -165,14 +165,14 @@ public class BlokGame {
                         Point ap = new Point(p.x+x,p.y+y); //Location of individual square on game board
                         squares[(20 * ap.y) + ap.x] = turn + 1; //Store piece on game board
                     }
-                    System.out.print("Turn: ");
+                    /*System.out.print("Turn: ");
                     System.out.println(turn);
                     for (int i = 0; i < 20; i++) {
                         for (int j = 0; j < 20; j++) {
-                            System.out.print(squares[i+20*j]);
+                            System.out.print(squares[j+20*i]);
                         }
                         System.out.println();
-                    }
+                    }*/
                     if (!cornerTouch) legit = false;
                     turn = (turn + 1) % 4;
                     encodingpart = -1;
