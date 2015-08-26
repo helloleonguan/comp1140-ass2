@@ -1,5 +1,9 @@
 package comp1140.ass2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Administrator on 2015/8/26/0026.
  */
@@ -9,6 +13,10 @@ public enum Player {
     YELLOW,
     RED,
     GREEN;
+
+    private ArrayList<String> allTiles = new ArrayList<String>(Arrays.asList("A", "B", "C", "D", "E", "F", "G",
+                                                                             "H", "I", "J", "K", "L", "M", "N",
+                                                                             "O", "P", "Q", "R", "S", "T", "U"));
 
     /**
      * Convert a player to an Int to represent the order in the game.
@@ -27,4 +35,30 @@ public enum Player {
         return  i;
     }
 
+    /**
+     * Parse a string representing a game state and return a list of available pieces for current turn.
+     * @param game A string representing the state of the game.
+     * @return A list strings representing all remaining tiles for the player. e.g ["A", "C", "H", "U"]
+     */
+    // e.g to call this method: Player.YELLOW.remainingTiles(game) .
+    public String[] remainingTiles(String game) {
+
+        String[] tilesPLaced = game.split("\\s+");
+        for (int i = 0; i < tilesPLaced.length; i ++) {
+            tilesPLaced[i] = Character.toString(tilesPLaced[i].charAt(0));
+        }
+
+        for (int i = 0; i < tilesPLaced.length; i ++) {
+            if (i % 4 == this.toInt() && tilesPLaced[i] != ".") {
+                allTiles.remove(tilesPLaced[i]);
+            }
+        }
+
+        String[] result = new String[allTiles.size()];
+        for (int i = 0; i < allTiles.size(); i ++) {
+            result[i] = allTiles.get(i);
+        }
+
+        return result;
+    }
 }
