@@ -225,16 +225,17 @@ public class BlokGame {
      * @return A four-character string representing the next move.
      */
     public static String makeMove(String game) {
-        /* FIXME */
+         /* FIXME */
         /*given a game state, we need a function that lists all possible locations where a player can place a block
         * this includes space and availability of blocks, but also that it is touching the corner of the player's other blocks
         * since we don't need to make a good move, we should just choose any move at random, or the "biggest possible block
          * I suggest we start with given a board, we retrieve the list of all the legitimate moves, then choose on of them by either
          * choosing the biggest block, or the first one the function gets, etc
          * Then, we "place" this block by appropriately adding the encoding to the game state*/
-        game = game.replaceAll(" ","");
-        Tiles tileSet = new Tiles();
-        /* FIXME */
+        /*
+        game = game.replaceAll(" ", "");
+        Tiles tileSet = new Tiles(); */
+        /*
         int[] squares = new int[400];
         boolean legit = true;
         int length = game.length();
@@ -242,48 +243,48 @@ public class BlokGame {
         int encodingpart = 0;
         int turn = 0;
         ArrayList<Point> piece = null;
-        int x=0,y = 0;
-        while (legit){
-            if(index >= length){
-                if(encodingpart!=4)
+        int x = 0, y = 0;
+        while (legit) {
+            if (index >= length) {
+                if (encodingpart != 4)
                     break;
             }
-            switch (encodingpart){
+            switch (encodingpart) {
                 case 0: //Check if pass otherwise encode piece as ArrayList of points
-                    if(game.charAt(index)=='.'){
+                    if (game.charAt(index) == '.') {
                         encodingpart = 4;
                         break;
                     }
                     piece = new ArrayList<Point>();
-                    for (Point p : tileSet.Pieces.get(game.charAt(index)-'A')){
-                        piece.add(new Point(p.x,p.y));
+                    for (Point p : tileSet.Pieces.get(game.charAt(index) - 'A')) {
+                        piece.add(new Point(p.x, p.y));
                     }
                     //piece = (ArrayList<Point>) tileSet.Pieces.get(game.charAt(index)-'A').clone();
                     break;
                 case 1: //Rotate each square in ArrayList as required
-                    if((game.charAt(index)-'A')>3){
-                        for (Point p : piece){
+                    if ((game.charAt(index) - 'A') > 3) {
+                        for (Point p : piece) {
                             p.x = -(p.x);
                         }
                     }
-                    switch((game.charAt(index)-'A') % 4 ){
+                    switch ((game.charAt(index) - 'A') % 4) {
                         case 0:
                             break;
                         case 1:
-                            for (Point p : piece){
+                            for (Point p : piece) {
                                 int temp = p.x;
                                 p.x = -p.y;
                                 p.y = temp;
                             }
                             break;
                         case 2:
-                            for (Point p : piece){
+                            for (Point p : piece) {
                                 p.x = -(p.x);
                                 p.y = -(p.y);
                             }
                             break;
                         case 3:
-                            for (Point p : piece){
+                            for (Point p : piece) {
                                 int temp = p.x;
                                 p.x = (p.y);
                                 p.y = -temp;
@@ -299,24 +300,24 @@ public class BlokGame {
                     break;
                 case 4: //Check for legitimacy of game state
                     ArrayList<Point> absPiece = new ArrayList<Point>();
-                    for (Point p : piece){
-                        absPiece.add(new Point(p.x + x,p.y+y));
+                    for (Point p : piece) {
+                        absPiece.add(new Point(p.x + x, p.y + y));
                     }
-                    boolean cornerTouch = (index< 20); //If at least one part of the block is diagonal to an owned piece
-                    if(index < 20){
+                    boolean cornerTouch = (index < 20); //If at least one part of the block is diagonal to an owned piece
+                    if (index < 20) {
                         boolean inCorner = false;
-                        for (Point p : absPiece){
+                        for (Point p : absPiece) {
                             if (tileSet.Corners.get(turn).x == p.x && tileSet.Corners.get(turn).y == p.y) {
                                 inCorner = true;
                             }
                         }
-                        if (!inCorner){
+                        if (!inCorner) {
                             legit = false;
                             break;
                         }
                     }
-                    for (Point p : piece){
-                        Point ap = new Point(p.x+x,p.y+y); //Location of individual square on game board
+                    for (Point p : piece) {
+                        Point ap = new Point(p.x + x, p.y + y); //Location of individual square on game board
                         squares[(20 * ap.y) + ap.x] = turn + 1; //Store piece on game board
                     }
                     if (!cornerTouch) legit = false;
@@ -333,7 +334,41 @@ public class BlokGame {
             index++;
         }
         turn++;
-        
+
         return null;
+    }
+    */
+
+
+        String[] tilesPLaced = game.split("\\s+");
+        Player currentPlayer = Player.getPlayer(tilesPLaced.length % 4);
+
+        String[] tile = currentPlayer.remainingTiles(game);
+        String[] rotation = {"A", "B", "C", "D", "E", "F", "G", "H"};
+        String[] position = new String[400];
+        for (int i = 0; i < 400; i ++) {
+            position[i] = Character.toString( (char)('A' + i % 20)) + Character.toString( (char)('A' + i / 20));
+        }
+
+        ArrayList<String> candidates = new ArrayList<>();
+
+        for (int i = 0; i < tile.length; i ++) {
+            for (int j = 0; j < rotation.length; j ++) {
+                for (int k = 0; k < position.length; k ++) {
+                    if (BlokGame.legitimateGame(game + " " +tile[i] + rotation[j] + position[k])) {
+                        candidates.add(tile[i] + rotation[j] + position[k]);
+                    }
+                }
+            }
+        }
+
+        String result = null;
+
+        if (candidates.size() == 0)
+            result = ".";
+        else
+            result = candidates.get(0);
+
+        return result;
     }
 }
