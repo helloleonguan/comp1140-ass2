@@ -252,7 +252,10 @@ public class BlokGame {
         /* FIXME */
         /*given a game state, we need a function that lists all possible locations where a player can place a block
         * this includes space and availability of blocks, but also that it is touching the corner of the player's other blocks
-        * since we don't need to make a good move, we should just choose any move at random, or the "biggest possible block */
+        * since we don't need to make a good move, we should just choose any move at random, or the "biggest possible block
+         * I suggest we start with given a board, we retrieve the list of all the legitimate moves, then choose on of them by either
+         * choosing the biggest block, or the first one the function gets, etc
+         * Then, we "place" this block by appropriately adding the encoding to the game state*/
         return null;
     }
 }
