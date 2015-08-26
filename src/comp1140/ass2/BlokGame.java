@@ -197,7 +197,7 @@ public class BlokGame {
         final int totalScore = 89; // best score if one placed all tiles on board.
         for (String s : tilesPLaced) {
             if (s.charAt(0) != '.') {
-                scores[n % 4] += tile.Pieces.get(convertToIndex(Character.toString(s.charAt(0)))).size();
+                scores[n % 4] += tile.Pieces.get(convertToIndex(s.charAt(0))).size();
             }
 
             if (79<n && n<84) {
@@ -215,9 +215,9 @@ public class BlokGame {
         return scores;
     }
 
-    private static int convertToIndex (String s) {
+    private static int convertToIndex (char s) {
         int num = 0;
-        switch (s) {
+        /*switch (s) {
             case "A" : num = 0 ; break;
             case "B" : num = 1 ; break;
             case "C" : num = 2 ; break;
@@ -240,7 +240,8 @@ public class BlokGame {
             case "T" : num = 19 ; break;
             case "U" : num = 20 ; break;
         }
-        return num;
+        return num;*/
+        return s - 'A';
     }
 
     /**
@@ -256,6 +257,108 @@ public class BlokGame {
          * I suggest we start with given a board, we retrieve the list of all the legitimate moves, then choose on of them by either
          * choosing the biggest block, or the first one the function gets, etc
          * Then, we "place" this block by appropriately adding the encoding to the game state*/
+        game = game.replaceAll(" ","");
+        Tiles tileSet = new Tiles();
+        /* FIXME */
+        int[] squares = new int[400];
+        boolean legit = true;
+        int length = game.length();
+        int index = 0;
+        int encodingpart = 0;
+        int turn = 0;
+        ArrayList<Point> piece = null;
+        int x=0,y = 0;
+        while (legit){
+            if(index >= length){
+                if(encodingpart!=4)
+                    break;
+            }
+            switch (encodingpart){
+                case 0: //Check if pass otherwise encode piece as ArrayList of points
+                    if(game.charAt(index)=='.'){
+                        encodingpart = 4;
+                        break;
+                    }
+                    piece = new ArrayList<Point>();
+                    for (Point p : tileSet.Pieces.get(game.charAt(index)-'A')){
+                        piece.add(new Point(p.x,p.y));
+                    }
+                    //piece = (ArrayList<Point>) tileSet.Pieces.get(game.charAt(index)-'A').clone();
+                    break;
+                case 1: //Rotate each square in ArrayList as required
+                    if((game.charAt(index)-'A')>3){
+                        for (Point p : piece){
+                            p.x = -(p.x);
+                        }
+                    }
+                    switch((game.charAt(index)-'A') % 4 ){
+                        case 0:
+                            break;
+                        case 1:
+                            for (Point p : piece){
+                                int temp = p.x;
+                                p.x = -p.y;
+                                p.y = temp;
+                            }
+                            break;
+                        case 2:
+                            for (Point p : piece){
+                                p.x = -(p.x);
+                                p.y = -(p.y);
+                            }
+                            break;
+                        case 3:
+                            for (Point p : piece){
+                                int temp = p.x;
+                                p.x = (p.y);
+                                p.y = -temp;
+                            }
+                            break;
+                    }
+                    break;
+                case 2: //Encode horizontal co-ordinate of origin
+                    x = game.charAt(index) - 'A';
+                    break;
+                case 3: //Encode vertical co-ordinate of origin
+                    y = game.charAt(index) - 'A';
+                    break;
+                case 4: //Check for legitimacy of game state
+                    ArrayList<Point> absPiece = new ArrayList<Point>();
+                    for (Point p : piece){
+                        absPiece.add(new Point(p.x + x,p.y+y));
+                    }
+                    boolean cornerTouch = (index< 20); //If at least one part of the block is diagonal to an owned piece
+                    if(index < 20){
+                        boolean inCorner = false;
+                        for (Point p : absPiece){
+                            if (tileSet.Corners.get(turn).x == p.x && tileSet.Corners.get(turn).y == p.y) {
+                                inCorner = true;
+                            }
+                        }
+                        if (!inCorner){
+                            legit = false;
+                            break;
+                        }
+                    }
+                    for (Point p : piece){
+                        Point ap = new Point(p.x+x,p.y+y); //Location of individual square on game board
+                        squares[(20 * ap.y) + ap.x] = turn + 1; //Store piece on game board
+                    }
+                    if (!cornerTouch) legit = false;
+                    turn = (turn + 1) % 4;
+                    encodingpart = -1;
+                    index--;
+                    break;
+                case 5: //Encoding players pass
+                    encodingpart = -1;
+                    turn = (turn + 1) % 4;
+                    break;
+            }
+            encodingpart++;
+            index++;
+        }
+        turn++;
+        
         return null;
     }
 }
