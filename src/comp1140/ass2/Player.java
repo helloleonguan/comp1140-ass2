@@ -36,6 +36,22 @@ public enum Player {
     }
 
     /**
+     * Convert an Int to a Player in the game.
+     * @param i An Integer representing the player in the game.
+     * @return  a Player..
+     */
+    public static Player getPlayer(int i) {
+        Player p = null;
+        switch (i) {
+            case 0: p = BLUE; break;
+            case 1: p = YELLOW; break;
+            case 2: p = RED; break;
+            case 3: p = GREEN; break;
+        }
+        return p;
+    }
+
+    /**
      * Parse a string representing a game state and return a list of available pieces for current turn.
      * @param game A string representing the state of the game.
      * @return A list strings representing all remaining tiles for the player. e.g ["A", "C", "H", "U"]
@@ -61,4 +77,5 @@ public enum Player {
 
         return result;
     }
+
 }
