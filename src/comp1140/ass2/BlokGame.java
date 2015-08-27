@@ -163,6 +163,9 @@ public class BlokGame {
                     if(!legit)return false;
                     for (Point p : piece){
                         Point ap = new Point(p.x+x,p.y+y); //Location of individual square on game board
+                        if(ap.x < 0 || ap.x > 19 || ap.y < 0 || ap.y >19){
+                            return false;
+                        }
                         squares[(20 * ap.y) + ap.x] = turn + 1; //Store piece on game board
                     }
                     /*System.out.print("Turn: ");
