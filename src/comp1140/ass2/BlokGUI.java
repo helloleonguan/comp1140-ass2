@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -31,6 +32,7 @@ public class BlokGUI extends Application {
         Canvas canvas = new Canvas(700,700);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawShapes(gc);
+        gridGame(gc);
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root, 700, 700));
         primaryStage.show();
@@ -43,6 +45,23 @@ public class BlokGUI extends Application {
         gc.strokeLine(500, 0, 500, 700);
         for (int i = 0; i < tiles.Pieces.size(); i++) {
             drawPiece(gc,66 + 150 * (i%4) ,10 + 127*((i/4)),tiles.Pieces.get(i),0);
+        }
+    }
+
+    private void gridGame (GraphicsContext gc) {
+        for (int k = 0; k < 20; k++) {
+            for (int i = 0; i < 20; i++) {
+                gc.fillRect(i * 25, k * 25, 25, 25);
+                gc.setFill(Color.BLACK);
+            }
+        }
+
+        for (int l = 0; l < 20; l++) {
+            for (int m = 0; m < 20; m++) {
+                gc.fillRect(m * 25 + 1, l * 25 + 1, 23, 23);
+                gc.setFill(Color.WHITE);
+            }
+
         }
     }
 
