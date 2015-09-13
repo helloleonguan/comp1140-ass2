@@ -35,8 +35,8 @@ public class BlokGUI extends Application {
         Group root = new Group();
         Canvas canvas = new Canvas(700,700);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawShapes(gc);
         gridGame(gc);
+        drawShapes(gc);
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root, 700, 700));
         primaryStage.show();
