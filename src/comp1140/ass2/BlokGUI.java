@@ -18,7 +18,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class BlokGUI extends Application {
-
+    public int turn;
+    Tiles players[];
+    boolean dragging;
     public static void main(String[] args) {
         launch(args);
     }
@@ -26,6 +28,9 @@ public class BlokGUI extends Application {
     Tiles tiles = new Tiles();
     @Override
     public void start(Stage primaryStage) {
+        turn = 0;
+        int page = 0;
+        players = new Tiles[4];
         primaryStage.setTitle("Blokus!");
         Group root = new Group();
         Canvas canvas = new Canvas(700,700);
@@ -45,7 +50,14 @@ public class BlokGUI extends Application {
             drawPiece(gc,66 + 150 * (i%4) ,10 + 127*((i/4)),tiles.Pieces.get(i),0);
         }
     }
+    private void drawAvailablePieces(GraphicsContext gc, int player, int page){
+        int actualpage = players[player].Pieces.size() <= 10 ? 0 : page;
+        for (int i = 0; i < 10; i++) {
+            if(i==players[player].Pieces.size())break;
+            drawPiece(gc,i%2 * 100 + 500, 10 + 125 * (i/2),players[player].Pieces.get(10* actualpage + i),player);
 
+        }
+    }
     private void drawPiece(GraphicsContext gc, int x, int y, ArrayList<Point> Piece, int Player){
         for (Point p : Piece){
             gc.setFill(Color.BLACK);

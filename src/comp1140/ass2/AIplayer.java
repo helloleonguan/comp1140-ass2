@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * Created by Administrator on 2015/8/31/0031.
+ * Created by Liyang GUAN on 2015/8/31/0031.
  */
 public class AIplayer {
 
