@@ -59,23 +59,29 @@ public enum Player {
     // e.g to call this method: Player.YELLOW.remainingTiles(game) .
     public String[] remainingTiles(String game) {
 
-        String[] tilesPLaced = game.split("\\s+");
-        for (int i = 0; i < tilesPLaced.length; i ++) {
-            tilesPLaced[i] = Character.toString(tilesPLaced[i].charAt(0));
-        }
-
-        for (int i = 0; i < tilesPLaced.length; i ++) {
-            if (i % 4 == this.toInt() && tilesPLaced[i] != ".") {
-                allTiles.remove(tilesPLaced[i]);
+        if (game == "") {
+            String[] tiles = {"A", "B", "C", "D", "E", "F", "G",
+                                "H", "I", "J", "K", "L", "M", "N",
+                                "O", "P", "Q", "R", "S", "T", "U"};
+            return tiles;
+        } else {
+            String[] tilesPLaced = game.split("\\s+");
+            for (int i = 0; i < tilesPLaced.length; i++) {
+                tilesPLaced[i] = Character.toString(tilesPLaced[i].charAt(0));
             }
-        }
 
-        String[] result = new String[allTiles.size()];
-        for (int i = 0; i < allTiles.size(); i ++) {
-            result[i] = allTiles.get(i);
-        }
+            for (int i = 0; i < tilesPLaced.length; i++) {
+                if (i % 4 == this.toInt() && tilesPLaced[i] != ".") {
+                    allTiles.remove(tilesPLaced[i]);
+                }
+            }
 
-        return result;
+            String[] result = new String[allTiles.size()];
+            for (int i = 0; i < allTiles.size(); i++) {
+                result[i] = allTiles.get(i);
+            }
+
+            return result;
+        }
     }
-
 }
