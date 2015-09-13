@@ -36,6 +36,7 @@ public class BlokGUI extends Application {
         Canvas canvas = new Canvas(700,700);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawShapes(gc);
+        gridGame(gc);
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root, 700, 700));
         primaryStage.show();
@@ -50,6 +51,24 @@ public class BlokGUI extends Application {
             drawPiece(gc,66 + 150 * (i%4) ,10 + 127*((i/4)),tiles.Pieces.get(i),0);
         }
     }
+
+    private void gridGame (GraphicsContext gc) {
+        for (int k = 0; k < 20; k++) {
+            for (int i = 0; i < 20; i++) {
+                gc.fillRect(i * 25, k * 25, 25, 25);
+                gc.setFill(Color.BLACK);
+            }
+        }
+
+        for (int l = 0; l < 20; l++) {
+            for (int m = 0; m < 20; m++) {
+                gc.fillRect(m * 25 + 1, l * 25 + 1, 23, 23);
+                gc.setFill(Color.WHITE);
+            }
+
+        }
+    }
+
     private void drawAvailablePieces(GraphicsContext gc, int player, int page){
         int actualpage = players[player].Pieces.size() <= 10 ? 0 : page;
         for (int i = 0; i < 10; i++) {
