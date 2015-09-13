@@ -53,14 +53,14 @@ public class BlokGUI extends Application {
     }
 
     private void gridGame (GraphicsContext gc) {
-        for (int k = 0; k < 20; k++) {
+        for (int k = 0; k < 20; k++) {    //for the black squares
             for (int i = 0; i < 20; i++) {
                 gc.fillRect(i * 25, k * 25, 25, 25);
                 gc.setFill(Color.BLACK);
             }
         }
 
-        for (int l = 0; l < 20; l++) {
+        for (int l = 0; l < 20; l++) {   //for the white squares
             for (int m = 0; m < 20; m++) {
                 gc.fillRect(m * 25 + 1, l * 25 + 1, 23, 23);
                 gc.setFill(Color.WHITE);
