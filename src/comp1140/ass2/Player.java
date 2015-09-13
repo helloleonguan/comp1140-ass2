@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Administrator on 2015/8/26/0026.
+ * Created by Liyang GUAN on 2015/8/26/0026.
  */
 public enum Player {
 
