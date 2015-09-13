@@ -52,6 +52,8 @@ public class BlokGUI extends Application {
         }
     }
 
+
+    /** (created by Faizan) Produces a 20x20 grid to represent the game board */
     private void gridGame (GraphicsContext gc) {
         for (int k = 0; k < 20; k++) {    //for the black squares
             for (int i = 0; i < 20; i++) {
@@ -69,6 +71,38 @@ public class BlokGUI extends Application {
         }
     }
 
+    /** Attempt at making a game to board function, that will take in a legitimate game state, and accordingly position all the pieces into the grid */
+    // sample game "RCCC RBTA SARR SBCR SHDD TBQD RAOO PBFP LBJH LHLH LGNN TAGN JDKI JBRA OHIM UAHK KDGJ KAPH JARK JAFG UADG UALA UASH QAGD"
+    private void gameToBoard(GraphicsContext gc, BlokGame game) {
+        int index;
+        String[] splitted = game.toString().split("\\s+");
+        for (int i =0; i<splitted.length;i++) {
+            if (splitted[i] == ".") {}
+            else {
+                for (int k = 0;k<3;k++) {
+                    switch (k) {
+                        case 0: {
+                            //encode polynomio type
+                        }
+                        case 1: {
+                            //encode rotation
+                        }
+
+                        case 2: {
+                            //encode x-position
+                        }
+
+                        case 3: {
+                            //encode y-position
+                        }
+
+                    }
+                }
+
+            }
+        }
+    }
+
     private void drawAvailablePieces(GraphicsContext gc, int player, int page){
         int actualpage = players[player].Pieces.size() <= 10 ? 0 : page;
         for (int i = 0; i < 10; i++) {
@@ -77,6 +111,7 @@ public class BlokGUI extends Application {
 
         }
     }
+
     private void drawPiece(GraphicsContext gc, int x, int y, ArrayList<Point> Piece, int Player){
         for (Point p : Piece){
             gc.setFill(Color.BLACK);
