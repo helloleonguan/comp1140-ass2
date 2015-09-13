@@ -71,7 +71,7 @@ public class BlokGUI extends Application {
         }
     }
 
-    /** Attempt at making a game to board function, that will take in a legitimate game state, and accordingly position all the pieces into the grid */
+    /** Faizan: Attempt at making a game to board function, that will take in a legitimate game state, and accordingly position all the pieces into the grid */
     // sample game "RCCC RBTA SARR SBCR SHDD TBQD RAOO PBFP LBJH LHLH LGNN TAGN JDKI JBRA OHIM UAHK KDGJ KAPH JARK JAFG UADG UALA UASH QAGD"
     private void gameToBoard(GraphicsContext gc, BlokGame game) {
         int index;
