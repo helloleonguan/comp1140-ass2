@@ -71,16 +71,17 @@ public class BlokGUI extends Application {
         }
     }
 
-    /** Faizan: Attempt at making a game to board function, that will take in a legitimate game state, and accordingly position all the pieces into the grid */
+    /** Faizan: Attempt at making a game to board function, that will take in a legitimate game state, and accordingly position all the pieces into the grid.
+     * It is a bit messy atm, I need to convert the game string into an array of pieces, with all the correct rotations done, and convert the last two letters into points to draw on */
     // sample game "RCCC RBTA SARR SBCR SHDD TBQD RAOO PBFP LBJH LHLH LGNN TAGN JDKI JBRA OHIM UAHK KDGJ KAPH JARK JAFG UADG UALA UASH QAGD"
-    private void gameToBoard(GraphicsContext gc, BlokGame game) {
-        int index;
+    private void gameToBoard(GraphicsContext gc, BlokGame game, int x, int y, ArrayList<Point> Pieces) {
         String[] splitted = game.toString().split("\\s+");
         for (int i =0; i<splitted.length;i++) {
             if (splitted[i] == ".") {}
             else {
-                for (int k = 0;k<3;k++) {
-                    switch (k) {
+                Pieces.get(splitted[i].charAt(0));
+                /*for (int encodingpart = 0;encodingpart<3;encodingpart++) {
+                    switch (encodingpart) {
                         case 0: {
                             //encode polynomio type
                         }
@@ -97,7 +98,7 @@ public class BlokGUI extends Application {
                         }
 
                     }
-                }
+                }*/
 
             }
         }
