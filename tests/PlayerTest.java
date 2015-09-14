@@ -17,6 +17,11 @@ public class PlayerTest {
             "RCCC RBTA SARR SBCR SHDD TBQD RAOO PBFP LBJH LHLH LGNN TAGN JDKI JBRA OHIM UAHK KDGJ KAPH JARK JAFG UADG UALA UASH QAGD QDCL PCIC MEQE MEBL DDKL MDRE TGJQ OHID EBFA QDON PAIR KBGT IBMM SHMO KDDR RCDK GCFO NAPR QCCQ IDAH FHKQ IHRP FATN LDAD NBIP OHJR DBEM FFFB PBMF BASN AAHN DBBP THMC FGTM BBSD AAME OBRB EBNJ . BBOF MHFC CBJI . . HANR DAHD . . CBMT AAGH . . BBBK . . . AACF"
     };
 
+    /**
+     * Convert an array of strings into a single string.
+     * @param string_list An array of strings..
+     * @return A String concatenated by the array of strings.
+     */
     public static String toString(String[] string_list) {
         String result = "";
         for (int i = 0; i < string_list.length; i ++) {

@@ -54,7 +54,7 @@ public enum Player {
     /**
      * Parse a string representing a game state and return a list of available pieces for current turn.
      * @param game A string representing the state of the game.
-     * @return A list strings representing all remaining tiles for the player. e.g ["A", "C", "H", "U"]
+     * @return A list strings representing all remaining tiles for the player. e.g {"A", "C", "H", "U"}
      */
     // e.g to call this method: Player.YELLOW.remainingTiles(game) .
     public String[] remainingTiles(String game) {
