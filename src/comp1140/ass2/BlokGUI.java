@@ -37,7 +37,7 @@ public class BlokGUI extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gridGame(gc);
         drawShapes(gc);
-        gameToBoard(gc, 1, 2,"RCCC RBTA SARR SBCR SHDD TBQD RAOO PBFP LBJH LHLH LGNN TAGN JDKI JBRA OHIM UAHK KDGJ KAPH JARK JAFG UADG UALA UASH QAGD"); //testing sample game
+        gameToBoard(gc, 0, 0,"GCEE"); //testing sample game-piece
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root, 700, 700));
         primaryStage.show();
@@ -72,31 +72,27 @@ public class BlokGUI extends Application {
         }
     }
 
-    /** Faizan: Attempt at making a game to board function, that will take in a legitimate game state, and accordingly position all the pieces
-     *  into the grid. It is a bit messy atm, I need to convert the game string into an array of pieces, with all the correct rotations done,
-     *  and convert the last two letters into points to draw on */
-    // sample game "RCCC RBTA SARR SBCR SHDD TBQD RAOO PBFP LBJH LHLH LGNN TAGN JDKI JBRA OHIM UAHK KDGJ KAPH JARK JAFG UADG UALA UASH QAGD"
+    /** Created by Faizan: It is a function that will take a game-piece string and draw it on the board. ATM it is only putting it at the 0,0 coord*/
     private void gameToBoard(GraphicsContext gc, int x, int y, String game) {
-        game = game.replaceAll(" ", "");
         int index = 0;
         int encodingpart = 0;
         Tiles tileSet = new Tiles();
-        ArrayList<Point> piece = null;
+        ArrayList<Point> pieces = null;
         switch (encodingpart) {
             case 0: //Check if pass otherwise encode piece as ArrayList of points
                 if (game.charAt(index) == '.') {
                     encodingpart = 5;
                     break;
                 }
-                piece = new ArrayList<Point>();
+                pieces = new ArrayList<Point>();
                 for (Point p : tileSet.Pieces.get(game.charAt(index) - 'A')) {
-                    piece.add(new Point(p.x, p.y));
+                    pieces.add(new Point(p.x, p.y));
                 }
                 //piece = (ArrayList<Point>) tileSet.Pieces.get(game.charAt(index)-'A').clone();
                 break;
             case 1: //Rotate each square in ArrayList as required
                 if ((game.charAt(index) - 'A') > 3) {
-                    for (Point p : piece) {
+                    for (Point p : pieces) {
                         p.x = -(p.x);
                     }
                 }
@@ -104,20 +100,20 @@ public class BlokGUI extends Application {
                     case 0:
                         break;
                     case 1:
-                        for (Point p : piece) {
+                        for (Point p : pieces) {
                             int temp = p.x;
                             p.x = -p.y;
                             p.y = temp;
                         }
                         break;
                     case 2:
-                        for (Point p : piece) {
+                        for (Point p : pieces) {
                             p.x = -(p.x);
                             p.y = -(p.y);
                         }
                         break;
                     case 3:
-                        for (Point p : piece) {
+                        for (Point p : pieces) {
                             int temp = p.x;
                             p.x = (p.y);
                             p.y = -temp;
@@ -135,7 +131,7 @@ public class BlokGUI extends Application {
         }
         encodingpart++;
         index++;
-        drawPiece(gc,x,y,piece,1);
+        drawPiece(gc,x,y,pieces,2);
     }
 
     private void drawAvailablePieces(GraphicsContext gc, int player, int page){
