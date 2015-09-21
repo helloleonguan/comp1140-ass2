@@ -61,11 +61,12 @@ public class PlayBoard extends Application {
 
             });
 
-            //this.setOnMouseReleased(event -> {
+            this.setOnMouseReleased(event -> {
+
                 //if it is not a legitimate move then move the tile back to original coordinates
                 //if it move outside the board then move the tile back to originak coordinates
                 // else place on board and change the encoding game string.
-           // });
+            });
         }
 
         Color setColor(Player player) {
@@ -131,7 +132,7 @@ public class PlayBoard extends Application {
         root.getChildren().add(t5);
         Tile t6 = new Tile(575,75,mytiles.Pieces.get(5),this);
         root.getChildren().add(t6);
-        Tile t7 = new Tile(650,75,mytiles.Pieces.get(14),this);
+        Tile t7 = new Tile(650,325,mytiles.Pieces.get(6),this);
         root.getChildren().add(t7);
         Tile t8 = new Tile(500,175,mytiles.Pieces.get(7),this);
         root.getChildren().add(t8);
@@ -147,7 +148,7 @@ public class PlayBoard extends Application {
         root.getChildren().add(t13);
         Tile t14 = new Tile(575,375,mytiles.Pieces.get(13),this);
         root.getChildren().add(t14);
-        Tile t15 = new Tile(650,325,mytiles.Pieces.get(6),this);
+        Tile t15 = new Tile(650,75,mytiles.Pieces.get(14),this);
         root.getChildren().add(t15);
         Tile t16 = new Tile(650,425,mytiles.Pieces.get(15),this);
         root.getChildren().add(t16);
