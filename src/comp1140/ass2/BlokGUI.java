@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.junit.Test;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public class BlokGUI extends Application {
                         p.x = -(p.x);
                     }
                 }
+
                 switch ((game.charAt(index) - 'A') % 4) {
                     case 0:
                         break;
@@ -133,6 +135,22 @@ public class BlokGUI extends Application {
         index++;
         drawPiece(gc,x,y,pieces,2);
     }
+
+    /** Created by Faizan:
+     * A class function I am planning to use later, which will be called by the gameToBoard function, to check if the user-inputted game piece doesn't
+     * contain any illegal characters such as numbers, expressions etc, and only contains letters.
+     */
+    public static boolean isOnlyAlpha(String gamepiece) {
+        char[] chars = gamepiece.toCharArray();
+        for (char c : chars) {
+            if(!Character.isLetter(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 
     private void drawAvailablePieces(GraphicsContext gc, int player, int page){
         int actualpage = players[player].Pieces.size() <= 10 ? 0 : page;
