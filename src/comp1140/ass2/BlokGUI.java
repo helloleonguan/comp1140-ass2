@@ -38,7 +38,7 @@ public class BlokGUI extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gridGame(gc);
         drawShapes(gc);
-        gameToBoard(gc, 0, 0,"GCEE"); //testing sample game-piece
+        gameToBoard(gc, 0, 0, "UAEE"); //testing sample game-piece
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root, 700, 700));
         primaryStage.show();
@@ -74,31 +74,30 @@ public class BlokGUI extends Application {
     }
 
     /** Created by Faizan: It is a function that will take a game-piece string and draw it on the board. ATM it is only putting it at the 0,0 coord*/
-    private void gameToBoard(GraphicsContext gc, int x, int y, String game) {
+    private void gameToBoard(GraphicsContext gc, int x, int y, String gamepiece) {
         int index = 0;
         int encodingpart = 0;
         Tiles tileSet = new Tiles();
         ArrayList<Point> pieces = null;
         switch (encodingpart) {
             case 0: //Check if pass otherwise encode piece as ArrayList of points
-                if (game.charAt(index) == '.') {
+                if (gamepiece.charAt(index) == '.') {
                     encodingpart = 5;
                     break;
                 }
                 pieces = new ArrayList<Point>();
-                for (Point p : tileSet.Pieces.get(game.charAt(index) - 'A')) {
+                for (Point p : tileSet.Pieces.get(gamepiece.charAt(index) - 'A')) {
                     pieces.add(new Point(p.x, p.y));
                 }
-                //piece = (ArrayList<Point>) tileSet.Pieces.get(game.charAt(index)-'A').clone();
                 break;
-            case 1: //Rotate each square in ArrayList as required
-                if ((game.charAt(index) - 'A') > 3) {
+            case 1: //Rotate each square in the ArrayList of points as required
+                if ((gamepiece.charAt(index) - 'A') > 3) {
                     for (Point p : pieces) {
                         p.x = -(p.x);
                     }
                 }
 
-                switch ((game.charAt(index) - 'A') % 4) {
+                switch ((gamepiece.charAt(index) - 'A') % 4) {
                     case 0:
                         break;
                     case 1:
@@ -124,15 +123,14 @@ public class BlokGUI extends Application {
                 }
                 break;
             case 2: //Encode horizontal co-ordinate of origin
-                x = game.charAt(index) - 'A';
+                x = gamepiece.charAt(index) - 'A';
                 break;
             case 3: //Encode vertical co-ordinate of origin
-                y = game.charAt(index) - 'A';
+                y = gamepiece.charAt(index) - 'A';
                 break;
 
         }
         encodingpart++;
-        index++;
         drawPiece(gc,x,y,pieces,2);
     }
 
@@ -148,6 +146,32 @@ public class BlokGUI extends Application {
             }
         }
         return true;
+    }
+
+    /** Created by Faizan:
+     * A class function I am planning to use later, which will be called by the gameToBoard function, to check if the user-inputted game piece
+     * has only 4 characters.
+     */
+    public static boolean isLengthOnlyFour (String gamepiece) {
+        return (gamepiece.length() == 4);
+    }
+
+    /** Created by Faizan:
+     * A class function I am planning to use later, which will be called by the gameToBoard function, to check if the user-inputted game piece
+     * has the valid encoding specifications. Even though this function should be able to do the job of isLengthOnlyFour and isOnlyAlpha, the way
+     * I have written isValidEncoding is that it can only correctly check a string of exactly four alphabets
+     */
+
+    public static boolean isValidEncoding (String gamepiece) {
+
+        return  (
+            isOnlyAlpha(gamepiece) && //checks if gamepiece contains only alphabetical values THEN
+            isLengthOnlyFour(gamepiece)) && //checks if gamepiece is of length 4 THEN
+            ((gamepiece.substring(0, 1).matches("[A-Ua-u]")) &&  //checks if game piece corresponds to an actual tile THEN
+            (gamepiece.substring(1, 2).matches("[A-Ha-h]"))  &&  //checks if  game piece corresponds to a correct rotation THEN
+            (gamepiece.substring(2, 3).matches("[A-Ta-t]"))  &&  //checks if  game piece corresponds to an actual X coordinate THEN
+            (gamepiece.substring(3, 4).matches("[A-Ta-t]")));   //checks if  game piece corresponds to an actual  Y coordinate
+
     }
 
 
