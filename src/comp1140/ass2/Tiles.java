@@ -15,6 +15,38 @@ import java.util.ArrayList;
 public class Tiles {
     public ArrayList<ArrayList<Point>> Pieces = new ArrayList<ArrayList<Point>>();
     public ArrayList<Point> Corners = new ArrayList<Point>();
+    public static void Rotate(ArrayList<Point> piece,int rotation){
+        if (rotation > 3) {
+            for (Point p : piece) {
+                p.x = -(p.x);
+            }
+        }
+        switch (rotation % 4) {
+            case 0:
+                break;
+            case 1:
+                for (Point p : piece) {
+                    int temp = p.x;
+                    p.x = -p.y;
+                    p.y = temp;
+                }
+                break;
+            case 2:
+                for (Point p : piece) {
+                    p.x = -(p.x);
+                    p.y = -(p.y);
+                }
+                break;
+            case 3:
+                for (Point p : piece) {
+                    int temp = p.x;
+                    p.x = (p.y);
+                    p.y = -temp;
+                }
+                break;
+        }
+        return;
+    }
     public Tiles(){
         Corners.add(new Point(0,0));
         Corners.add(new Point(19,0));

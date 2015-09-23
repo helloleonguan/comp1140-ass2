@@ -45,35 +45,7 @@ public class BlokGame {
                     //piece = (ArrayList<Point>) tileSet.Pieces.get(game.charAt(index)-'A').clone();
                     break;
                 case 1: //Rotate each square in ArrayList as required
-                    if ((game.charAt(index) - 'A') > 3) {
-                        for (Point p : piece) {
-                            p.x = -(p.x);
-                        }
-                    }
-                    switch ((game.charAt(index) - 'A') % 4) {
-                        case 0:
-                            break;
-                        case 1:
-                            for (Point p : piece) {
-                                int temp = p.x;
-                                p.x = -p.y;
-                                p.y = temp;
-                            }
-                            break;
-                        case 2:
-                            for (Point p : piece) {
-                                p.x = -(p.x);
-                                p.y = -(p.y);
-                            }
-                            break;
-                        case 3:
-                            for (Point p : piece) {
-                                int temp = p.x;
-                                p.x = (p.y);
-                                p.y = -temp;
-                            }
-                            break;
-                    }
+                    Tiles.Rotate(piece,(game.charAt(index) - 'A'));
                     break;
                 case 2: //Encode horizontal co-ordinate of origin
                     x = game.charAt(index) - 'A';
