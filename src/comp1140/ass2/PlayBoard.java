@@ -131,6 +131,13 @@ public class PlayBoard extends Application {
             x_c = 0;
         }
 
+        //Draw the area where the message box would go
+        Rectangle messagearea = new Rectangle(350,660,150,40);
+        messagearea.setFill(Color.ORANGE);
+        root.getChildren().add(messagearea);
+        TextField enterPiece = new TextField();
+
+
         //Draw all the playable pieces
         Tile t1 = new Tile(500,0,mytiles.Pieces.get(0),this);
         root.getChildren().add(t1);
