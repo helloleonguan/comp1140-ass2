@@ -123,6 +123,8 @@ public class PlayBoard extends Application {
         Rectangle messagearea = new Rectangle(350,660,150,40);
         messagearea.setFill(Color.ORANGE);
         root.getChildren().add(messagearea);
+        TextField enterPiece = new TextField();
+
 
         //Draw all the playable pieces
         Tile t1 = new Tile(500,0,mytiles.Pieces.get(0),this);
