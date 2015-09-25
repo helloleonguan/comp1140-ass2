@@ -3,6 +3,8 @@ package comp1140.ass2;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.effect.Reflection;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -74,9 +76,16 @@ public class PlayBoard extends Application {
             });
 
             this.setOnMouseClicked(event -> {
-                if (event.isDragDetect()) {
+                if (event.getClickCount() == 2) {
                     this.setRotate(rotation + 90);
                     rotation = this.getRotate();
+                }
+                else if (event.getButton().equals(MouseButton.SECONDARY)) {
+                    if (this.getScaleX() == -1) {
+                        this.setScaleX(1);
+                    } else {
+                        this.setScaleX(-1);
+                    }
                 }
             });
         }
