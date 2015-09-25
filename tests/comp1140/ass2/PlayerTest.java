@@ -1,4 +1,5 @@
-import comp1140.ass2.Player;
+package comp1140.ass2;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
