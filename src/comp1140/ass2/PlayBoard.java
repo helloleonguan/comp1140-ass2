@@ -136,7 +136,7 @@ public class PlayBoard extends Application {
         messagearea.setFill(Color.ORANGE);
         root.getChildren().add(messagearea);
         TextField enterPiece = new TextField();
-
+        //root.getChildren().add(enterPiece);
 
         //Draw all the playable pieces
         Tile t1 = new Tile(500,0,mytiles.Pieces.get(0),this);
