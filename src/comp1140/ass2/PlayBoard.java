@@ -21,7 +21,7 @@ public class PlayBoard extends Application {
     final static double CELL_LENGTH = 25;
 
     ArrayList<Cell> board = new ArrayList<>();
-     String game = "";
+    String game = "";
     Tiles mytiles = new Tiles();
     //Put all inner classes here, and those events inside the object.
 
@@ -39,10 +39,13 @@ public class PlayBoard extends Application {
         ArrayList<Cell> tile = new ArrayList<>();
         double original_x;
         double original_y;
+        double rotation;
         String encodingTile = "";
 
         public Tile (double x, double y, ArrayList<Point> piece,PlayBoard board) {
             this.board = board;
+            this.rotation = 0.0;
+
             for (Point p : piece){
                 Cell c = new Cell(p.x * 25 + x,p.y * 25 + y,CELL_LENGTH - 1);
                 c.setFill(setColor(getCurrentPlayer(game)));
@@ -50,22 +53,31 @@ public class PlayBoard extends Application {
                 this.getChildren().add(c);
             }
 
-            this.setOnMousePressed(event -> {
-                original_x = event.getSceneX();
-                original_y = event.getSceneY();
+            this.setOnMouseDragEntered(event -> {
+                this.original_x = event.getSceneX();
+                this.original_y = event.getSceneY();
+                toFront();
             });
 
             this.setOnMouseDragged(event -> {
-                this.setLayoutX(event.getSceneX()-original_x);
-                this.setLayoutY(event.getSceneY()-original_y);
-
+                this.setLayoutX(event.getSceneX() - x);
+                this.setLayoutY(event.getSceneY() - y);
+                toFront();
+                this.original_x = event.getSceneX();
+                this.original_y = event.getSceneY();
             });
 
             this.setOnMouseReleased(event -> {
-
                 //if it is not a legitimate move then move the tile back to original coordinates
                 //if it move outside the board then move the tile back to originak coordinates
                 // else place on board and change the encoding game string.
+            });
+
+            this.setOnMouseClicked(event -> {
+                if (event.isDragDetect()) {
+                    this.setRotate(rotation + 90);
+                    rotation = this.getRotate();
+                }
             });
         }
 
@@ -118,6 +130,13 @@ public class PlayBoard extends Application {
             y_c += CELL_LENGTH;
             x_c = 0;
         }
+
+        //Draw the area where the message box would go
+        Rectangle messagearea = new Rectangle(350,660,150,40);
+        messagearea.setFill(Color.ORANGE);
+        root.getChildren().add(messagearea);
+        TextField enterPiece = new TextField();
+        //root.getChildren().add(enterPiece);
 
         //Draw all the playable pieces
         Tile t1 = new Tile(500,0,mytiles.Pieces.get(0),this);
