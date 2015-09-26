@@ -192,7 +192,7 @@ public class PlayBoard extends Application {
         }
 
         //Add a textfield
-        Text fieldpromt = new Text(200,530,"Enter your game piece here");
+        Text fieldpromt = new Text(200,545,"Enter your game piece here");
         root.getChildren().add(fieldpromt);
         TextField field = new TextField();
         field.setPromptText("Enter your game piece...");
