@@ -1,11 +1,18 @@
 package comp1140.ass2;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
 
 import javafx.stage.Stage;
 
@@ -73,10 +80,10 @@ public class PlayBoard extends Application {
             });
 
             this.setOnMouseDragExited(event -> {
-                encodingOfTile = convertToCode(shape_encoding) + convertToCode(rotation_encoding + 4 * (this.getScaleX() == -1? 1:0))
+                encodingOfTile = convertToCode(shape_encoding) + convertToCode(rotation_encoding + 4 * (this.getScaleX() == -1 ? 1 : 0))
                         + convertToCode(positionX_encoding) + convertToCode(positionY_encoding);
 
-                if (BlokGame.legitimateGame(game+encodingOfTile)) {
+                if (BlokGame.legitimateGame(game + encodingOfTile)) {
                     if (game.equals("")) {
                         game += encodingOfTile;
                     } else {
@@ -95,8 +102,7 @@ public class PlayBoard extends Application {
                 if (event.getClickCount() == 2) {
                     this.setRotate(this.getRotate() + 90);
                     this.rotation_encoding = (this.rotation_encoding + 1) % 4;
-                }
-                else if (event.getButton().equals(MouseButton.SECONDARY)) {
+                } else if (event.getButton().equals(MouseButton.SECONDARY)) {
                     if (this.getScaleX() == -1) {
                         this.setScaleX(1);
                     } else {
@@ -104,6 +110,7 @@ public class PlayBoard extends Application {
                     }
                 }
             });
+
         }
 
         Color setColor(Player player) {
@@ -184,12 +191,41 @@ public class PlayBoard extends Application {
             x_c = 0;
         }
 
-        //Draw the area where the message box would go
-        Rectangle messagearea = new Rectangle(350,660,150,40);
-        messagearea.setFill(Color.ORANGE);
-        root.getChildren().add(messagearea);
-        TextField enterPiece = new TextField();
-        //root.getChildren().add(enterPiece);
+        //Add a textfield
+        Text fieldpromt = new Text(200,530,"Enter your game piece here");
+        root.getChildren().add(fieldpromt);
+        TextField field = new TextField();
+        field.setPromptText("Enter your game piece...");
+        field.setLayoutX(200);
+        field.setLayoutY(550);
+        field.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent e) {
+                if (e.getCode() == KeyCode.ENTER) {
+                    if (BlokGUI.isValidEncoding(field.getText())) {
+                        if (BlokGame.legitimateGame(game+field.getText())) {
+                            if (game == "") {
+                                game += field.getText();
+                            }
+                            else {
+                                game += " " + field.getText(); //add piece to game
+                            }
+                        }
+
+                        else {
+                            System.out.println(field.getText()+" is not a valid move!");
+                        }
+                    }
+                    else {
+                        System.out.println(field.getText()+" is an invalid encoding!");
+                    }
+                    System.out.println("So far the game is '"+game+"' and it is "+getCurrentPlayer(game)+"'s turn!");
+                    field.clear();
+                }
+            }
+        });
+        root.getChildren().add(field);
+
 
         //Draw all the playable pieces
         Tile t1 = new Tile(500,0, gameTiles.Pieces.get(0),this);
