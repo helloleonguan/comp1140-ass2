@@ -1,15 +1,22 @@
 package comp1140.ass2;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
 
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.awt.image.PixelInterleavedSampleModel;
 import java.util.ArrayList;
 
 
@@ -22,7 +29,8 @@ public class PlayBoard extends Application {
 
     ArrayList<Cell> board = new ArrayList<>();
     String game = "";
-    Tiles mytiles = new Tiles();
+    Tiles gameTiles = new Tiles();
+
     //Put all inner classes here, and those events inside the object.
 
     class Cell extends Rectangle {
@@ -39,12 +47,16 @@ public class PlayBoard extends Application {
         ArrayList<Cell> tile = new ArrayList<>();
         double original_x;
         double original_y;
-        double rotation;
+        int shape_encoding;
+        int rotation_encoding = 0;
+        int positionX_encoding;
+        int positionY_encoding;
+        String encodingOfTile;
         String encodingTile = "";
 
         public Tile (double x, double y, ArrayList<Point> piece,PlayBoard board) {
+            this.shape_encoding = piece.indexOf(gameTiles);
             this.board = board;
-            this.rotation = 0.0;
 
             for (Point p : piece){
                 Cell c = new Cell(p.x * 25 + x,p.y * 25 + y,CELL_LENGTH - 1);
@@ -67,18 +79,38 @@ public class PlayBoard extends Application {
                 this.original_y = event.getSceneY();
             });
 
-            this.setOnMouseReleased(event -> {
+            this.setOnMouseDragExited(event -> {
+                encodingOfTile = convertToCode(shape_encoding) + convertToCode(rotation_encoding + 4 * (this.getScaleX() == -1 ? 1 : 0))
+                        + convertToCode(positionX_encoding) + convertToCode(positionY_encoding);
+
+                if (BlokGame.legitimateGame(game + encodingOfTile)) {
+                    if (game.equals("")) {
+                        game += encodingOfTile;
+                    } else {
+                        game += " " + encodingOfTile;
+                    }
+                } else {
+                    // Move the tile back to the panel.
+                }
                 //if it is not a legitimate move then move the tile back to original coordinates
                 //if it move outside the board then move the tile back to originak coordinates
                 // else place on board and change the encoding game string.
+
             });
 
             this.setOnMouseClicked(event -> {
-                if (event.isDragDetect()) {
-                    this.setRotate(rotation + 90);
-                    rotation = this.getRotate();
+                if (event.getClickCount() == 2) {
+                    this.setRotate(this.getRotate() + 90);
+                    this.rotation_encoding = (this.rotation_encoding + 1) % 4;
+                } else if (event.getButton().equals(MouseButton.SECONDARY)) {
+                    if (this.getScaleX() == -1) {
+                        this.setScaleX(1);
+                    } else {
+                        this.setScaleX(-1);
+                    }
                 }
             });
+
         }
 
         Color setColor(Player player) {
@@ -99,6 +131,34 @@ public class PlayBoard extends Application {
     Player getCurrentPlayer (String game) {
         String[] tilesPLaced = game.split("\\s+");
         return Player.getPlayer((tilesPLaced.length - 1) % 4);
+    }
+
+    String convertToCode(int i) {
+        String rotation_code = "";
+        switch (i) {
+            case 0: rotation_code = "A"; break;
+            case 1: rotation_code = "B"; break;
+            case 2: rotation_code = "C"; break;
+            case 3: rotation_code = "D"; break;
+            case 4: rotation_code = "E"; break;
+            case 5: rotation_code = "F"; break;
+            case 6: rotation_code = "G"; break;
+            case 7: rotation_code = "H"; break;
+            case 8: rotation_code = "I"; break;
+            case 9: rotation_code = "J"; break;
+            case 10: rotation_code = "K"; break;
+            case 11: rotation_code = "L"; break;
+            case 12: rotation_code = "M"; break;
+            case 13: rotation_code = "N"; break;
+            case 14: rotation_code = "O"; break;
+            case 15: rotation_code = "P"; break;
+            case 16: rotation_code = "Q"; break;
+            case 17: rotation_code = "R"; break;
+            case 18: rotation_code = "S"; break;
+            case 19: rotation_code = "T"; break;
+            case 20: rotation_code = "U"; break;
+        }
+        return rotation_code;
     }
 
     @Override
@@ -131,55 +191,84 @@ public class PlayBoard extends Application {
             x_c = 0;
         }
 
-        //Draw the area where the message box would go
-        Rectangle messagearea = new Rectangle(350,660,150,40);
-        messagearea.setFill(Color.ORANGE);
-        root.getChildren().add(messagearea);
-        TextField enterPiece = new TextField();
+        //Add a textfield
+        Text fieldpromt = new Text(200,545,"Enter your game piece here");
+        root.getChildren().add(fieldpromt);
+        TextField field = new TextField();
+        field.setPromptText("Enter your game piece...");
+        field.setLayoutX(200);
+        field.setLayoutY(550);
+        field.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent e) {
+                if (e.getCode() == KeyCode.ENTER) {
+                    if (BlokGUI.isValidEncoding(field.getText())) {
+                        if (BlokGame.legitimateGame(game+field.getText())) {
+                            if (game == "") {
+                                game += field.getText();
+                            }
+                            else {
+                                game += " " + field.getText(); //add piece to game
+                            }
+                        }
+
+                        else {
+                            System.out.println(field.getText()+" is not a valid move!");
+                        }
+                    }
+                    else {
+                        System.out.println(field.getText()+" is an invalid encoding!");
+                    }
+                    System.out.println("So far the game is '"+game+"' and it is "+getCurrentPlayer(game)+"'s turn!");
+                    field.clear();
+                }
+            }
+        });
+        root.getChildren().add(field);
 
 
         //Draw all the playable pieces
-        Tile t1 = new Tile(500,0,mytiles.Pieces.get(0),this);
+        Tile t1 = new Tile(500,0, gameTiles.Pieces.get(0),this);
         root.getChildren().add(t1);
-        Tile t2 = new Tile(550,0,mytiles.Pieces.get(1),this);
+        Tile t2 = new Tile(550,0, gameTiles.Pieces.get(1),this);
         root.getChildren().add(t2);
-        Tile t3 = new Tile(600,0,mytiles.Pieces.get(2),this);
+        Tile t3 = new Tile(600,0, gameTiles.Pieces.get(2),this);
         root.getChildren().add(t3);
-        Tile t4 = new Tile(650,0,mytiles.Pieces.get(3),this);
+        Tile t4 = new Tile(650,0, gameTiles.Pieces.get(3),this);
         root.getChildren().add(t4);
-        Tile t5 = new Tile(500,50,mytiles.Pieces.get(4),this);
+        Tile t5 = new Tile(500,50, gameTiles.Pieces.get(4),this);
         root.getChildren().add(t5);
-        Tile t6 = new Tile(575,75,mytiles.Pieces.get(5),this);
+        Tile t6 = new Tile(575,75, gameTiles.Pieces.get(5),this);
         root.getChildren().add(t6);
-        Tile t7 = new Tile(650,325,mytiles.Pieces.get(6),this);
+        Tile t7 = new Tile(650,325, gameTiles.Pieces.get(6),this);
         root.getChildren().add(t7);
-        Tile t8 = new Tile(500,175,mytiles.Pieces.get(7),this);
+        Tile t8 = new Tile(500,175, gameTiles.Pieces.get(7),this);
         root.getChildren().add(t8);
-        Tile t9 = new Tile(575,175,mytiles.Pieces.get(8),this);
+        Tile t9 = new Tile(575,175, gameTiles.Pieces.get(8),this);
         root.getChildren().add(t9);
-        Tile t10 = new Tile(500,250,mytiles.Pieces.get(9),this);
+        Tile t10 = new Tile(500,250, gameTiles.Pieces.get(9),this);
         root.getChildren().add(t10);
-        Tile t11 = new Tile(575,250,mytiles.Pieces.get(10),this);
+        Tile t11 = new Tile(575,250, gameTiles.Pieces.get(10),this);
         root.getChildren().add(t11);
-        Tile t12 = new Tile(675,200,mytiles.Pieces.get(11),this);
+        Tile t12 = new Tile(675,200, gameTiles.Pieces.get(11),this);
         root.getChildren().add(t12);
-        Tile t13 = new Tile(525,400,mytiles.Pieces.get(12),this);
+        Tile t13 = new Tile(525,400, gameTiles.Pieces.get(12),this);
         root.getChildren().add(t13);
-        Tile t14 = new Tile(575,375,mytiles.Pieces.get(13),this);
+        Tile t14 = new Tile(575,375, gameTiles.Pieces.get(13),this);
         root.getChildren().add(t14);
-        Tile t15 = new Tile(650,75,mytiles.Pieces.get(14),this);
+        Tile t15 = new Tile(650,75, gameTiles.Pieces.get(14),this);
         root.getChildren().add(t15);
-        Tile t16 = new Tile(650,425,mytiles.Pieces.get(15),this);
+        Tile t16 = new Tile(650,425, gameTiles.Pieces.get(15),this);
         root.getChildren().add(t16);
-        Tile t17 = new Tile(500,500,mytiles.Pieces.get(16),this);
+        Tile t17 = new Tile(500,500, gameTiles.Pieces.get(16),this);
         root.getChildren().add(t17);
-        Tile t18 = new Tile(500,600,mytiles.Pieces.get(17),this);
+        Tile t18 = new Tile(500,600, gameTiles.Pieces.get(17),this);
         root.getChildren().add(t18);
-        Tile t19 = new Tile(550,475,mytiles.Pieces.get(18),this);
+        Tile t19 = new Tile(550,475, gameTiles.Pieces.get(18),this);
         root.getChildren().add(t19);
-        Tile t20 = new Tile(625,550,mytiles.Pieces.get(19),this);
+        Tile t20 = new Tile(625,550, gameTiles.Pieces.get(19),this);
         root.getChildren().add(t20);
-        Tile t21 = new Tile(625,625,mytiles.Pieces.get(20),this);
+        Tile t21 = new Tile(625,625, gameTiles.Pieces.get(20),this);
         root.getChildren().add(t21);
 
 
