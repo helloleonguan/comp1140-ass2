@@ -23,7 +23,6 @@ public enum Player {
      * @return  an Integer.
      */
     //e.g. to call this method: Player.BLUE.toInt() .
-
     public int toInt() {
         int i = 0;
         switch (this) {
@@ -34,7 +33,6 @@ public enum Player {
         }
         return  i;
     }
-
     /**
      * Convert an Int to a Player in the game.
      * @param i An Integer representing the player in the game.

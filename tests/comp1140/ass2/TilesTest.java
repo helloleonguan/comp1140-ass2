@@ -24,6 +24,6 @@ public class TilesTest {
             Tiles.Rotate(piece, ng.nextInt(7));
             assert (piece.size()==size);
         }
-        
+
     }
 }

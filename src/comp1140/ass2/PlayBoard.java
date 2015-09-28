@@ -33,7 +33,7 @@ public class PlayBoard extends Application {
     ArrayList<Cell> board = new ArrayList<>();
     String game = "";
     Tiles gameTiles = new Tiles();
-
+    int currentTurn = 0;
     //Put all inner classes here, and those events inside the object.
 
     class Scoreboard {
@@ -64,6 +64,8 @@ public class PlayBoard extends Application {
 
     class Tile extends Group {
         private PlayBoard board = null;
+        int owner;
+        boolean played = false;
         ArrayList<Cell> tile = new ArrayList<>();
         double original_x;
         double original_y;
@@ -74,48 +76,47 @@ public class PlayBoard extends Application {
         String encodingOfTile;
         String encodingTile = "";
 
-        public Tile (double x, double y, ArrayList<Point> piece,PlayBoard board) {
-            this.shape_encoding = piece.indexOf(gameTiles);
+        public Tile (int currentPlayer, double x, double y, ArrayList<Point> piece,PlayBoard board, int pieceNumber) {
+            this.shape_encoding = pieceNumber;
             this.board = board;
-
+            this.owner = currentPlayer;
             for (Point p : piece){
                 Cell c = new Cell(p.x * 25 + x,p.y * 25 + y,CELL_LENGTH - 1);
-                c.setFill(setColor(getCurrentPlayer(game)));
+                c.setFill(setColor(owner));
                 tile.add(c);
                 this.getChildren().add(c);
             }
-
-            this.setOnMouseDragEntered(event -> {
-                this.original_x = event.getSceneX();
-                this.original_y = event.getSceneY();
-                toFront();
-            });
-
             this.setOnMouseDragged(event -> {
-                this.setLayoutX(event.getSceneX() - x);
-                this.setLayoutY(event.getSceneY() - y);
-                toFront();
-                this.original_x = event.getSceneX();
-                this.original_y = event.getSceneY();
+                if(!played && board.currentTurn == this.owner) {
+                    this.setLayoutX(event.getSceneX() - x);
+                    this.setLayoutY(event.getSceneY() - y);
+                    toFront();
+                }
             });
-
-            this.setOnMouseDragExited(event -> {
+            this.setOnMouseReleased(event -> {
+                this.positionX_encoding = (int) Math.floor(event.getSceneX() / 25);
+                this.setLayoutX(this.positionX_encoding * 25 - x);
+                this.positionY_encoding = (int) Math.floor(event.getSceneY() / 25);
+                this.setLayoutY(this.positionY_encoding * 25 - y);
                 encodingOfTile = convertToCode(shape_encoding) + convertToCode(rotation_encoding + 4 * (this.getScaleX() == -1 ? 1 : 0))
                         + convertToCode(positionX_encoding) + convertToCode(positionY_encoding);
-
                 if (BlokGame.legitimateGame(game + encodingOfTile)) {
                     if (game.equals("")) {
                         game += encodingOfTile;
                     } else {
                         game += " " + encodingOfTile;
                     }
+                    this.played = true;
+                    board.currentTurn = (board.currentTurn + 1)%4;
                 } else {
-                    // Move the tile back to the panel.
+                    System.out.println("Bad move");
+                    this.setLayoutX(0);
+                    this.setLayoutY(0);
                 }
-                //if it is not a legitimate move then move the tile back to original coordinates
-                //if it move outside the board then move the tile back to originak coordinates
-                // else place on board and change the encoding game string.
 
+                //if it is not a legitimate move then move the tile back to original coordinates
+                //if it move outside the board then move the tile back to original coordinates
+                // else place on board and change the encoding game string.
             });
 
             this.setOnMouseClicked(event -> {
@@ -133,13 +134,13 @@ public class PlayBoard extends Application {
 
         }
 
-        Color setColor(Player player) {
+        Color setColor(int player) {
             Color color = null;
             switch(player) {
-                case BLUE: color = Color.BLUE; break;
-                case YELLOW: color = Color.YELLOW; break;
-                case RED: color = Color.RED; break;
-                case GREEN:color = Color.GREEN; break;
+                case 0: color = Color.BLUE; break;
+                case 1: color = Color.YELLOW; break;
+                case 2: color = Color.RED; break;
+                case 3:color = Color.GREEN; break;
             }
 
             return color;
@@ -236,58 +237,62 @@ public class PlayBoard extends Application {
                         System.out.println(field.getText() + " is an invalid encoding!");
                     }
                     System.out.println("So far the game is '" + game + "' and it is " + getCurrentPlayer(game) + "'s turn!");
-                    System.out.println("Suggested moves are:"+AIplayer.getMove(game));
+                    System.out.println("Suggested moves are:" + AIplayer.getMove(game));
                     field.clear();
                 }
             }
         });
         root.getChildren().add(field);
-
-
+        ArrayList<ArrayList<Tile>> Players = new ArrayList<>();
+        for (int currentPlayer = 0;currentPlayer < 4; currentPlayer++){
+            ArrayList<Tile> PlayerTiles = new ArrayList<>();
+            Tile t1 = new Tile(currentPlayer, 500,0, gameTiles.Pieces.get(0),this,0);
+            PlayerTiles.add(t1);
+            Tile t2 = new Tile(currentPlayer, 550,0, gameTiles.Pieces.get(1),this,1);
+            PlayerTiles.add(t2);
+            Tile t3 = new Tile(currentPlayer, 600,0, gameTiles.Pieces.get(2),this,2);
+            PlayerTiles.add(t3);
+            Tile t4 = new Tile(currentPlayer, 650,0, gameTiles.Pieces.get(3),this,3);
+            PlayerTiles.add(t4);
+            Tile t5 = new Tile(currentPlayer, 500,50, gameTiles.Pieces.get(4),this,4);
+            PlayerTiles.add(t5);
+            Tile t6 = new Tile(currentPlayer, 575,75, gameTiles.Pieces.get(5),this,5);
+            PlayerTiles.add(t6);
+            Tile t7 = new Tile(currentPlayer, 650,325, gameTiles.Pieces.get(6),this,6);
+            PlayerTiles.add(t7);
+            Tile t8 = new Tile(currentPlayer, 500,175, gameTiles.Pieces.get(7),this,7);
+            PlayerTiles.add(t8);
+            Tile t9 = new Tile(currentPlayer, 575,175, gameTiles.Pieces.get(8),this,8);
+            PlayerTiles.add(t9);
+            Tile t10 = new Tile(currentPlayer, 500,250, gameTiles.Pieces.get(9),this,9);
+            PlayerTiles.add(t10);
+            Tile t11 = new Tile(currentPlayer, 575,250, gameTiles.Pieces.get(10),this,10);
+            PlayerTiles.add(t11);
+            Tile t12 = new Tile(currentPlayer, 675,200, gameTiles.Pieces.get(11),this,11);
+            PlayerTiles.add(t12);
+            Tile t13 = new Tile(currentPlayer, 525,400, gameTiles.Pieces.get(12),this,12);
+            PlayerTiles.add(t13);
+            Tile t14 = new Tile(currentPlayer, 575,375, gameTiles.Pieces.get(13),this,13);
+            PlayerTiles.add(t14);
+            Tile t15 = new Tile(currentPlayer, 650,75, gameTiles.Pieces.get(14),this,14);
+            PlayerTiles.add(t15);
+            Tile t16 = new Tile(currentPlayer, 650,425, gameTiles.Pieces.get(15),this,15);
+            PlayerTiles.add(t16);
+            Tile t17 = new Tile(currentPlayer, 500,500, gameTiles.Pieces.get(16),this,16);
+            PlayerTiles.add(t17);
+            Tile t18 = new Tile(currentPlayer, 500,600, gameTiles.Pieces.get(17),this,17);
+            PlayerTiles.add(t18);
+            Tile t19 = new Tile(currentPlayer, 550,475, gameTiles.Pieces.get(18),this,18);
+            PlayerTiles.add(t19);
+            Tile t20 = new Tile(currentPlayer, 625,550, gameTiles.Pieces.get(19),this,19);
+            PlayerTiles.add(t20);
+            Tile t21 = new Tile(currentPlayer, 625,625, gameTiles.Pieces.get(20),this,20);
+            PlayerTiles.add(t21);
+            Players.add(PlayerTiles);
+            root.getChildren().addAll(PlayerTiles);
+        }
         //Draw all the playable pieces
-        Tile t1 = new Tile(500,0, gameTiles.Pieces.get(0),this);
-        root.getChildren().add(t1);
-        Tile t2 = new Tile(550,0, gameTiles.Pieces.get(1),this);
-        root.getChildren().add(t2);
-        Tile t3 = new Tile(600,0, gameTiles.Pieces.get(2),this);
-        root.getChildren().add(t3);
-        Tile t4 = new Tile(650,0, gameTiles.Pieces.get(3),this);
-        root.getChildren().add(t4);
-        Tile t5 = new Tile(500,50, gameTiles.Pieces.get(4),this);
-        root.getChildren().add(t5);
-        Tile t6 = new Tile(575,75, gameTiles.Pieces.get(5),this);
-        root.getChildren().add(t6);
-        Tile t7 = new Tile(650,325, gameTiles.Pieces.get(6),this);
-        root.getChildren().add(t7);
-        Tile t8 = new Tile(500,175, gameTiles.Pieces.get(7),this);
-        root.getChildren().add(t8);
-        Tile t9 = new Tile(575,175, gameTiles.Pieces.get(8),this);
-        root.getChildren().add(t9);
-        Tile t10 = new Tile(500,250, gameTiles.Pieces.get(9),this);
-        root.getChildren().add(t10);
-        Tile t11 = new Tile(575,250, gameTiles.Pieces.get(10),this);
-        root.getChildren().add(t11);
-        Tile t12 = new Tile(675,200, gameTiles.Pieces.get(11),this);
-        root.getChildren().add(t12);
-        Tile t13 = new Tile(525,400, gameTiles.Pieces.get(12),this);
-        root.getChildren().add(t13);
-        Tile t14 = new Tile(575,375, gameTiles.Pieces.get(13),this);
-        root.getChildren().add(t14);
-        Tile t15 = new Tile(650,75, gameTiles.Pieces.get(14),this);
-        root.getChildren().add(t15);
-        Tile t16 = new Tile(650,425, gameTiles.Pieces.get(15),this);
-        root.getChildren().add(t16);
-        Tile t17 = new Tile(500,500, gameTiles.Pieces.get(16),this);
-        root.getChildren().add(t17);
-        Tile t18 = new Tile(500,600, gameTiles.Pieces.get(17),this);
-        root.getChildren().add(t18);
-        Tile t19 = new Tile(550,475, gameTiles.Pieces.get(18),this);
-        root.getChildren().add(t19);
-        Tile t20 = new Tile(625,550, gameTiles.Pieces.get(19),this);
-        root.getChildren().add(t20);
-        Tile t21 = new Tile(625,625, gameTiles.Pieces.get(20),this);
-        root.getChildren().add(t21);
-
+        
 
         primaryStage.setScene(main);
         primaryStage.show();
