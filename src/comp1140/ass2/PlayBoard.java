@@ -1,10 +1,12 @@
 package comp1140.ass2;
 
+import com.sun.rowset.internal.Row;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -16,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 
 import javafx.stage.Stage;
 
+import javax.swing.text.TableView;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -32,6 +35,23 @@ public class PlayBoard extends Application {
     Tiles gameTiles = new Tiles();
 
     //Put all inner classes here, and those events inside the object.
+
+    class Scoreboard {
+
+        int blue_score;
+        int yellow_score;
+        int red_score;
+        int green_score;
+
+        public Scoreboard (double x, double y) {
+
+        }
+
+
+
+        //store 4 values for each player
+        //give coords, 4 ints
+    }
 
     class Cell extends Rectangle {
         public Cell (double x, double y, double length) {
@@ -192,34 +212,31 @@ public class PlayBoard extends Application {
         }
 
         //Add a textfield
-        Text fieldpromt = new Text(200,545,"Enter your game piece here");
+        Text fieldpromt = new Text(300,645,"Enter your game piece here");
         root.getChildren().add(fieldpromt);
         TextField field = new TextField();
         field.setPromptText("Enter your game piece...");
-        field.setLayoutX(200);
-        field.setLayoutY(550);
+        field.setLayoutX(300);
+        field.setLayoutY(650);
         field.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent e) {
                 if (e.getCode() == KeyCode.ENTER) {
                     if (BlokGUI.isValidEncoding(field.getText())) {
-                        if (BlokGame.legitimateGame(game+field.getText())) {
+                        if (BlokGame.legitimateGame(game + field.getText())) {
                             if (game == "") {
                                 game += field.getText();
-                            }
-                            else {
+                            } else {
                                 game += " " + field.getText(); //add piece to game
                             }
+                        } else {
+                            System.out.println(field.getText() + " is not a valid move!");
                         }
-
-                        else {
-                            System.out.println(field.getText()+" is not a valid move!");
-                        }
+                    } else {
+                        System.out.println(field.getText() + " is an invalid encoding!");
                     }
-                    else {
-                        System.out.println(field.getText()+" is an invalid encoding!");
-                    }
-                    System.out.println("So far the game is '"+game+"' and it is "+getCurrentPlayer(game)+"'s turn!");
+                    System.out.println("So far the game is '" + game + "' and it is " + getCurrentPlayer(game) + "'s turn!");
+                    System.out.println("Suggested moves are:"+AIplayer.getMove(game));
                     field.clear();
                 }
             }
