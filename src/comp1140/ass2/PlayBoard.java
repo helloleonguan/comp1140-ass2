@@ -31,11 +31,20 @@ public class PlayBoard extends Application {
     final static double CELL_LENGTH = 25;
 
     ArrayList<Cell> board = new ArrayList<>();
+    ArrayList<ArrayList<Tile>> Players = new ArrayList<>();
     String game = "";
     Tiles gameTiles = new Tiles();
     int currentTurn = 0;
     //Put all inner classes here, and those events inside the object.
-
+    void nextTurn(){
+        for(Tile t : Players.get(currentTurn)){
+            t.Deactivate();
+        }
+        currentTurn = (currentTurn + 1) % 4;
+        for(Tile t : Players.get(currentTurn)){
+            t.Activate();
+        }
+    }
     class Scoreboard {
 
         int blue_score;
@@ -65,7 +74,7 @@ public class PlayBoard extends Application {
     class Tile extends Group {
         private PlayBoard board = null;
         int owner;
-        boolean played = false;
+        public boolean played = false;
         ArrayList<Cell> tile = new ArrayList<>();
         double original_x;
         double original_y;
@@ -75,7 +84,14 @@ public class PlayBoard extends Application {
         int positionY_encoding;
         String encodingOfTile;
         String encodingTile = "";
-
+        public void Deactivate(){
+            this.setDisable(true);
+            if (!played)this.setVisible(false);
+        }
+        public void Activate(){
+            this.setDisable(false);
+            this.setVisible(true);
+        }
         public Tile (int currentPlayer, double x, double y, ArrayList<Point> piece,PlayBoard board, int pieceNumber) {
             this.shape_encoding = pieceNumber;
             this.board = board;
@@ -87,36 +103,39 @@ public class PlayBoard extends Application {
                 this.getChildren().add(c);
             }
             this.setOnMouseDragged(event -> {
-                if(!played && board.currentTurn == this.owner) {
+                if(!played) {
                     this.setLayoutX(event.getSceneX() - x);
                     this.setLayoutY(event.getSceneY() - y);
                     toFront();
                 }
             });
             this.setOnMouseReleased(event -> {
-                this.positionX_encoding = (int) Math.floor(event.getSceneX() / 25);
-                this.setLayoutX(this.positionX_encoding * 25 - x);
-                this.positionY_encoding = (int) Math.floor(event.getSceneY() / 25);
-                this.setLayoutY(this.positionY_encoding * 25 - y);
-                encodingOfTile = convertToCode(shape_encoding) + convertToCode(rotation_encoding + 4 * (this.getScaleX() == -1 ? 1 : 0))
-                        + convertToCode(positionX_encoding) + convertToCode(positionY_encoding);
-                if (BlokGame.legitimateGame(game + encodingOfTile)) {
-                    if (game.equals("")) {
-                        game += encodingOfTile;
+                if(event.getSceneX()<500 && event.getSceneY()<500 && event.getSceneX() > 0 && event.getSceneY()>0) {
+                    this.positionX_encoding = (int) Math.floor(event.getSceneX() / 25);
+                    this.setLayoutX(this.positionX_encoding * 25 - x);
+                    this.positionY_encoding = (int) Math.floor(event.getSceneY() / 25);
+                    this.setLayoutY(this.positionY_encoding * 25 - y);
+                    encodingOfTile = convertToCode(shape_encoding) + convertToCode(rotation_encoding + 4 * (this.getScaleX() == -1 ? 1 : 0))
+                            + convertToCode(positionX_encoding) + convertToCode(positionY_encoding);
+                    if (BlokGame.legitimateGame(game + encodingOfTile)) {
+                        if (game.equals("")) {
+                            game += encodingOfTile;
+                        } else {
+                            game += " " + encodingOfTile;
+                        }
+                        System.out.println(game);
+                        this.played = true;
+                        board.nextTurn();
                     } else {
-                        game += " " + encodingOfTile;
+                        System.out.println("Bad move " + encodingOfTile);
+                        this.setLayoutX(0);
+                        this.setLayoutY(0);
                     }
-                    this.played = true;
-                    board.currentTurn = (board.currentTurn + 1)%4;
-                } else {
-                    System.out.println("Bad move");
-                    this.setLayoutX(0);
-                    this.setLayoutY(0);
-                }
 
-                //if it is not a legitimate move then move the tile back to original coordinates
-                //if it move outside the board then move the tile back to original coordinates
-                // else place on board and change the encoding game string.
+                    //if it is not a legitimate move then move the tile back to original coordinates
+                    //if it move outside the board then move the tile back to original coordinates
+                    // else place on board and change the encoding game string.
+                }
             });
 
             this.setOnMouseClicked(event -> {
@@ -243,7 +262,6 @@ public class PlayBoard extends Application {
             }
         });
         root.getChildren().add(field);
-        ArrayList<ArrayList<Tile>> Players = new ArrayList<>();
         for (int currentPlayer = 0;currentPlayer < 4; currentPlayer++){
             ArrayList<Tile> PlayerTiles = new ArrayList<>();
             Tile t1 = new Tile(currentPlayer, 500,0, gameTiles.Pieces.get(0),this,0);
@@ -292,8 +310,14 @@ public class PlayBoard extends Application {
             root.getChildren().addAll(PlayerTiles);
         }
         //Draw all the playable pieces
-        
-
+        for (ArrayList<Tile> playersTile : Players){
+            for (Tile t : playersTile){
+                t.Deactivate();
+            }
+        }
+        for (Tile t : Players.get(currentTurn)){
+            t.Activate();
+        }
         primaryStage.setScene(main);
         primaryStage.show();
     }
