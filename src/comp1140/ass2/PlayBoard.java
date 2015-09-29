@@ -152,7 +152,7 @@ public class PlayBoard extends Application {
                     for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
                         Cell d = (Cell) c;
                         double temp = d.getX() - original_x;
-                        d.setX(original_x - d.getY() - original_y);
+                        d.setX(original_x - (d.getY() - original_y));
                         d.setY(temp + original_y);
                     }
                     this.rotation_encoding = (this.rotation_encoding + 1) % 4;
