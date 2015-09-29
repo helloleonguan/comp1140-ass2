@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.input.MouseButton;
@@ -70,11 +71,13 @@ public class PlayBoard extends Application {
             this.setHeight(length);
         }
     }
-
+    //Written by Jack and Leon
+    //Tile represents a single game piece, possessing an orientation, location, owner and shape.
     class Tile extends Group {
         private PlayBoard board = null;
-        int owner;
+        int owner; //Index of enum of players
         public boolean played = false;
+        public boolean flipped = false; //Whether flipped along Y axis
         ArrayList<Cell> tile = new ArrayList<>();
         double original_x;
         double original_y;
@@ -84,15 +87,17 @@ public class PlayBoard extends Application {
         int positionY_encoding;
         String encodingOfTile;
         String encodingTile = "";
-        public void Deactivate(){
+        public void Deactivate(){ //Called whenever it is no longer the owners turn.
             this.setDisable(true);
             if (!played)this.setVisible(false);
         }
-        public void Activate(){
+        public void Activate(){ //Called at begining of owners turn
             this.setDisable(false);
             this.setVisible(true);
         }
         public Tile (int currentPlayer, double x, double y, ArrayList<Point> piece,PlayBoard board, int pieceNumber) {
+            original_x = x;
+            original_y = y;
             this.shape_encoding = pieceNumber;
             this.board = board;
             this.owner = currentPlayer;
@@ -102,20 +107,20 @@ public class PlayBoard extends Application {
                 tile.add(c);
                 this.getChildren().add(c);
             }
-            this.setOnMouseDragged(event -> {
+            this.setOnMouseDragged(event -> { //Drag effect of piece
                 if(!played) {
-                    this.setLayoutX(event.getSceneX() - x);
-                    this.setLayoutY(event.getSceneY() - y);
+                    this.setLayoutX(event.getSceneX() - x - 12);
+                    this.setLayoutY(event.getSceneY() - y - 12);
                     toFront();
                 }
             });
-            this.setOnMouseReleased(event -> {
+            this.setOnMouseReleased(event -> { //Handles encoding of piece and snapping to grid.
                 if(event.getSceneX()<500 && event.getSceneY()<500 && event.getSceneX() > 0 && event.getSceneY()>0) {
                     this.positionX_encoding = (int) Math.floor(event.getSceneX() / 25);
                     this.setLayoutX(this.positionX_encoding * 25 - x);
                     this.positionY_encoding = (int) Math.floor(event.getSceneY() / 25);
                     this.setLayoutY(this.positionY_encoding * 25 - y);
-                    encodingOfTile = convertToCode(shape_encoding) + convertToCode(rotation_encoding + 4 * (this.getScaleX() == -1 ? 1 : 0))
+                    encodingOfTile = convertToCode(shape_encoding) + convertToCode(rotation_encoding + (this.flipped ? 4 : 0))
                             + convertToCode(positionX_encoding) + convertToCode(positionY_encoding);
                     if (BlokGame.legitimateGame(game + encodingOfTile)) {
                         if (game.equals("")) {
@@ -126,6 +131,10 @@ public class PlayBoard extends Application {
                         System.out.println(game);
                         this.played = true;
                         board.nextTurn();
+                        /*TODO
+                        Need to handle players that need to pass or reaching an end of game state.
+
+                         */
                     } else {
                         System.out.println("Bad move " + encodingOfTile);
                         this.setLayoutX(0);
@@ -139,14 +148,19 @@ public class PlayBoard extends Application {
             });
 
             this.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2) {
-                    this.setRotate(this.getRotate() + 90);
+                if (event.getClickCount() == 2) { //Rotate piece 90 deg Clockwise
+                    for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+                        Cell d = (Cell) c;
+                        double temp = d.getX() - original_x;
+                        d.setX(original_x - d.getY() - original_y);
+                        d.setY(temp + original_y);
+                    }
                     this.rotation_encoding = (this.rotation_encoding + 1) % 4;
-                } else if (event.getButton().equals(MouseButton.SECONDARY)) {
-                    if (this.getScaleX() == -1) {
-                        this.setScaleX(1);
-                    } else {
-                        this.setScaleX(-1);
+                } else if (event.getButton().equals(MouseButton.SECONDARY)) { //Flip piece along Y axis
+                    flipped = !flipped;
+                    for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+                        Cell d = (Cell) c;
+                        d.setX(original_x - (d.getX() -original_x));
                     }
                 }
             });
@@ -165,9 +179,6 @@ public class PlayBoard extends Application {
             return color;
         }
     }
-
-
-    //Put all methods here
     Player getCurrentPlayer (String game) {
         String[] tilesPLaced = game.split("\\s+");
         return Player.getPlayer((tilesPLaced.length - 1) % 4);
