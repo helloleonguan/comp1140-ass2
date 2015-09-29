@@ -37,15 +37,6 @@ public class PlayBoard extends Application {
     Tiles gameTiles = new Tiles();
     int currentTurn = 0;
     //Put all inner classes here, and those events inside the object.
-    void nextTurn(){
-        for(Tile t : Players.get(currentTurn)){
-            t.Deactivate();
-        }
-        currentTurn = (currentTurn + 1) % 4;
-        for(Tile t : Players.get(currentTurn)){
-            t.Activate();
-        }
-    }
     class Scoreboard {
 
         int blue_score;
@@ -179,6 +170,18 @@ public class PlayBoard extends Application {
             return color;
         }
     }
+
+    // Put all methods for the game here.
+    void nextTurn(){
+        for(Tile t : Players.get(currentTurn)){
+            t.Deactivate();
+        }
+        currentTurn = (currentTurn + 1) % 4;
+        for(Tile t : Players.get(currentTurn)){
+            t.Activate();
+        }
+    }
+
     Player getCurrentPlayer (String game) {
         String[] tilesPLaced = game.split("\\s+");
         return Player.getPlayer((tilesPLaced.length - 1) % 4);
