@@ -3,12 +3,19 @@ package comp1140.ass2;
 import com.sun.rowset.internal.Row;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Rectangle;
@@ -19,9 +26,10 @@ import javafx.scene.input.KeyEvent;
 
 import javafx.stage.Stage;
 
-import javax.swing.text.TableView;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -37,6 +45,8 @@ public class PlayBoard extends Application {
     Tiles gameTiles = new Tiles();
     int currentTurn = 0;
     //Put all inner classes here, and those events inside the object.
+
+
     class Scoreboard {
 
         int blue_score;
@@ -44,13 +54,15 @@ public class PlayBoard extends Application {
         int red_score;
         int green_score;
 
-        public Scoreboard (double x, double y) {
+        public Scoreboard () {
+
+            this.blue_score = 0;
+            this.yellow_score = 0;
+            this.red_score = 0;
+            this.green_score = 0;
 
         }
-
-
-
-        //store 4 values for each player
+        //store 4 values, one for each player
         //give coords, 4 ints
     }
 
@@ -120,6 +132,7 @@ public class PlayBoard extends Application {
                             game += " " + encodingOfTile;
                         }
                         System.out.println(game);
+                        System.out.println(Arrays.toString(BlokGame.scoreGame(game)));
                         this.played = true;
                         board.nextTurn();
                         /*TODO
@@ -187,6 +200,7 @@ public class PlayBoard extends Application {
         return Player.getPlayer((tilesPLaced.length - 1) % 4);
     }
 
+
     String convertToCode(int i) {
         String rotation_code = "";
         switch (i) {
@@ -244,6 +258,64 @@ public class PlayBoard extends Application {
             y_c += CELL_LENGTH;
             x_c = 0;
         }
+
+        //Scoreboard (currently not an innerclass, need to fix that)
+
+        int blScore = 0;
+        int ylScore = 0;
+        int rdScore = 0;
+        int grScore = 0;
+
+        //blScore = BlokGame.scoreGame(game)[0];
+        //ylScore = BlokGame.scoreGame(game)[1];
+        //rdScore = BlokGame.scoreGame(game)[2];
+        //grScore = BlokGame.scoreGame(game)[3];
+
+
+        GridPane scoreBoard = new GridPane();
+        scoreBoard.setHgap(5);
+        scoreBoard.setVgap(5);
+        ColumnConstraints column1 = new ColumnConstraints(100);
+        ColumnConstraints column2 = new ColumnConstraints(100);
+        ColumnConstraints column3 = new ColumnConstraints(100);
+        ColumnConstraints column4 = new ColumnConstraints(100);
+        scoreBoard.getColumnConstraints().addAll(column1, column2, column3, column4);
+
+        Text blueLabel = new Text("BLUE");
+        Text blueScore = new Text(Integer.toString(blScore));
+
+        Text yellowLabel = new Text("YELLOW");
+        Text yellowScore = new Text(Integer.toString(ylScore));
+
+
+        Text redLabel = new Text("RED");
+        Text redScore = new Text(Integer.toString(rdScore));
+
+
+        Text greenLabel = new Text("GREEN");
+        Text greenScore = new Text(Integer.toString(grScore));
+
+        GridPane.setHalignment(blueLabel, HPos.LEFT);
+        scoreBoard.add(blueLabel, 0, 0);
+        scoreBoard.add(blueScore,0,1);
+
+        GridPane.setHalignment(yellowLabel, HPos.LEFT);
+        scoreBoard.add(yellowLabel, 1, 0);
+        scoreBoard.add(yellowScore,1,1);
+
+        GridPane.setHalignment(redLabel, HPos.LEFT);
+        scoreBoard.add(redLabel, 2, 0);
+        scoreBoard.add(redScore,2,1);
+
+        GridPane.setHalignment(greenLabel, HPos.LEFT);
+        scoreBoard.add(greenLabel, 3, 0);
+        scoreBoard.add(greenScore,3,1);
+
+        scoreBoard.setLayoutX(50);
+        scoreBoard.setLayoutY(520);
+
+        root.getChildren().add(scoreBoard);
+
 
         //Add a textfield
         Text fieldpromt = new Text(300,645,"Enter your game piece here");
