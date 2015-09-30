@@ -7,6 +7,8 @@ import java.util.List;
 /**
  * Created by Liyang GUAN on 2015/8/26/0026.
  */
+
+/* All written by Liyang(Leon) */
 public enum Player {
 
     BLUE,
