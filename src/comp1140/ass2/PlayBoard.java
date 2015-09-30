@@ -1,40 +1,29 @@
 package comp1140.ass2;
 
-import com.sun.rowset.internal.Row;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
-
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
 /**
- * Created by Liyang(Leon) Guan on 2015/9/20/0020.
+ * Created by Liyang(Leon) Guan on 2015/9/20.
  */
 public class PlayBoard extends Application {
     //Put only global variables for the GAME here
@@ -48,7 +37,7 @@ public class PlayBoard extends Application {
     Scoreboard scores = new Scoreboard();
 
     //Put all inner classes here, and those events inside the object.
-    //Class for the scoreboard presented at the scene. (Written by Faizan and Liyang)
+    //Class for the scoreboard presented at the scene. (Written by Faizan and Liyang(Leon))
     class Scoreboard extends GridPane{
         int blue_score;
         int yellow_score;
@@ -114,6 +103,13 @@ public class PlayBoard extends Application {
             this.add(greenScore, 3, 1);
         }
 
+        /**
+         * update the scores for each player.
+         * @param score1 score for the blue player.
+         * @param score2 score for the yellow player.
+         * @param score3 score for the red player.
+         * @param score4 score for the green player.
+        .*/
         public void update(int score1, int score2, int score3, int score4) {
             this.blue_score = score1+89;
             this.yellow_score =score2+89;
@@ -127,7 +123,7 @@ public class PlayBoard extends Application {
         }
     }
 
-    //Class for each individual little square cell. (Written by Liyang)
+    //Class for each individual little square cell. (Written by Liyang(Leon))
     class Cell extends Rectangle {
         public Cell (double x, double y, double length) {
             this.setX(x);
@@ -137,7 +133,7 @@ public class PlayBoard extends Application {
         }
     }
 
-    //Tile represents a single game piece, possessing an orientation, location, owner and shape. (Written by Jack and Liyang)
+    //Tile represents a single game piece, possessing an orientation, location, owner and shape. (Written by Jack and Liyang(Leon))
     class Tile extends Group {
         private PlayBoard board = null;
         int owner; //Index of enum of players
@@ -152,26 +148,31 @@ public class PlayBoard extends Application {
         int positionY_encoding;
         String encodingOfTile;
         String encodingTile = "";
+
         public void Deactivate(){ //Called whenever it is no longer the owners turn.
             this.setDisable(true);
             if (!played)this.setVisible(false);
         }
+
         public void Activate(){ //Called at begining of owners turn
             this.setDisable(false);
             this.setVisible(true);
         }
+
         public Tile (int currentPlayer, double x, double y, ArrayList<Point> piece,PlayBoard board, int pieceNumber) {
             original_x = x;
             original_y = y;
             this.shape_encoding = pieceNumber;
             this.board = board;
             this.owner = currentPlayer;
+
             for (Point p : piece){
                 Cell c = new Cell(p.x * 25 + x,p.y * 25 + y,CELL_LENGTH - 1);
                 c.setFill(setColor(owner));
                 tile.add(c);
                 this.getChildren().add(c);
             }
+
             this.setOnMouseDragged(event -> { //Drag effect of piece
                 if(!played) {
                     this.setLayoutX(event.getSceneX() - x - 12);
@@ -179,6 +180,7 @@ public class PlayBoard extends Application {
                     toFront();
                 }
             });
+
             this.setOnMouseReleased(event -> { //Handles encoding of piece and snapping to grid.
                 if(event.getSceneX()<500 && event.getSceneY()<500 && event.getSceneX() > 0 && event.getSceneY()>0) {
                     this.positionX_encoding = (int) Math.floor(event.getSceneX() / 25);
@@ -232,7 +234,6 @@ public class PlayBoard extends Application {
                     }
                 }
             });
-
         }
 
         Color setColor(int player) {
@@ -243,13 +244,14 @@ public class PlayBoard extends Application {
                 case 2: color = Color.RED; break;
                 case 3:color = Color.GREEN; break;
             }
-
             return color;
         }
     }
 
     // Put all methods for the game here.
-    //
+    /**
+     * Activate all tiles for current turn and deactivate the others.
+     * (Written by Jack) */
     void nextTurn(){
         for(Tile t : Players.get(currentTurn)){
             t.Deactivate();
@@ -260,13 +262,20 @@ public class PlayBoard extends Application {
         }
     }
 
-    //
+    /**
+     * Given a game string, determine it is what player's turn.
+     * @param game A string representing the state of the game, as described in the assignment description.
+     * @return Player Whose turn it is.
+     *(Written by Liyang(Leon))*/
     Player getCurrentPlayer (String game) {
         String[] tilesPLaced = game.split("\\s+");
         return Player.getPlayer((tilesPLaced.length - 1) % 4);
     }
 
-    //
+    /**
+     * @param i an integer representing the encoding character.
+     * @return String a one-character string.
+     *(Written by Liyang(Leon))*/
     String convertToCode(int i) {
         String rotation_code = "";
         switch (i) {
@@ -296,9 +305,8 @@ public class PlayBoard extends Application {
     }
 
     @Override
-    // The start method. (Written by the the whole group)
+    // The start method. (Written by the the whole group: Faizan, Jack, Liyang(Leon))
     public void start(Stage primaryStage) throws Exception {
-
         primaryStage.setTitle("Blokus!");
         Group root = new Group();
         Scene main = new Scene(root,700,700);
@@ -326,7 +334,7 @@ public class PlayBoard extends Application {
 
         //Draw the Scoreboard
         scores.setLayoutX(50);
-        scores.setLayoutY(550);
+        scores.setLayoutY(530);
         root.getChildren().add(scores);
 
 
