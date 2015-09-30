@@ -17,13 +17,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.text.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import javax.swing.table.TableColumn;
@@ -33,7 +34,7 @@ import java.util.Arrays;
 
 
 /**
- * Created by Administrator on 2015/9/20/0020.
+ * Created by Liyang(Leon) Guan on 2015/9/20/0020.
  */
 public class PlayBoard extends Application {
     //Put only global variables for the GAME here
@@ -44,28 +45,89 @@ public class PlayBoard extends Application {
     String game = "";
     Tiles gameTiles = new Tiles();
     int currentTurn = 0;
+    Scoreboard scores = new Scoreboard();
+
     //Put all inner classes here, and those events inside the object.
-
-
-    class Scoreboard {
-
+    //Class for the scoreboard presented at the scene. (Written by Faizan and Liyang)
+    class Scoreboard extends GridPane{
         int blue_score;
         int yellow_score;
         int red_score;
         int green_score;
+        Text blueScore;
+        Text yellowScore;
+        Text redScore;
+        Text greenScore;
 
         public Scoreboard () {
-
             this.blue_score = 0;
             this.yellow_score = 0;
             this.red_score = 0;
             this.green_score = 0;
 
+            this.setHgap(5);
+            this.setVgap(5);
+            ColumnConstraints column1 = new ColumnConstraints(100);
+            ColumnConstraints column2 = new ColumnConstraints(100);
+            ColumnConstraints column3 = new ColumnConstraints(100);
+            ColumnConstraints column4 = new ColumnConstraints(100);
+            this.getColumnConstraints().addAll(column1, column2, column3, column4);
+
+            Text blueLabel = new Text("BLUE");
+            blueLabel.setFill(Color.BLUE);
+            blueLabel.setFont(new Font(18));
+            this.blueScore = new Text(Integer.toString(this.blue_score));
+            this.blueScore.setFont(new Font(16));
+
+            Text yellowLabel = new Text("YELLOW");
+            yellowLabel.setFill(Color.YELLOW);
+            yellowLabel.setFont(new Font(18));
+            this.yellowScore = new Text(Integer.toString(this.yellow_score));
+            this.yellowScore.setFont(new Font(16));
+
+            Text redLabel = new Text("RED");
+            redLabel.setFill(Color.RED);
+            redLabel.setFont(new Font(18));
+            this.redScore = new Text(Integer.toString(this.red_score));
+            this.redScore.setFont(new Font(16));
+
+            Text greenLabel = new Text("GREEN");
+            greenLabel.setFill(Color.GREEN);
+            greenLabel.setFont(new Font(18));
+            this.greenScore = new Text(Integer.toString(this.green_score));
+            this.greenScore.setFont(new Font(16));
+
+            GridPane.setHalignment(blueLabel, HPos.LEFT);
+            this.add(blueLabel, 0, 0);
+            this.add(blueScore, 0, 1);
+
+            GridPane.setHalignment(yellowLabel, HPos.LEFT);
+            this.add(yellowLabel, 1, 0);
+            this.add(yellowScore, 1, 1);
+
+            GridPane.setHalignment(redLabel, HPos.LEFT);
+            this.add(redLabel, 2, 0);
+            this.add(redScore, 2, 1);
+
+            GridPane.setHalignment(greenLabel, HPos.LEFT);
+            this.add(greenLabel, 3, 0);
+            this.add(greenScore, 3, 1);
         }
-        //store 4 values, one for each player
-        //give coords, 4 ints
+
+        public void update(int score1, int score2, int score3, int score4) {
+            this.blue_score = score1+89;
+            this.yellow_score =score2+89;
+            this.red_score = score3+89;
+            this.green_score = score4+89;
+
+            this.blueScore.setText(Integer.toString(this.blue_score));
+            this.yellowScore.setText(Integer.toString(this.yellow_score));
+            this.redScore.setText(Integer.toString(this.red_score));
+            this.greenScore.setText(Integer.toString(this.green_score));
+        }
     }
 
+    //Class for each individual little square cell. (Written by Liyang)
     class Cell extends Rectangle {
         public Cell (double x, double y, double length) {
             this.setX(x);
@@ -74,8 +136,8 @@ public class PlayBoard extends Application {
             this.setHeight(length);
         }
     }
-    //Written by Jack and Leon
-    //Tile represents a single game piece, possessing an orientation, location, owner and shape.
+
+    //Tile represents a single game piece, possessing an orientation, location, owner and shape. (Written by Jack and Liyang)
     class Tile extends Group {
         private PlayBoard board = null;
         int owner; //Index of enum of players
@@ -134,6 +196,8 @@ public class PlayBoard extends Application {
                         System.out.println(game);
                         System.out.println(Arrays.toString(BlokGame.scoreGame(game)));
                         this.played = true;
+                        //update the scores for each player
+                        scores.update(BlokGame.scoreGame(game)[0],BlokGame.scoreGame(game)[1],BlokGame.scoreGame(game)[2],BlokGame.scoreGame(game)[3]);
                         board.nextTurn();
                         /*TODO
                         Need to handle players that need to pass or reaching an end of game state.
@@ -185,6 +249,7 @@ public class PlayBoard extends Application {
     }
 
     // Put all methods for the game here.
+    //
     void nextTurn(){
         for(Tile t : Players.get(currentTurn)){
             t.Deactivate();
@@ -195,12 +260,13 @@ public class PlayBoard extends Application {
         }
     }
 
+    //
     Player getCurrentPlayer (String game) {
         String[] tilesPLaced = game.split("\\s+");
         return Player.getPlayer((tilesPLaced.length - 1) % 4);
     }
 
-
+    //
     String convertToCode(int i) {
         String rotation_code = "";
         switch (i) {
@@ -230,13 +296,12 @@ public class PlayBoard extends Application {
     }
 
     @Override
+    // The start method. (Written by the the whole group)
     public void start(Stage primaryStage) throws Exception {
 
         primaryStage.setTitle("Blokus!");
         Group root = new Group();
         Scene main = new Scene(root,700,700);
-
-        //Draw and add shapes to the 'main' scene here as well as local variables.
 
         //Draw the panel on the right-side
         Rectangle panel = new Rectangle(500,0,200,700);
@@ -248,7 +313,7 @@ public class PlayBoard extends Application {
         double y_c = 0;
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
-                Cell c = new Cell(x_c,y_c,CELL_LENGTH - 1); //Leave 1 pixel for the margin.
+                Cell c = new Cell(x_c, y_c, CELL_LENGTH - 1); //Leave 1 pixel for the margin.
                 c.setFill(Color.LIGHTGREY);
                 root.getChildren().add(c);
                 board.add(c);
@@ -259,62 +324,10 @@ public class PlayBoard extends Application {
             x_c = 0;
         }
 
-        //Scoreboard (currently not an innerclass, need to fix that)
-
-        int blScore = 0;
-        int ylScore = 0;
-        int rdScore = 0;
-        int grScore = 0;
-
-        //blScore = BlokGame.scoreGame(game)[0];
-        //ylScore = BlokGame.scoreGame(game)[1];
-        //rdScore = BlokGame.scoreGame(game)[2];
-        //grScore = BlokGame.scoreGame(game)[3];
-
-
-        GridPane scoreBoard = new GridPane();
-        scoreBoard.setHgap(5);
-        scoreBoard.setVgap(5);
-        ColumnConstraints column1 = new ColumnConstraints(100);
-        ColumnConstraints column2 = new ColumnConstraints(100);
-        ColumnConstraints column3 = new ColumnConstraints(100);
-        ColumnConstraints column4 = new ColumnConstraints(100);
-        scoreBoard.getColumnConstraints().addAll(column1, column2, column3, column4);
-
-        Text blueLabel = new Text("BLUE");
-        Text blueScore = new Text(Integer.toString(blScore));
-
-        Text yellowLabel = new Text("YELLOW");
-        Text yellowScore = new Text(Integer.toString(ylScore));
-
-
-        Text redLabel = new Text("RED");
-        Text redScore = new Text(Integer.toString(rdScore));
-
-
-        Text greenLabel = new Text("GREEN");
-        Text greenScore = new Text(Integer.toString(grScore));
-
-        GridPane.setHalignment(blueLabel, HPos.LEFT);
-        scoreBoard.add(blueLabel, 0, 0);
-        scoreBoard.add(blueScore,0,1);
-
-        GridPane.setHalignment(yellowLabel, HPos.LEFT);
-        scoreBoard.add(yellowLabel, 1, 0);
-        scoreBoard.add(yellowScore,1,1);
-
-        GridPane.setHalignment(redLabel, HPos.LEFT);
-        scoreBoard.add(redLabel, 2, 0);
-        scoreBoard.add(redScore,2,1);
-
-        GridPane.setHalignment(greenLabel, HPos.LEFT);
-        scoreBoard.add(greenLabel, 3, 0);
-        scoreBoard.add(greenScore,3,1);
-
-        scoreBoard.setLayoutX(50);
-        scoreBoard.setLayoutY(520);
-
-        root.getChildren().add(scoreBoard);
+        //Draw the Scoreboard
+        scores.setLayoutX(50);
+        scores.setLayoutY(550);
+        root.getChildren().add(scores);
 
 
         //Add a textfield
@@ -348,6 +361,7 @@ public class PlayBoard extends Application {
             }
         });
         root.getChildren().add(field);
+
         for (int currentPlayer = 0;currentPlayer < 4; currentPlayer++){
             ArrayList<Tile> PlayerTiles = new ArrayList<>();
             Tile t1 = new Tile(currentPlayer, 500,0, gameTiles.Pieces.get(0),this,0);
@@ -395,12 +409,14 @@ public class PlayBoard extends Application {
             Players.add(PlayerTiles);
             root.getChildren().addAll(PlayerTiles);
         }
+
         //Draw all the playable pieces
         for (ArrayList<Tile> playersTile : Players){
             for (Tile t : playersTile){
                 t.Deactivate();
             }
         }
+
         for (Tile t : Players.get(currentTurn)){
             t.Activate();
         }
