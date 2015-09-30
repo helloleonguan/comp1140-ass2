@@ -7,6 +7,8 @@ import java.util.List;
 /**
  * Created by Liyang GUAN on 2015/8/26/0026.
  */
+
+/* All written by Liyang(Leon) */
 public enum Player {
 
     BLUE,
@@ -23,7 +25,6 @@ public enum Player {
      * @return  an Integer.
      */
     //e.g. to call this method: Player.BLUE.toInt() .
-
     public int toInt() {
         int i = 0;
         switch (this) {
@@ -34,7 +35,6 @@ public enum Player {
         }
         return  i;
     }
-
     /**
      * Convert an Int to a Player in the game.
      * @param i An Integer representing the player in the game.
@@ -84,4 +84,5 @@ public enum Player {
             return result;
         }
     }
+
 }

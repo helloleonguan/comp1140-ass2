@@ -7,6 +7,7 @@ import java.util.Collections;
 /**
  * Created by Liyang GUAN on 2015/8/31/0031.
  */
+// (All written by Liyang(Leon) )
 public class AIplayer {
 
     public static String getMove(String game) {

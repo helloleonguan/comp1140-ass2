@@ -14,7 +14,7 @@ public class BlokGame {
      * @param game A string representing the state of the game, as described in the assignment description.
      * @return True if the string represents a legitimate game state, according to the encoding defined in the
      * assignment description and the rules of the game.
-     */
+     *(Written by Jack) */
     public static boolean legitimateGame(String game) {
         game = game.replaceAll(" ", "");
         Tiles tileSet = new Tiles();
@@ -171,7 +171,7 @@ public class BlokGame {
      * @param game A string representing the state of the game, as described in the assignment description.
      * @return An array of four integers reflecting the score for the game.   The scores should be given in the playing
      * order specified in the rules of the game, and the scores should be made according to the rules.
-     */
+     * (written by Liyang(Leon))*/
     public static int[] scoreGame(String game) {
         Tiles tile = new Tiles();
 
@@ -199,17 +199,20 @@ public class BlokGame {
         return scores;
     }
 
-    private static int convertToIndex(char s) {
-        return s - 'A';
-    }
 
     /**
      * Parse a string representing a game state and return a valid next move.  If no move is possible, return a pass ('.')
      *
      * @param game A string representing the state of the game, as described in the assignment description.
      * @return A four-character string representing the next move.
-     */
+     * (written by Liyang(Leon))*/
     public static String makeMove(String game) {
         return AIplayer.getMove(game);
     }
+
+    /* (Written by Jack) */
+    private static int convertToIndex(char s) {
+        return s - 'A';
+    }
+
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
  *   #
  *   ##
  */
+/* All written by Jack */
 public class Tiles {
     public ArrayList<ArrayList<Point>> Pieces = new ArrayList<ArrayList<Point>>();
     public ArrayList<Point> Corners = new ArrayList<Point>();
