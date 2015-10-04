@@ -182,14 +182,14 @@ public class PlayBoard extends Application {
             });
 
             this.setOnMouseReleased(event -> { //Handles encoding of piece and snapping to grid.
-                if(event.getSceneX()<500 && event.getSceneY()<500 && event.getSceneX() > 0 && event.getSceneY()>0) {
+                if (event.getSceneX() < 500 && event.getSceneY() < 500 && event.getSceneX() > 0 && event.getSceneY() > 0) {
                     this.positionX_encoding = (int) Math.floor(event.getSceneX() / 25);
                     this.setLayoutX(this.positionX_encoding * 25 - x);
                     this.positionY_encoding = (int) Math.floor(event.getSceneY() / 25);
                     this.setLayoutY(this.positionY_encoding * 25 - y);
                     encodingOfTile = convertToCode(shape_encoding) + convertToCode(rotation_encoding + (this.flipped ? 4 : 0))
                             + convertToCode(positionX_encoding) + convertToCode(positionY_encoding);
-                    if (BlokGame.legitimateGame(game + encodingOfTile)) {
+                    if (BlokGame.legitimateGame(game + (game.equals("")? encodingOfTile:" "+ encodingOfTile))) {
                         if (game.equals("")) {
                             game += encodingOfTile;
                         } else {
@@ -199,7 +199,7 @@ public class PlayBoard extends Application {
                         System.out.println(Arrays.toString(BlokGame.scoreGame(game)));
                         this.played = true;
                         //update the scores for each player
-                        scores.update(BlokGame.scoreGame(game)[0],BlokGame.scoreGame(game)[1],BlokGame.scoreGame(game)[2],BlokGame.scoreGame(game)[3]);
+                        scores.update(BlokGame.scoreGame(game)[0], BlokGame.scoreGame(game)[1], BlokGame.scoreGame(game)[2], BlokGame.scoreGame(game)[3]);
                         board.nextTurn();
                         /*TODO
                         Need to handle players that need to pass or reaching an end of game state.
@@ -230,7 +230,7 @@ public class PlayBoard extends Application {
                     flipped = !flipped;
                     for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
                         Cell d = (Cell) c;
-                        d.setX(original_x - (d.getX() -original_x));
+                        d.setX(original_x - (d.getX() - original_x));
                     }
                 }
             });
