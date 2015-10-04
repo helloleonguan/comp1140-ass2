@@ -237,7 +237,6 @@ public class Legit {
             if (pos < 0 || pos > 399)
                 continue;
             if (board[pos] == turn) {
-                System.out.println(pos);
                 flag = false;
                 break;
             }

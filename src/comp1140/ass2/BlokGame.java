@@ -168,7 +168,6 @@ public class BlokGame {
 //            index++;
 //        }
 //        return legit;
-        System.out.println(Legit.legitimateGame(game));
         return Legit.legitimateGame(game);
     }
 
