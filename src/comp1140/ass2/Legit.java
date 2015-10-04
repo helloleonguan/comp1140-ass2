@@ -1,8 +1,6 @@
 package comp1140.ass2;
-
-
 /**
- * Created by Liyang(Leon) Guan on 2015/10/3/0003.
+ * Created by Liyang(Leon) Guan on 2015/10/3.
  */
 
 import java.awt.*;
@@ -19,7 +17,7 @@ public class Legit {
         if (tilesPLaced.length <= 4) {
             for (int i = 0; i < tilesPLaced.length; i++) {
                 legit = isStarter(tilesPLaced[i]) && onBoard(tilesPLaced[i]);
-                if (legit == true) {
+                if (legit) {
                     draw(tilesPLaced[i]);
                 } else {
                     break;
@@ -38,7 +36,7 @@ public class Legit {
                 legit = start && onBoard(tilesPLaced[i]) && noOverlapping(tilesPLaced[i]) &&
                         cornerContactWithSameColor(tilesPLaced[i]) && noEdgeContactWithSameColor(tilesPLaced[i]);
 
-                if (legit == true) {
+                if (legit) {
                     draw(tilesPLaced[i]);
                 } else {
                     break;
@@ -247,9 +245,5 @@ public class Legit {
 
         mytiles = new Tiles();
         return flag;
-    }
-
-    public static void main(String[] args) {
-
     }
 }
