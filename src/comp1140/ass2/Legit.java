@@ -18,7 +18,7 @@ public class Legit {
             for (int i = 0; i < tilesPLaced.length; i++) {
                 legit = isStarter(tilesPLaced[i]) && onBoard(tilesPLaced[i]);
                 if (legit) {
-                    draw(tilesPLaced[i]);
+                    draw(tilesPLaced[i],board);
                 } else {
                     break;
                 }
@@ -27,17 +27,17 @@ public class Legit {
             boolean start = isStarter(tilesPLaced[0]) && isStarter(tilesPLaced[1]) && isStarter(tilesPLaced[2]) && isStarter(tilesPLaced[3])
                     && onBoard(tilesPLaced[0]) && onBoard(tilesPLaced[1]) && onBoard(tilesPLaced[2]) && onBoard(tilesPLaced[3]);
             if (start) {
-                draw(tilesPLaced[0]);
-                draw(tilesPLaced[1]);
-                draw(tilesPLaced[2]);
-                draw(tilesPLaced[3]);
+                draw(tilesPLaced[0],board);
+                draw(tilesPLaced[1],board);
+                draw(tilesPLaced[2],board);
+                draw(tilesPLaced[3],board);
             }
             for (int i = 4; i < tilesPLaced.length; i++) {
                 legit = start && onBoard(tilesPLaced[i]) && noOverlapping(tilesPLaced[i]) &&
                         cornerContactWithSameColor(tilesPLaced[i]) && noEdgeContactWithSameColor(tilesPLaced[i]);
 
                 if (legit) {
-                    draw(tilesPLaced[i]);
+                    draw(tilesPLaced[i],board);
                 } else {
                     break;
                 }
@@ -52,20 +52,34 @@ public class Legit {
         return legit;
     }
 
-    public static int[] draw(String tile) {
+    public static boolean checkLegitForTile (String game, String tile) {
+        int[] tempBoard = new int[400];
+        String[] tilesPLaced = game.split("\\s+");
+        for (String s:tilesPLaced) {
+            draw(s,tempBoard);
+        }
+
+        if (tilesPLaced.length < 4) {
+            return isStarter(tile) && onBoard(tile);
+        } else {
+            return onBoard(tile) && noEdgeContactWithSameColor(tile) && noOverlapping(tile) && cornerContactWithSameColor(tile);
+        }
+    }
+
+    public static int[] draw(String tile, int[] b) {
         int[] codes = analyseTile(tile);
         if (codes == null) {
             turn++;
             if (turn == 5) {
                 turn = 1;
             }
-            return board;
+            return b;
         }
         Tiles.Rotate(mytiles.Pieces.get(codes[0]), codes[1]);
 
         for (Point p:mytiles.Pieces.get(codes[0])) {
             int pos = codes[2] + codes[3] * 20 + p.x + p.y*20;
-            board[pos] = turn;
+            b[pos] = turn;
         }
 
         turn++;
@@ -73,7 +87,7 @@ public class Legit {
             turn = 1;
         }
         mytiles = new Tiles();
-        return board;
+        return b;
     }
 
     public static int[] analyseTile(String tile) {
