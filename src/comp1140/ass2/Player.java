@@ -58,6 +58,14 @@ public enum Player {
      */
     // e.g to call this method: Player.YELLOW.remainingTiles(game) .
     public String[] remainingTiles(String game) {
+        if (game.equals("")) {
+             String[] result = {"A", "B", "C", "D", "E", "F", "G",
+                                "H", "I", "J", "K", "L", "M", "N",
+                                "O", "P", "Q", "R", "S", "T", "U"};
+
+            return result;
+        }
+
         String[] tilesPLaced = game.split("\\s+");
         for (int i = 0; i < tilesPLaced.length; i ++) {
             tilesPLaced[i] = Character.toString(tilesPLaced[i].charAt(0));
