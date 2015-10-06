@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import java.awt.*;
 import java.util.ArrayList;
@@ -304,6 +305,7 @@ public class PlayBoard extends Application {
         return rotation_code;
     }
 
+
     @Override
     // The start method. (Written by the the whole group: Faizan, Jack, Liyang(Leon))
     public void start(Stage primaryStage) throws Exception {
@@ -350,7 +352,7 @@ public class PlayBoard extends Application {
             public void handle(KeyEvent e) {
                 if (e.getCode() == KeyCode.ENTER) {
                     if (BlokGUI.isValidEncoding(field.getText())) {
-                        if (BlokGame.legitimateGame(game + field.getText())) {
+                        if (BlokGame.legitimateGame(game + (game.equals("")? "":" ") +field.getText())) {
                             if (game == "") {
                                 game += field.getText();
                             } else {

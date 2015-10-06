@@ -17,9 +17,9 @@ public class Legit {
         String[] tilesPLaced = game.split("\\s+");
         if (tilesPLaced.length <= 4) {
             for (int i = 0; i < tilesPLaced.length; i++) {
-                legit = isStarter(tilesPLaced[i]) && onBoard(tilesPLaced[i]);
+                legit = isStarter(tilesPLaced[i]) && onBoard(tilesPLaced[i]) && noOverlapping(tilesPLaced[i],board);
                 if (legit) {
-                    draw(tilesPLaced[i],board);
+                    draw(tilesPLaced[i], board);
                 } else {
                     break;
                 }
@@ -29,16 +29,16 @@ public class Legit {
                     && onBoard(tilesPLaced[0]) && onBoard(tilesPLaced[1]) && onBoard(tilesPLaced[2]) && onBoard(tilesPLaced[3]);
             if (start) {
                 draw(tilesPLaced[0],board);
-                draw(tilesPLaced[1],board);
-                draw(tilesPLaced[2],board);
-                draw(tilesPLaced[3],board);
+                draw(tilesPLaced[1], board);
+                draw(tilesPLaced[2], board);
+                draw(tilesPLaced[3], board);
             }
             for (int i = 4; i < tilesPLaced.length; i++) {
                 legit = start && onBoard(tilesPLaced[i]) && noOverlapping(tilesPLaced[i],board) &&
                         cornerContactWithSameColor(tilesPLaced[i],board) && noEdgeContactWithSameColor(tilesPLaced[i], board);
 
                 if (legit) {
-                    draw(tilesPLaced[i],board);
+                    draw(tilesPLaced[i], board);
                 } else {
                     break;
                 }
@@ -53,15 +53,11 @@ public class Legit {
         return legit;
     }
 
-    public static boolean checkLegitForTile (String game, String tile) {
-        int[] tempBoard = new int[400];
-        String[] tilesPLaced = game.split("\\s+");
-        for (String s:tilesPLaced) {
-            draw(s,tempBoard);
-        }
-
-        if (tilesPLaced.length < 4) {
-            return isStarter(tile) && onBoard(tile);
+    // It takes in a int[400] as a board, the tile you want to place and a boolean indicates whether it is a initial board
+    // (i.e. Have all 4 players place their first tiles. OR whether there are less than 4 tiles already on board).
+    public static boolean checkLegitForTile (int[] tempBoard, String tile, boolean initial) {
+        if (initial) {
+            return isStarter(tile) && onBoard(tile) && noOverlapping(tile, tempBoard);
         } else {
             return onBoard(tile) && noEdgeContactWithSameColor(tile, tempBoard) && noOverlapping(tile, tempBoard) && cornerContactWithSameColor(tile, tempBoard);
         }
