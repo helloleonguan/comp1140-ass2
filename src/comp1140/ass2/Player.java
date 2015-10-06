@@ -77,14 +77,15 @@ public enum Player {
             }
         }
 
+        if (allTiles.size() == 0) {
+            return null;
+        }
         String[] result = new String[allTiles.size()];
         for (int i = 0; i < allTiles.size(); i ++) {
             result[i] = allTiles.get(i);
         }
 
-        return result;
+            return result;
     }
-
-
 
 }
