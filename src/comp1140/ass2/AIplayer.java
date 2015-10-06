@@ -50,7 +50,7 @@ public class AIplayer {
         for (int i = 0; i < tile.size(); i++) {
             for (int j = 0; j < rotation.length; j++) {
                 for (int k = 0; k < position.length; k++) {
-                    if (Legit.legitimateGame(game + " " + tile.get(i) + rotation[j] + position[k])) {
+                    if (Legit.checkLegitForTile(game, tile.get(i) + rotation[j] + position[k])) {
                         candidates.add(tile.get(i) + rotation[j] + position[k]);
                     }
                 }

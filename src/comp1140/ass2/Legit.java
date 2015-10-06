@@ -8,10 +8,11 @@ import java.util.ArrayList;
 
 public class Legit {
     public static int turn = 1;
-    static int[] board = new int[400];
+
     static Tiles mytiles = new Tiles();
 
     public static boolean legitimateGame(String game) {
+        int[] board = new int[400];
         boolean legit = false;
         String[] tilesPLaced = game.split("\\s+");
         if (tilesPLaced.length <= 4) {
@@ -33,8 +34,8 @@ public class Legit {
                 draw(tilesPLaced[3],board);
             }
             for (int i = 4; i < tilesPLaced.length; i++) {
-                legit = start && onBoard(tilesPLaced[i]) && noOverlapping(tilesPLaced[i]) &&
-                        cornerContactWithSameColor(tilesPLaced[i]) && noEdgeContactWithSameColor(tilesPLaced[i]);
+                legit = start && onBoard(tilesPLaced[i]) && noOverlapping(tilesPLaced[i],board) &&
+                        cornerContactWithSameColor(tilesPLaced[i],board) && noEdgeContactWithSameColor(tilesPLaced[i], board);
 
                 if (legit) {
                     draw(tilesPLaced[i],board);
@@ -62,9 +63,10 @@ public class Legit {
         if (tilesPLaced.length < 4) {
             return isStarter(tile) && onBoard(tile);
         } else {
-            return onBoard(tile) && noEdgeContactWithSameColor(tile) && noOverlapping(tile) && cornerContactWithSameColor(tile);
+            return onBoard(tile) && noEdgeContactWithSameColor(tile, tempBoard) && noOverlapping(tile, tempBoard) && cornerContactWithSameColor(tile, tempBoard);
         }
     }
+
 
     public static int[] draw(String tile, int[] b) {
         int[] codes = analyseTile(tile);
@@ -144,7 +146,7 @@ public class Legit {
         return flag;
     }
 
-    public static boolean noOverlapping (String tile) {
+    public static boolean noOverlapping (String tile, int[] currentBoard) {
         boolean flag = true;
         int[] codes = analyseTile(tile);
         if (codes == null) {
@@ -159,7 +161,7 @@ public class Legit {
             int pos = codes[2] + codes[3] * 20 + p.x + p.y * 20;
             if (pos < 0 || pos > 399)
                 continue;
-            if (board[pos] != 0) {
+            if (currentBoard[pos] != 0) {
                 flag = false;
                 break;
             }
@@ -208,7 +210,7 @@ public class Legit {
         return corners;
     }
 
-    public static boolean cornerContactWithSameColor (String tile) {
+    public static boolean cornerContactWithSameColor (String tile, int[] currentBoard) {
         boolean flag = false;
         int[] codes = analyseTile(tile);
         if (codes == null) {
@@ -224,7 +226,7 @@ public class Legit {
             int pos = codes[2] + codes[3] * 20 + p.x + p.y * 20;
             if (pos < 0 || pos > 399)
                 continue;
-            if (board[pos] == turn) {
+            if (currentBoard[pos] == turn) {
                 flag = true;
                 break;
             }
@@ -234,7 +236,7 @@ public class Legit {
         return flag;
     }
 
-    public static boolean noEdgeContactWithSameColor (String tile){
+    public static boolean noEdgeContactWithSameColor (String tile, int[] currentBoard){
         boolean flag = true;
         int[] codes = analyseTile(tile);
         if (codes == null) {
@@ -250,7 +252,7 @@ public class Legit {
             int pos = codes[2] + codes[3] * 20 + p.x + p.y * 20;
             if (pos < 0 || pos > 399)
                 continue;
-            if (board[pos] == turn) {
+            if (currentBoard[pos] == turn) {
                 flag = false;
                 break;
             }
