@@ -7,8 +7,8 @@ import javafx.collections.ObservableArray;
 import javafx.geometry.HPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -31,7 +31,7 @@ public class Menu extends Application {
     PlayerSelectionPane selectionPane = new PlayerSelectionPane();
 
     class PlayerSelectionPane extends GridPane {
-
+        ChoiceBox a;
         public PlayerSelectionPane() {
             this.setHgap(5);
             this.setVgap(5);
@@ -92,6 +92,8 @@ public class Menu extends Application {
             Player4Label.setVisible(false);
             Player4.setVisible(false);
 
+            Button launchGame = new Button("Launch Game!");
+
 
             selectNumber.getSelectionModel().selectedItemProperty()
                     .addListener((ObservableValue observable ,
@@ -142,10 +144,45 @@ public class Menu extends Application {
                             Player4.setVisible(true);
                         }});
 
+            StringBuilder gameVariation = new StringBuilder("     ");
 
-            selectNumber.getSelectionModel().selectedItemProperty()
-                    .addListener((ObservableValue observable ,
-                                  Object oldValue, Object newValue) -> {});
+            launchGame.setOnAction(event -> {
+                if (Player1.getValue().equals("Human Player")) {
+                    gameVariation.setCharAt(1,'H');
+                }
+
+                if (Player1.getValue().equals("Computer Player")) {
+                    gameVariation.setCharAt(1,'C');
+                }
+
+                if (Player2.getValue().equals("Human Player")) {
+                    gameVariation.setCharAt(2,'H');
+                }
+
+                if (Player2.getValue().equals("Computer Player")) {
+                    gameVariation.setCharAt(2,'C');
+                }
+
+                if (Player3.getValue().equals("Human Player")) {
+                    gameVariation.setCharAt(3,'H');
+                }
+
+                if (Player3.getValue().equals("Computer Player")) {
+                    gameVariation.setCharAt(3,'C');
+                }
+
+                if (Player4.getValue().equals("Human Player")) {
+                    gameVariation.setCharAt(4,'H');
+                }
+
+                if (Player4.getValue().equals("Computer Player")) {
+                    gameVariation.setCharAt(4,'C');
+                }
+
+                System.out.println(gameVariation);
+
+
+            });
 
 
            GridPane.setHalignment(Player1Label, HPos.LEFT);
@@ -166,6 +203,7 @@ public class Menu extends Application {
             this.add(Player4Label, 0, 4);
             this.add(Player4,1,4);
 
+            this.add(launchGame,0,6,2,1);
 
 
         }
