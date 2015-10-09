@@ -10,7 +10,6 @@ import java.util.Collections;
 // (All written by Liyang(Leon) )
 public class AIplayer {
 
-
     public static int scoreFunction(int[] scores, Player player) {
         int promisingValue = 0;
 
@@ -25,11 +24,13 @@ public class AIplayer {
     }
 
     public static String getMove(String game) {
+        int turn = 1;
         String[] tilesPLaced = game.split("\\s+");
         int[] board0 = new int[400];
 
         for (String s: tilesPLaced) {
-            Legit.draw(s, board0);
+            Legit.draw(s, board0,turn);
+            turn = Legit.incrementTurn(turn);
         }
 
         Player currentPlayer = Player.getPlayer(tilesPLaced.length % 4);
@@ -54,7 +55,12 @@ public class AIplayer {
         for (int i = 0; i < tile.size(); i++) {
             for (int j = 0; j < rotation.length; j++) {
                 for (int k = 0; k < position.length; k++) {
-                    if (Legit.checkLegitForTile(board0,tile.get(i) + rotation[j] + position[k],tilesPLaced.length < 4)) {
+
+                    if ( Legit.checkLegitForTile(board0,tile.get(i) + rotation[j] + position[k],tilesPLaced.length < 4, turn) ) {
+                        if ((tile.get(i) + rotation[j] + position[k]).equals("UHAS")) {
+
+                            System.out.println(Legit.checkLegitForTile(board0, tile.get(i) + rotation[j] + position[k], tilesPLaced.length < 4, turn));
+                        }
                         candidates.add(tile.get(i) + rotation[j] + position[k]);
                     }
                 }
@@ -74,4 +80,5 @@ public class AIplayer {
 
         return " "+result;
     }
+
 }
