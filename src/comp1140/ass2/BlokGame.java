@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.awt.*;
 import java.util.*;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -171,11 +172,10 @@ public class BlokGame {
         return Legit.legitimateGame(game);
     }
 
-//    @Test
-//    public void test() {
-//        assertTrue(legitimateGame("JBEA EATA NAAR MATR KAFB KBSE IACQ NARO MAGF HANF HAEO JAQJ HAHI JAMH FAHL KAPF IAJH IAJF PAJI SANJ"));
-//        assertTrue(legitimateGame("JBEA EATA NAAR MATR KAFB KBSE IACQ NARO MAGF HANF HAEO JAQJ HAHI JAMH FAHL KAPF IAJH IAJF PAJI SANJ BAIF FAIC EALL PAOM NADI NALC KAIO QAMP TACL SANM SAKP"));
-//    }
+   @Test    public void test() {
+        assertFalse(legitimateGame("JBEA EATA NAAR MATR KAFB KBSE IACQ NARO MAGF HANF HAEO JAQJ HAHI JAMH FAHL KAPF IAJH IAJF PAJI SANJ"));
+        assertFalse(legitimateGame("JBEA EATA NAAR MATR KAFB KBSE IACQ NARO MAGF HANF HAEO JAQJ HAHI JAMH FAHL KAPF IAJH IAJF PAJI SANJ BAIF FAIC EALL PAOM NADI NALC KAIO QAMP TACL SANM SAKP"));
+    }
 
     /**
      * Parse a string representing a game state and return a score for the game.  The game may be in progress

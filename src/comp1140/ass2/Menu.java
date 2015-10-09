@@ -1,13 +1,14 @@
 package comp1140.ass2;
 
 import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.geometry.HPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -26,16 +27,14 @@ import java.util.Observable;
  */
 
 public class Menu extends Application {
-
     PlayerSelectionPane selectionPane = new PlayerSelectionPane();
+    public static String gameVariationState;
 
     class PlayerSelectionPane extends GridPane {
-
         public PlayerSelectionPane() {
             this.setHgap(5);
             this.setVgap(5);
             this.setMinWidth(290);
-            this.setStyle("-fx-background-color: #C0C0C0;");
 
             ColumnConstraints column1 = new ColumnConstraints(100);
             ColumnConstraints column2 = new ColumnConstraints(100);
@@ -45,78 +44,182 @@ public class Menu extends Application {
 
             Text selectNumberLabel = new Text("Select the number of players for this game (both humans and computers):");
             selectNumberLabel.setFont(new Font(18));
-            selectNumberLabel.setWrappingWidth(290);
+            selectNumberLabel.setWrappingWidth(350);
 
             GridPane NumberSelectionPane = new GridPane();
-            ChoiceBox selectNumber = new ChoiceBox(FXCollections.observableArrayList(2,3,4) );
+            ChoiceBox selectNumber = new ChoiceBox(FXCollections.observableArrayList(1,2,3,4) );
             NumberSelectionPane.add(selectNumberLabel, 0, 0);
             NumberSelectionPane.add(selectNumber, 0, 1);
 
-            selectNumber.setOnAction(event -> {
-                if (selectNumber.getValue().equals(2)) {
-                    //Show Blue and Yellow together, and green and red
+            Text Player1Label = new Text("Player 1");
+            Player1Label.setFont(new Font(18));
+
+            ChoiceBox Player1 = new ChoiceBox();
+            Player1.setMinWidth(150);
+            Player1.setItems(FXCollections.observableArrayList("Human Player", "Computer Player"));
+
+
+            Text Player2Label = new Text("Player 2");
+            Player2Label.setFont(new Font(18));
+
+            ChoiceBox Player2 = new ChoiceBox();
+            Player2.setMinWidth(150);
+            Player2.setItems(FXCollections.observableArrayList("Human Player", "Computer Player"));
+
+
+            Text Player3Label = new Text("Player 3");
+            Player3Label.setFont(new Font(18));
+
+            ChoiceBox Player3 = new ChoiceBox();
+            Player3.setMinWidth(150);
+            Player3.setItems(FXCollections.observableArrayList("Human Player", "Computer Player"));
+
+
+            Text Player4Label = new Text("Player 4");
+            Player4Label.setFont(new Font(18));
+
+            ChoiceBox Player4 = new ChoiceBox();
+            Player4.setMinWidth(150);
+            Player4.setItems(FXCollections.observableArrayList("Human Player", "Computer Player"));
+
+            Player1Label.setVisible(false);
+            Player1.setVisible(false);
+            Player2Label.setVisible(false);
+            Player2.setVisible(false);
+            Player3Label.setVisible(false);
+            Player3.setVisible(false);
+            Player4Label.setVisible(false);
+            Player4.setVisible(false);
+
+            Player1.getSelectionModel().select(0);
+            Player2.getSelectionModel().select(0);
+            Player3.getSelectionModel().select(0);
+            Player4.getSelectionModel().select(0);
+
+            Button launchGame = new Button("Launch Game!");
+
+
+            selectNumber.getSelectionModel().selectedItemProperty()
+                    .addListener((ObservableValue observable ,
+                                  Object oldValue, Object newValue) -> {
+
+                        if (selectNumber.getValue().equals(1)) {
+                            //Start game, go to 84game mode
+                            Player1Label.setVisible(false);
+                            Player1.setVisible(false);
+                            Player2Label.setVisible(false);
+                            Player2.setVisible(false);
+                            Player3Label.setVisible(false);
+                            Player3.setVisible(false);
+                            Player4Label.setVisible(false);
+                            Player4.setVisible(false);
+                        }
+
+                        else if (selectNumber.getValue().equals(2)) {
+                            Player1Label.setVisible(true);
+                            Player1.setVisible(true);
+                            Player2Label.setVisible(true);
+                            Player2.setVisible(true);
+                            Player3Label.setVisible(false);
+                            Player3.setVisible(false);
+                            Player4Label.setVisible(false);
+                            Player4.setVisible(false);
+                        }
+
+                        else if (selectNumber.getValue().equals(3)) {
+                            Player1Label.setVisible(true);
+                            Player1.setVisible(true);
+                            Player2Label.setVisible(true);
+                            Player2.setVisible(true);
+                            Player3Label.setVisible(true);
+                            Player3.setVisible(true);
+                            Player4Label.setVisible(false);
+                            Player4.setVisible(false);
+                        }
+
+                        else if (selectNumber.getValue().equals(4)) {
+                            Player1Label.setVisible(true);
+                            Player1.setVisible(true);
+                            Player2Label.setVisible(true);
+                            Player2.setVisible(true);
+                            Player3Label.setVisible(true);
+                            Player3.setVisible(true);
+                            Player4Label.setVisible(true);
+                            Player4.setVisible(true);
+                        }});
+
+            StringBuilder gameVariation = new StringBuilder("    ");
+
+            launchGame.setOnAction(event -> {
+                if (Player1.getValue().equals("Human Player")) {
+                    gameVariation.setCharAt(0, 'H');
                 }
+
+                if (Player1.getValue().equals("Computer Player")) {
+                    gameVariation.setCharAt(0, 'C');
+                }
+
+                if (Player2.getValue().equals("Human Player")) {
+                    gameVariation.setCharAt(1, 'H');
+                }
+
+                if (Player2.getValue().equals("Computer Player")) {
+                    gameVariation.setCharAt(1, 'C');
+                }
+
+                if (Player3.getValue().equals("Human Player")) {
+                    gameVariation.setCharAt(2, 'H');
+                }
+
+                if (Player3.getValue().equals("Computer Player")) {
+                    gameVariation.setCharAt(2, 'C');
+                }
+
+                if (Player4.getValue().equals("Human Player")) {
+                    gameVariation.setCharAt(3, 'H');
+                }
+
+                if (Player4.getValue().equals("Computer Player")) {
+                    gameVariation.setCharAt(3, 'C');
+                }
+
+                 gameVariationState = gameVariation.substring(0,Integer.parseInt(selectNumber.getValue().toString()));
+
+                System.out.println(gameVariationState);
+
 
             });
 
-            Text blueLabel = new Text("BLUE");
-            blueLabel.setFill(Color.BLUE);
-            blueLabel.setFont(new Font(18));
-
-            ChoiceBox bluePlayer = new ChoiceBox();
-            bluePlayer.setMinWidth(150);
-            bluePlayer.setItems(FXCollections.observableArrayList( "Human Player", "Computer Player", new Separator(), "Not Playing") );
 
 
-            Text yellowLabel = new Text("YELLOW");
-            yellowLabel.setFill(Color.YELLOW);
-            yellowLabel.setFont(new Font(18));
-
-            ChoiceBox yellowPlayer = new ChoiceBox();
-            yellowPlayer.setMinWidth(150);
-            yellowPlayer.setItems(FXCollections.observableArrayList( "Human Player", "Computer Player", new Separator(), "Not Playing") );
-
-
-
-            Text redLabel = new Text("RED");
-            redLabel.setFill(Color.RED);
-            redLabel.setFont(new Font(18));
-
-            ChoiceBox redPlayer = new ChoiceBox();
-            redPlayer.setMinWidth(150);
-            redPlayer.setItems(FXCollections.observableArrayList( "Human Player", "Computer Player", new Separator(), "Not Playing") );
-
-
-            Text greenLabel = new Text("GREEN");
-            greenLabel.setFill(Color.GREEN);
-            greenLabel.setFont(new Font(18));
-
-            ChoiceBox greenPlayer = new ChoiceBox();
-            greenPlayer.setMinWidth(150);
-            greenPlayer.setItems(FXCollections.observableArrayList( "Human Player", "Computer Player", new Separator(), "Not Playing") );
-
-
-
-
-           GridPane.setHalignment(blueLabel, HPos.LEFT);
-            this.add(blueLabel,0,1);
-            this.add(bluePlayer,1,1);
+           GridPane.setHalignment(Player1Label, HPos.LEFT);
+            this.add(Player1Label,0,1);
+            this.add(Player1,1,1);
 
             this.add(NumberSelectionPane,0,0,2,1);
 
-            GridPane.setHalignment(yellowLabel, HPos.LEFT);
-            this.add(yellowLabel, 0, 2);
-            this.add(yellowPlayer,1,2);
+            GridPane.setHalignment(Player2Label, HPos.LEFT);
+            this.add(Player2Label, 0, 2);
+            this.add(Player2,1,2);
 
-            GridPane.setHalignment(redLabel, HPos.LEFT);
-            this.add(redLabel, 0, 3);
-            this.add(redPlayer,1,3);
+            GridPane.setHalignment(Player3Label, HPos.LEFT);
+            this.add(Player3Label, 0, 3);
+            this.add(Player3,1,3);
 
-            GridPane.setHalignment(greenLabel, HPos.LEFT);
-            this.add(greenLabel, 0, 4);
-            this.add(greenPlayer,1,4);
+            GridPane.setHalignment(Player4Label, HPos.LEFT);
+            this.add(Player4Label, 0, 4);
+            this.add(Player4,1,4);
+
+            this.add(launchGame,0,6,2,1);
 
         }
+
+
+
+    }
+
+    public static String getGame() {
+        return gameVariationState;
     }
 
     @Override
