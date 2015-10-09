@@ -92,6 +92,11 @@ public class Menu extends Application {
             Player4Label.setVisible(false);
             Player4.setVisible(false);
 
+            Player1.getSelectionModel().select(0);
+            Player2.getSelectionModel().select(0);
+            Player3.getSelectionModel().select(0);
+            Player4.getSelectionModel().select(0);
+
             Button launchGame = new Button("Launch Game!");
 
 
@@ -144,42 +149,44 @@ public class Menu extends Application {
                             Player4.setVisible(true);
                         }});
 
-            StringBuilder gameVariation = new StringBuilder("     ");
+            StringBuilder gameVariation = new StringBuilder("    ");
 
             launchGame.setOnAction(event -> {
                 if (Player1.getValue().equals("Human Player")) {
-                    gameVariation.setCharAt(1,'H');
+                    gameVariation.setCharAt(0, 'H');
                 }
 
                 if (Player1.getValue().equals("Computer Player")) {
-                    gameVariation.setCharAt(1,'C');
+                    gameVariation.setCharAt(0, 'C');
                 }
 
                 if (Player2.getValue().equals("Human Player")) {
-                    gameVariation.setCharAt(2,'H');
+                    gameVariation.setCharAt(1, 'H');
                 }
 
                 if (Player2.getValue().equals("Computer Player")) {
-                    gameVariation.setCharAt(2,'C');
+                    gameVariation.setCharAt(1, 'C');
                 }
 
                 if (Player3.getValue().equals("Human Player")) {
-                    gameVariation.setCharAt(3,'H');
+                    gameVariation.setCharAt(2, 'H');
                 }
 
                 if (Player3.getValue().equals("Computer Player")) {
-                    gameVariation.setCharAt(3,'C');
+                    gameVariation.setCharAt(2, 'C');
                 }
 
                 if (Player4.getValue().equals("Human Player")) {
-                    gameVariation.setCharAt(4,'H');
+                    gameVariation.setCharAt(3, 'H');
                 }
 
                 if (Player4.getValue().equals("Computer Player")) {
-                    gameVariation.setCharAt(4,'C');
+                    gameVariation.setCharAt(3, 'C');
                 }
 
-                System.out.println(gameVariation);
+                String gameVariationState = gameVariation.substring(0,Integer.parseInt(selectNumber.getValue().toString()));
+
+                System.out.println(gameVariationState);
 
 
             });
@@ -206,7 +213,11 @@ public class Menu extends Application {
             this.add(launchGame,0,6,2,1);
 
 
+
         }
+
+
+
     }
 
     @Override
