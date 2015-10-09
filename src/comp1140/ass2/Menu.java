@@ -27,11 +27,10 @@ import java.util.Observable;
  */
 
 public class Menu extends Application {
-
     PlayerSelectionPane selectionPane = new PlayerSelectionPane();
+    public static String gameVariationState;
 
     class PlayerSelectionPane extends GridPane {
-        ChoiceBox a;
         public PlayerSelectionPane() {
             this.setHgap(5);
             this.setVgap(5);
@@ -184,12 +183,13 @@ public class Menu extends Application {
                     gameVariation.setCharAt(3, 'C');
                 }
 
-                String gameVariationState = gameVariation.substring(0,Integer.parseInt(selectNumber.getValue().toString()));
+                 gameVariationState = gameVariation.substring(0,Integer.parseInt(selectNumber.getValue().toString()));
 
                 System.out.println(gameVariationState);
 
 
             });
+
 
 
            GridPane.setHalignment(Player1Label, HPos.LEFT);
@@ -212,12 +212,14 @@ public class Menu extends Application {
 
             this.add(launchGame,0,6,2,1);
 
-
-
         }
 
 
 
+    }
+
+    public static String getGame() {
+        return gameVariationState;
     }
 
     @Override
