@@ -9,10 +9,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.input.KeyCode;
@@ -20,6 +24,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import java.awt.*;
+import java.awt.Image;
+import java.awt.Label;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -314,17 +320,27 @@ public class PlayBoard extends Application {
         Scene main = new Scene(root,700,700);
 
         primaryStage.setTitle("Blokus!");
-        Group root_menu = new Group();
+        Pane root_menu = new Pane();
         Menu menu = new Menu(root_menu,700,700);
         menu.selectionPane.setLayoutX(150);
         menu.selectionPane.setLayoutY(270);
         root_menu.getChildren().add(menu.selectionPane);
         menu.confirm.toFront();
+        root_menu.setStyle(" -fx-background-image: url('comp1140/ass2/menu_background.png'); -fx-background-repeat: stretch;");
 
         Button launchGame = new Button("Launch Game!");
-        launchGame.setLayoutX(170);
+        launchGame.setLayoutX(200);
         launchGame.setLayoutY(520);
-        root_menu.getChildren().add(launchGame);
+        Text blokusTitle = new Text("Blokus");
+        blokusTitle.setFont(new Font(80));
+        blokusTitle.setFill(Color.WHITE);
+        blokusTitle.setLayoutX(220);
+        blokusTitle.setLayoutY(100);
+        Text madeBy = new Text("Made by Jack Adamson, Liyang Guan and Faizan Siddiqui");
+        madeBy.setLayoutX(170);
+        madeBy.setLayoutY(140);
+        madeBy.setFill(Color.WHITE);
+        root_menu.getChildren().addAll(launchGame, blokusTitle, madeBy);
         launchGame.setOnAction(event -> {
             primaryStage.setScene(main);
         });

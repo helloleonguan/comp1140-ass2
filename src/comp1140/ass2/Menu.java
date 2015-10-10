@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -22,8 +23,6 @@ public class Menu extends Scene {
     Button confirm;
     public PlayerSelectionPane selectionPane = new PlayerSelectionPane();
     public static String gameVariationState;
-    Stage menuStage;
-    Group root = new Group();
     public Menu(Parent root, double x, double y) {
         super(root,x,y);
     }
@@ -42,6 +41,7 @@ public class Menu extends Scene {
 
             Text selectNumberLabel = new Text("Select the number of players for this game (both humans and computers):");
             selectNumberLabel.setFont(new Font(18));
+            selectNumberLabel.setFill(Color.WHITE);
             selectNumberLabel.setWrappingWidth(350);
 
             GridPane NumberSelectionPane = new GridPane();
@@ -51,6 +51,7 @@ public class Menu extends Scene {
 
             Text Player1Label = new Text("Player 1");
             Player1Label.setFont(new Font(18));
+            Player1Label.setFill(Color.WHITE);
 
             ChoiceBox Player1 = new ChoiceBox();
             Player1.setMinWidth(150);
@@ -59,6 +60,7 @@ public class Menu extends Scene {
 
             Text Player2Label = new Text("Player 2");
             Player2Label.setFont(new Font(18));
+            Player2Label.setFill(Color.WHITE);
 
             ChoiceBox Player2 = new ChoiceBox();
             Player2.setMinWidth(150);
@@ -67,6 +69,7 @@ public class Menu extends Scene {
 
             Text Player3Label = new Text("Player 3");
             Player3Label.setFont(new Font(18));
+            Player3Label.setFill(Color.WHITE);
 
             ChoiceBox Player3 = new ChoiceBox();
             Player3.setMinWidth(150);
@@ -75,6 +78,7 @@ public class Menu extends Scene {
 
             Text Player4Label = new Text("Player 4");
             Player4Label.setFont(new Font(18));
+            Player4Label.setFill(Color.WHITE);
 
             ChoiceBox Player4 = new ChoiceBox();
             Player4.setMinWidth(150);
@@ -95,7 +99,6 @@ public class Menu extends Scene {
             Player4.getSelectionModel().select(0);
 
             confirm = new Button("Confirm your selection");
-
 
             selectNumber.getSelectionModel().selectedItemProperty()
                     .addListener((ObservableValue observable ,
@@ -208,6 +211,7 @@ public class Menu extends Scene {
             this.add(Player4Label, 0, 4);
             this.add(Player4,1,4);
 
+            GridPane.setHalignment(confirm,HPos.CENTER);
             this.add(confirm,0,6,2,1);
 
         }
