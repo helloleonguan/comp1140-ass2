@@ -1,34 +1,32 @@
 package comp1140.ass2;
 
-import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.geometry.HPos;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.awt.*;
-import java.util.List;
-import java.util.Observable;
 
 /**
  * Created by Faizan on 5/10/2015.
  */
 
-public class Menu extends Application {
-    PlayerSelectionPane selectionPane = new PlayerSelectionPane();
+public class Menu extends Scene {
+    Button confirm;
+    public PlayerSelectionPane selectionPane = new PlayerSelectionPane();
     public static String gameVariationState;
+    Stage menuStage;
+    Group root = new Group();
+    public Menu(Parent root, double x, double y) {
+        super(root,x,y);
+    }
 
     class PlayerSelectionPane extends GridPane {
         public PlayerSelectionPane() {
@@ -96,7 +94,7 @@ public class Menu extends Application {
             Player3.getSelectionModel().select(0);
             Player4.getSelectionModel().select(0);
 
-            Button launchGame = new Button("Launch Game!");
+            confirm = new Button("Confirm your selection");
 
 
             selectNumber.getSelectionModel().selectedItemProperty()
@@ -150,7 +148,7 @@ public class Menu extends Application {
 
             StringBuilder gameVariation = new StringBuilder("    ");
 
-            launchGame.setOnAction(event -> {
+            confirm.setOnAction(event -> {
                 if (Player1.getValue().equals("Human Player")) {
                     gameVariation.setCharAt(0, 'H');
                 }
@@ -183,7 +181,7 @@ public class Menu extends Application {
                     gameVariation.setCharAt(3, 'C');
                 }
 
-                 gameVariationState = gameVariation.substring(0,Integer.parseInt(selectNumber.getValue().toString()));
+                gameVariationState = gameVariation.substring(0, Integer.parseInt(selectNumber.getValue().toString()));
 
                 System.out.println(gameVariationState);
 
@@ -210,7 +208,7 @@ public class Menu extends Application {
             this.add(Player4Label, 0, 4);
             this.add(Player4,1,4);
 
-            this.add(launchGame,0,6,2,1);
+            this.add(confirm,0,6,2,1);
 
         }
 
@@ -222,28 +220,26 @@ public class Menu extends Application {
         return gameVariationState;
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Blokus!");
-        Group root = new Group();
-        Scene main = new Scene(root,700,700);
-        primaryStage.setScene(main);
-        primaryStage.show();
+//    @Override
+//    public void start(Stage primaryStage) throws Exception {
+//        primaryStage.setTitle("Blokus!");
+//        Group root = new Group();
+//        Scene main = new Scene(root,700,700);
+//        primaryStage.setScene(main);
+//        primaryStage.show();
+//        menuStage = primaryStage;
+//
+//        root.getChildren().add(selectionPane);
+//        selectionPane.setLayoutX(150);
+//        selectionPane.setLayoutY(270);
+//
+//
+//        Text blokus = new Text("Blokus!");
+//        root.getChildren().add(blokus);
+//
+//
+//
+//    }
 
-        root.getChildren().add(selectionPane);
-        selectionPane.setLayoutX(150);
-        selectionPane.setLayoutY(270);
 
-
-        Text blokus = new Text("Blokus!");
-        root.getChildren().add(blokus);
-
-
-
-
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 }

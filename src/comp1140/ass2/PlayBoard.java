@@ -6,17 +6,18 @@ import javafx.geometry.HPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import java.awt.*;
 import java.util.ArrayList;
@@ -309,9 +310,27 @@ public class PlayBoard extends Application {
     @Override
     // The start method. (Written by the the whole group: Faizan, Jack, Liyang(Leon))
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Blokus!");
         Group root = new Group();
         Scene main = new Scene(root,700,700);
+
+        primaryStage.setTitle("Blokus!");
+        Group root_menu = new Group();
+        Menu menu = new Menu(root_menu,700,700);
+        menu.selectionPane.setLayoutX(150);
+        menu.selectionPane.setLayoutY(270);
+        root_menu.getChildren().add(menu.selectionPane);
+        menu.confirm.toFront();
+
+        Button launchGame = new Button("Launch Game!");
+        launchGame.setLayoutX(170);
+        launchGame.setLayoutY(520);
+        root_menu.getChildren().add(launchGame);
+        launchGame.setOnAction(event -> {
+            primaryStage.setScene(main);
+        });
+        primaryStage.setScene(menu);
+        primaryStage.show();
+
 
         //Draw the panel on the right-side
         Rectangle panel = new Rectangle(500,0,200,700);
@@ -430,8 +449,7 @@ public class PlayBoard extends Application {
         for (Tile t : Players.get(currentTurn)){
             t.Activate();
         }
-        primaryStage.setScene(main);
-        primaryStage.show();
+
     }
 
     public static void main(String[] args) {
