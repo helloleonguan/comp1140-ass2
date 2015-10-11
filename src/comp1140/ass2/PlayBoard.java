@@ -33,8 +33,30 @@ public class PlayBoard extends Application {
     int currentTurn = 0;
     int passes = 0;
     Scoreboard scores = new Scoreboard();
+    String game_mode = "";
+    boolean[] isHuman = new boolean[4];
+    MessageContainer messageBox = new MessageContainer(25,615,"");
+    int fourth_player = 0; // This is only for 3-player game mode.
 
     //Put all inner classes here, and those events inside the object.
+    //Class for the MessageBox to present the info to the user. (Written by Liyang(Leon))
+    class MessageContainer extends Text {
+        String current_msg = "";
+
+        public MessageContainer (double x, double y, String initial_msg) {
+            this.setWrappingWidth(300);
+            this.setFont(Font.font("Calibri", FontWeight.NORMAL, 18));
+            this.setFill(Color.BROWN);
+            this.setLayoutX(x);
+            this.setLayoutY(y);
+            this.setText(initial_msg);
+        }
+
+        public void renew(String msg) {
+            this.setText(msg);
+        }
+    }
+
     //Class for the scoreboard presented at the scene. (Written by Faizan and Liyang(Leon))
     class Scoreboard extends GridPane{
         int blue_score;
@@ -149,7 +171,7 @@ public class PlayBoard extends Application {
         public void Grey(){ //Used at begining of turn to make all legal pieces grey
             for (Node c : this.getChildren().filtered(Cell.class::isInstance)) {
                 Cell d = (Cell) c;
-                d.setFill(setColor(owner).darker());
+                d.setFill(setColor(owner).grayscale());
             }
         }
 
@@ -265,8 +287,29 @@ public class PlayBoard extends Application {
 
     // Put all methods for the game here.
     /**
-     * Activate all tiles for current turn and deactivate the others.
-     * (Written by Jack) */
+     * find the maximum score and the player for a game.
+     * @return a pair of ints. The first one is the score, the second one is the player. .
+     * (Written by Liyang(Leon)) */
+    int[] max_score(ArrayList<Integer> scores) {
+        int max = 0;
+        int player = 0;
+        int counter= 0;
+        int[] rst = new int[2];
+        for (int i :scores) {
+            counter++;
+            if (i >= max) {
+                max = i;
+                player = counter;
+            }
+        }
+        rst[0] = max;
+        rst[1] = player;
+
+        return rst;
+    }
+    /**
+     * Activate all tiles for current turn and deactivate the others, present the player info and detect endgame. .
+     * (Written by Jack and Liyang(Leon)) */
     void nextTurn(){
         Players.get(currentTurn).forEach(PlayBoard.Tile::Deactivate);
         currentTurn = (currentTurn + 1) % 4;
@@ -279,15 +322,75 @@ public class PlayBoard extends Application {
                 Players.get(currentTurn).get(i).Ungrey();
             }
         }
+
+        if (game_mode.length() == 1) {
+            messageBox.renew("You are playing the \"eighty-four\" game. All moves are played by Player1.");
+        } else if (game_mode.length() == 2) {
+            if (currentTurn % 2 == 0)
+                messageBox.renew("It's Player1's turn.");
+            else
+                messageBox.renew("It's Player2's turn.");
+        } else if (game_mode.length() == 3){
+            fourth_player = (fourth_player+1) % 3;
+            if (currentTurn == 0) {
+                messageBox.renew("It's Player1's turn.");
+            } else if (currentTurn == 1) {
+                messageBox.renew("It's Player2's turn.");
+            } else if (currentTurn == 2) {
+                messageBox.renew("It's Player3's turn.");
+            } else {
+                messageBox.renew("It's Player" + (fourth_player+1) + "'s turn.");
+                isHuman[3] = isHuman[fourth_player];
+            }
+        } else {
+            messageBox.renew("It's Player" + (currentTurn + 1) + "'s turn.");
+        }
+
         if (!playable.contains(true)){
             if(passes >= 3){
                 passes++;
-                //TODO END OF GAME
+                game += " .";
+
+                //End of the game message.
+                if (game_mode.length() == 1) {
+                    int overall = scores.blue_score + scores.red_score + scores.green_score + scores.yellow_score;
+                    messageBox.renew("Game Over! \nYou achieve an overall score: " + overall + "\n Try to achieve a higher score next time. \nPress SPACE to reset the game.");
+                } else if (game_mode.length() == 2) {
+                    int max_score = Math.max(scores.blue_score+scores.red_score, scores.green_score + scores.yellow_score);
+                    int player = (scores.blue_score+scores.red_score > scores.green_score + scores.yellow_score) ? 1 : 2;
+                    messageBox.renew("Game Over! \nPlayer" +player+" win the game with a overall score:" + max_score +". \nPress SPACE to reset the game.");
+                } else if (game_mode.length() == 3) {
+                    ArrayList<Integer> list = new ArrayList<>();
+                    list.add(scores.blue_score);
+                    list.add(scores.yellow_score);
+                    list.add(scores.red_score);
+                    int max_score = max_score(list)[0];
+                    int max_score_player = max_score(list)[1];
+                    messageBox.renew("Game Over! \nPlayer" +max_score_player+" win the game with a overall score:" + max_score +". \nPress SPACE to reset the game.");
+                } else {
+                    ArrayList<Integer> list = new ArrayList<>();
+                    list.add(scores.blue_score);
+                    list.add(scores.yellow_score);
+                    list.add(scores.red_score);
+                    list.add(scores.green_score);
+                    int max_score = max_score(list)[0];
+                    int max_score_player = max_score(list)[1];
+                    messageBox.renew("Game Over! \nPlayer" + max_score_player + " win the game with a overall score:" + max_score + ". \nPress SPACE to reset the game.");
+                }
+
             } else {
                 passes++;
                 game += " .";
                 nextTurn();
             }
+        }
+
+        if (!isHuman[currentTurn]) {
+            String agentChoice = AIplayer.getMove(game);
+            movePiece(agentChoice);
+            scores.update(BlokGame.scoreGame(game)[0], BlokGame.scoreGame(game)[1], BlokGame.scoreGame(game)[2], BlokGame.scoreGame(game)[3]);
+            game += agentChoice;
+            nextTurn();
         }
     }
 
@@ -375,6 +478,10 @@ public class PlayBoard extends Application {
      * Made by Jack Adamson
      */
     void movePiece(String move){
+        //modify the case that generate by AIPlayer.
+        if (move.length() == 5)
+            move = move.substring(1,5);
+
         Tile current = Players.get(currentTurn).get(move.charAt(0)-'A');
         int rotation = move.charAt(1)-'A';
         if(rotation >= 4) {
@@ -399,98 +506,7 @@ public class PlayBoard extends Application {
         current.played = true;
     }
 
-    @Override
-    // The start method. (Written by the the whole group: Faizan, Jack, Liyang(Leon))
-    public void start(Stage primaryStage) throws Exception {
-        Group root = new Group();
-        Scene main = new Scene(root,700,700);
-
-        primaryStage.setTitle("Blokus!");
-        Pane root_menu = new Pane();
-        Menu menu = new Menu(root_menu,700,700);
-        menu.selectionPane.setLayoutX(150);
-        menu.selectionPane.setLayoutY(270);
-        root_menu.getChildren().add(menu.selectionPane);
-        menu.confirm.toFront();
-        root_menu.setStyle(" -fx-background-image: url('comp1140/ass2/menu_background.png'); -fx-background-repeat: stretch;");
-
-        Button launchGame = new Button("Launch Game!");
-        launchGame.setLayoutX(200);
-        launchGame.setLayoutY(520);
-        Text blokusTitle = new Text("Blokus");
-        blokusTitle.setFont(new Font(80));
-        blokusTitle.setFill(Color.WHITE);
-        blokusTitle.setLayoutX(220);
-        blokusTitle.setLayoutY(100);
-        Text madeBy = new Text("Made by Jack Adamson, Liyang Guan and Faizan Siddiqui");
-        madeBy.setLayoutX(170);
-        madeBy.setLayoutY(140);
-        madeBy.setFill(Color.WHITE);
-        root_menu.getChildren().addAll(launchGame, blokusTitle, madeBy);
-        launchGame.setOnAction(event -> primaryStage.setScene(main));
-        primaryStage.setScene(menu);
-        primaryStage.show();
-
-
-        //Draw the panel on the right-side
-        Rectangle panel = new Rectangle(500,0,200,700);
-        panel.setFill(Color.GREY);
-        root.getChildren().add(panel);
-
-        //Draw the board for playing
-        double x_c = 0;
-        double y_c = 0;
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
-                Cell c = new Cell(x_c, y_c, CELL_LENGTH - 1); //Leave 1 pixel for the margin.
-                c.setFill(Color.LIGHTGREY);
-                root.getChildren().add(c);
-                board.add(c);
-
-                x_c += CELL_LENGTH;
-            }
-            y_c += CELL_LENGTH;
-            x_c = 0;
-        }
-
-        //Draw the Scoreboard
-        scores.setLayoutX(50);
-        scores.setLayoutY(530);
-        root.getChildren().add(scores);
-
-
-        //Add a textfield
-        Text fieldpromt = new Text(300,645,"Enter your game piece here");
-        root.getChildren().add(fieldpromt);
-        TextField field = new TextField();
-        field.setPromptText("Enter your game piece...");
-        field.setLayoutX(300);
-        field.setLayoutY(650);
-        field.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                if (BlokGUI.isValidEncoding(field.getText())) {
-                    if (BlokGame.legitimateGame(game + (game.equals("")? "":" ") +field.getText())) {
-                        if (Objects.equals(game, "")) {
-                            game += field.getText();
-                        } else {
-                            game += " " + field.getText(); //add piece to game
-                        }
-                        movePiece(field.getText());
-                        nextTurn();
-                    } else {
-                        System.out.println(field.getText() + " is not a valid move!");
-                    }
-                } else {
-                    System.out.println(field.getText() + " is an invalid encoding!");
-                }
-                System.out.println("So far the game is '" + game + "' and it is " + getCurrentPlayer(game) + "'s turn!");
-                System.out.println("Suggested moves are:" + AIplayer.getMove(game));
-                field.clear();
-            }
-        });
-        root.getChildren().add(field);
-
-        //Populate each players side panel with each piece
+    void initTiles() {
         for (int currentPlayer = 0;currentPlayer < 4; currentPlayer++){
             ArrayList<Tile> PlayerTiles = new ArrayList<>();
             Tile t1 = new Tile(currentPlayer, 500,0, gameTiles.Pieces.get(0),this,0);
@@ -536,11 +552,159 @@ public class PlayBoard extends Application {
             Tile t21 = new Tile(currentPlayer, 625,625, gameTiles.Pieces.get(20),this,20);
             PlayerTiles.add(t21);
             Players.add(PlayerTiles);
-            root.getChildren().addAll(PlayerTiles);
+        }
+    }
+
+    @Override
+    // The start method. (Written by the the whole group: Faizan, Jack, Liyang(Leon))
+    public void start(Stage primaryStage) throws Exception {
+        Group root = new Group();
+        Scene main = new Scene(root, 700, 700);
+
+        primaryStage.setTitle("Blokus!");
+        Pane root_menu = new Pane();
+        Menu menu = new Menu(root_menu, 700, 700);
+        menu.selectionPane.setLayoutX(150);
+        menu.selectionPane.setLayoutY(270);
+        root_menu.getChildren().add(menu.selectionPane);
+        menu.confirm.toFront();
+        root_menu.setStyle(" -fx-background-image: url('comp1140/ass2/menu_background.png'); -fx-background-repeat: stretch;");
+
+        Button launchGame = new Button("Launch Game!");
+        launchGame.setLayoutX(200);
+        launchGame.setLayoutY(520);
+        // parse the game mode and go to the main scene.
+        launchGame.setOnAction(event -> {
+            game_mode = Menu.gameVariationState;
+            messageBox.renew("Welcome to " + game_mode.length() + "-player game mode! Enjoy your time playing Blokus! \nIt's Player1's turn.");
+            if (game_mode.length() == 1) {
+                isHuman[0] = true;
+                isHuman[1] = true;
+                isHuman[2] = true;
+                isHuman[3] = true;
+            } else if (game_mode.length() == 2) {
+                if (game_mode.charAt(0) == 'H' && game_mode.charAt(1) == 'H') {
+                    isHuman[0] = true;
+                    isHuman[1] = true;
+                    isHuman[2] = true;
+                    isHuman[3] = true;
+                } else if (game_mode.charAt(0) == 'H' && game_mode.charAt(1) == 'C') {
+                    isHuman[0] = true;
+                    isHuman[1] = false;
+                    isHuman[2] = true;
+                    isHuman[3] = false;
+                } else {
+                    isHuman[0] = false;
+                    isHuman[1] = true;
+                    isHuman[2] = false;
+                    isHuman[3] = true;
+                }
+            } else if (game_mode.length() == 3) {
+                for (int i = 0; i < 3; i++) {
+                    if (game_mode.charAt(i) == 'H') {
+                        isHuman[i] = true;
+                    } else {
+                        isHuman[i] = false;
+                    }
+                }
+                isHuman[3] = isHuman[0];
+            } else if (game_mode.length() == 4) {
+                for (int i = 0; i < 4; i++) {
+                    if (game_mode.charAt(i) == 'H') {
+                        isHuman[i] = true;
+                    } else {
+                        isHuman[i] = false;
+                    }
+                }
+            }
+            primaryStage.setScene(main);
+        });
+
+        Text blokusTitle = new Text("Blokus");
+        blokusTitle.setFont(new Font(80));
+        blokusTitle.setFill(Color.WHITE);
+        blokusTitle.setLayoutX(220);
+        blokusTitle.setLayoutY(100);
+
+        Text madeBy = new Text("Made by Jack Adamson, Liyang Guan and Faizan Siddiqui");
+        madeBy.setLayoutX(170);
+        madeBy.setLayoutY(140);
+        madeBy.setFill(Color.WHITE);
+        primaryStage.setScene(menu);
+        root_menu.getChildren().addAll(launchGame, blokusTitle, madeBy);
+        primaryStage.show();
+
+
+        //Draw the panel on the right-side
+        Rectangle panel = new Rectangle(500, 0, 200, 700);
+        panel.setFill(Color.GREY);
+        root.getChildren().add(panel);
+
+        //Draw the board for playing
+        double x_c = 0;
+        double y_c = 0;
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+                Cell c = new Cell(x_c, y_c, CELL_LENGTH - 1); //Leave 1 pixel for the margin.
+                c.setFill(Color.LIGHTGREY);
+                root.getChildren().add(c);
+                board.add(c);
+
+                x_c += CELL_LENGTH;
+            }
+            y_c += CELL_LENGTH;
+            x_c = 0;
         }
 
+        //Draw the Scoreboard
+        scores.setLayoutX(50);
+        scores.setLayoutY(530);
+        root.getChildren().add(scores);
+
+        //Add a message board
+        root.getChildren().add(messageBox);
+
+        //Add a textfield
+        Text fieldpromt = new Text(325, 645, "Enter your game piece here");
+        root.getChildren().add(fieldpromt);
+        TextField field = new TextField();
+        field.setPromptText("Enter your game piece...");
+        field.setLayoutX(325);
+        field.setLayoutY(650);
+        field.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                if (BlokGUI.isValidEncoding(field.getText())) {
+                    if (BlokGame.legitimateGame(game + (game.equals("") ? "" : " ") + field.getText())) {
+                        if (Objects.equals(game, "")) {
+                            game += field.getText();
+                        } else {
+                            game += " " + field.getText(); //add piece to game
+                        }
+                        movePiece(field.getText());
+                        nextTurn();
+                    } else {
+                        System.out.println(field.getText() + " is not a valid move!");
+                    }
+                } else {
+                    System.out.println(field.getText() + " is an invalid encoding!");
+                }
+                System.out.println("So far the game is '" + game + "' and it is " + getCurrentPlayer(game) + "'s turn!");
+                System.out.println("Suggested moves are:" + AIplayer.getMove(game));
+                field.clear();
+            }
+        });
+        root.getChildren().add(field);
+
+        //Populate each players side panel with each piece
+        initTiles();
+        root.getChildren().addAll(Players.get(0));
+        root.getChildren().addAll(Players.get(1));
+        root.getChildren().addAll(Players.get(2));
+        root.getChildren().addAll(Players.get(3));
+
+
         //Draw all the playable pieces
-        for (ArrayList<Tile> playersTile : Players){
+        for (ArrayList<Tile> playersTile : Players) {
             playersTile.forEach(PlayBoard.Tile::Deactivate);
         }
 
@@ -548,6 +712,7 @@ public class PlayBoard extends Application {
         Players.get(currentTurn).forEach(PlayBoard.Tile::Activate);
         //Disable Player 1's only unplayable piece
         Players.get(currentTurn).get(20).Grey();
+
     }
 
     public static void main(String[] args) {

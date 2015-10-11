@@ -18,11 +18,12 @@ import javafx.stage.Stage;
 /**
  * Created by Faizan on 5/10/2015.
  */
-
+//(Mostly written by Faizan, Liyang made some adaptations)
 public class Menu extends Scene {
     Button confirm;
     public PlayerSelectionPane selectionPane = new PlayerSelectionPane();
     public static String gameVariationState;
+
     public Menu(Parent root, double x, double y) {
         super(root,x,y);
     }
