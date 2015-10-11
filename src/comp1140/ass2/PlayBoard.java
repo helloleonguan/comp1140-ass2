@@ -555,7 +555,7 @@ public class PlayBoard extends Application {
         for (Tile t : Players.get(currentTurn)){
             t.Activate();
         }
-
+        Players.get(currentTurn).get(20).Grey();
     }
 
     public static void main(String[] args) {
