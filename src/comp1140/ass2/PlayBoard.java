@@ -42,6 +42,7 @@ public class PlayBoard extends Application {
     String game = "";
     Tiles gameTiles = new Tiles();
     int currentTurn = 0;
+    int passes = 0;
     Scoreboard scores = new Scoreboard();
 
     //Put all inner classes here, and those events inside the object.
@@ -274,6 +275,15 @@ public class PlayBoard extends Application {
                 Players.get(currentTurn).get(i).Deactivate();
             }
         }
+        if (!playable.contains(true)){
+            if(passes >= 3){
+                //TODO END OF GAME
+            } else {
+                passes++;
+                game += " .";
+                nextTurn();
+            }
+        }
     }
 
     /**
@@ -323,16 +333,14 @@ public class PlayBoard extends Application {
         for (int i = 0; i < 21; i++) {
             legal.add(false);
         }
-        int turn = 0;
+        int turn = 1;
         String[] tilesPLaced = game.split("\\s+");
         int[] board0 = new int[400];
-        boolean initial = game.length() <= 19;
+        boolean initial = game.length() <= 18;
         for (String s: tilesPLaced) {
             Legit.draw(s, board0,turn);
             turn = Legit.incrementTurn(turn);
         }
-        //ArrayList<Point> corners = Legit.findCorners(game);
-
         for (char piece = 'A'; piece <= 'U'; piece++) {
             if(Players.get(currentTurn).get(piece - 'A').played){
                 legal.set(piece-'A',true);
@@ -341,7 +349,7 @@ public class PlayBoard extends Application {
             for (char rotate = 'A'; rotate <= 'H' && ! legal.get(piece-'A'); rotate++){
                 for (char x = 'A'; x < 'A'+20 && ! legal.get(piece-'A'); x++){
                     for (char y = 'A'; y < 'A' + 20 && ! legal.get(piece-'A'); y++){
-                        if(Legit.checkLegitForTile (board0, "" + piece + rotate + x + y, initial, currentTurn) ){
+                        if(Legit.checkLegitForTile (board0, "" + piece + rotate + x + y, initial, currentTurn + 1) ){
                             legal.set(piece-'A',true);
                         }
                     }
