@@ -354,11 +354,11 @@ public class PlayBoard extends Application {
                 //End of the game message.
                 if (game_mode.length() == 1) {
                     int overall = scores.blue_score + scores.red_score + scores.green_score + scores.yellow_score;
-                    messageBox.renew("Game Over! \nYou achieve an overall score: " + overall + "\n Try to achieve a higher score next time. \nPress SPACE to reset the game.");
+                    messageBox.renew("Game Over! \nYou achieve an overall score: " + overall + "\n Try to achieve a higher score next time.");
                 } else if (game_mode.length() == 2) {
                     int max_score = Math.max(scores.blue_score+scores.red_score, scores.green_score + scores.yellow_score);
                     int player = (scores.blue_score+scores.red_score > scores.green_score + scores.yellow_score) ? 1 : 2;
-                    messageBox.renew("Game Over! \nPlayer" +player+" win the game with a overall score:" + max_score +". \nPress SPACE to reset the game.");
+                    messageBox.renew("Game Over! \nPlayer" +player+" win the game with a overall score:" + max_score +".");
                 } else if (game_mode.length() == 3) {
                     ArrayList<Integer> list = new ArrayList<>();
                     list.add(scores.blue_score);
@@ -366,7 +366,7 @@ public class PlayBoard extends Application {
                     list.add(scores.red_score);
                     int max_score = max_score(list)[0];
                     int max_score_player = max_score(list)[1];
-                    messageBox.renew("Game Over! \nPlayer" +max_score_player+" win the game with a overall score:" + max_score +". \nPress SPACE to reset the game.");
+                    messageBox.renew("Game Over! \nPlayer" +max_score_player+" win the game with a overall score:" + max_score +".");
                 } else {
                     ArrayList<Integer> list = new ArrayList<>();
                     list.add(scores.blue_score);
@@ -375,7 +375,7 @@ public class PlayBoard extends Application {
                     list.add(scores.green_score);
                     int max_score = max_score(list)[0];
                     int max_score_player = max_score(list)[1];
-                    messageBox.renew("Game Over! \nPlayer" + max_score_player + " win the game with a overall score:" + max_score + ". \nPress SPACE to reset the game.");
+                    messageBox.renew("Game Over! \nPlayer" + max_score_player + " win the game with a overall score:" + max_score + ".");
                 }
 
             } else {
