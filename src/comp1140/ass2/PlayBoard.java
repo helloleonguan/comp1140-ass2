@@ -388,8 +388,8 @@ public class PlayBoard extends Application {
         if (!isHuman[currentTurn]) {
             String agentChoice = AIplayer.getMove(game);
             movePiece(agentChoice);
-            scores.update(BlokGame.scoreGame(game)[0], BlokGame.scoreGame(game)[1], BlokGame.scoreGame(game)[2], BlokGame.scoreGame(game)[3]);
             game += agentChoice;
+            scores.update(BlokGame.scoreGame(game)[0], BlokGame.scoreGame(game)[1], BlokGame.scoreGame(game)[2], BlokGame.scoreGame(game)[3]);
             nextTurn();
         }
     }
