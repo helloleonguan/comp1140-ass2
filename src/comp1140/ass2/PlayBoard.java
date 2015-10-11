@@ -1,38 +1,27 @@
 package comp1140.ass2;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import java.awt.*;
-import java.awt.Image;
-import java.awt.Label;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
-
-/**
- * Created by Liyang(Leon) Guan on 2015/9/20.
- */
 public class PlayBoard extends Application {
     //Put only global variables for the GAME here
     final static double CELL_LENGTH = 25;
@@ -144,29 +133,28 @@ public class PlayBoard extends Application {
 
     //Tile represents a single game piece, possessing an orientation, location, owner and shape. (Written by Jack and Liyang(Leon))
     class Tile extends Group {
-        private PlayBoard board = null;
+        private PlayBoard board;
         int owner; //Index of enum of players
-        public boolean played = false;
-        public boolean flipped = false; //Whether flipped along Y axis
-        ArrayList<Cell> tile = new ArrayList<>();
+        public boolean played;
+        public boolean flipped; //Whether flipped along Y axis
+        ArrayList<Cell> tile;
         double original_x;
         double original_y;
         int shape_encoding;
-        int rotation_encoding = 0;
+        int rotation_encoding;
         int positionX_encoding;
         int positionY_encoding;
         String encodingOfTile;
-        String encodingTile = "";
 
-        public void Grey(){
-            for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+        public void Grey(){ //Used at begining of turn to make all legal pieces grey
+            for (Node c : this.getChildren().filtered(Cell.class::isInstance)) {
                 Cell d = (Cell) c;
                 d.setFill(setColor(owner).darker());
             }
         }
 
-        public void Ungrey(){
-            for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+        public void Ungrey(){ //Used at begining of turn to make all legal pieces normal
+            for (Node c : this.getChildren().filtered(Cell.class::isInstance)) {
                 Cell d = (Cell) c;
                 d.setFill(setColor(owner));
             }
@@ -189,6 +177,7 @@ public class PlayBoard extends Application {
             this.board = board;
             this.owner = currentPlayer;
 
+            tile = new ArrayList<>();
             for (Point p : piece){
                 Cell c = new Cell(p.x * 25 + x,p.y * 25 + y,CELL_LENGTH - 1);
                 c.setFill(setColor(owner));
@@ -196,6 +185,7 @@ public class PlayBoard extends Application {
                 this.getChildren().add(c);
             }
 
+            played = false;
             this.setOnMouseDragged(event -> { //Drag effect of piece
                 if(!played) {
                     this.setLayoutX(event.getSceneX() - x - 12);
@@ -204,6 +194,8 @@ public class PlayBoard extends Application {
                 }
             });
 
+            flipped = false;
+            rotation_encoding = 0;
             this.setOnMouseReleased(event -> { //Handles encoding of piece and snapping to grid.
                 if (event.getSceneX() < 500 && event.getSceneY() < 500 && event.getSceneX() > 0 && event.getSceneY() > 0) {
                     this.positionX_encoding = (int) Math.floor(event.getSceneX() / 25);
@@ -242,7 +234,7 @@ public class PlayBoard extends Application {
 
             this.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) { //Rotate piece 90 deg Clockwise
-                    for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+                    for (Node c : this.getChildren().filtered(Cell.class::isInstance)) {
                         Cell d = (Cell) c;
                         double temp = d.getX() - original_x;
                         d.setX(original_x - (d.getY() - original_y));
@@ -251,7 +243,7 @@ public class PlayBoard extends Application {
                     this.rotation_encoding = (this.rotation_encoding + 1) % 4;
                 } else if (event.getButton().equals(MouseButton.SECONDARY)) { //Flip piece along Y axis
                     flipped = !flipped;
-                    for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+                    for (Node c : this.getChildren().filtered(Cell.class::isInstance)) {
                         Cell d = (Cell) c;
                         d.setX(original_x - (d.getX() - original_x));
                     }
@@ -276,14 +268,10 @@ public class PlayBoard extends Application {
      * Activate all tiles for current turn and deactivate the others.
      * (Written by Jack) */
     void nextTurn(){
-        for(Tile t : Players.get(currentTurn)){
-            t.Deactivate();
-        }
+        Players.get(currentTurn).forEach(PlayBoard.Tile::Deactivate);
         currentTurn = (currentTurn + 1) % 4;
         ArrayList<Boolean> playable = legalPieces();
-        for(Tile t : Players.get(currentTurn)){
-            t.Activate();
-        }
+        Players.get(currentTurn).forEach(PlayBoard.Tile::Activate);
         for (int i = 0; i < Players.get(currentTurn).size(); i++) {
             if(!playable.get(i)){
                 Players.get(currentTurn).get(i).Grey();
@@ -293,6 +281,7 @@ public class PlayBoard extends Application {
         }
         if (!playable.contains(true)){
             if(passes >= 3){
+                passes++;
                 //TODO END OF GAME
             } else {
                 passes++;
@@ -344,6 +333,10 @@ public class PlayBoard extends Application {
         return rotation_code;
     }
 
+    /**
+     * @return A boolean arraylist of which pieces have moves that can be legally made
+     * Made by Jack Adamson
+     */
     ArrayList<Boolean> legalPieces(){
         ArrayList<Boolean> legal = new ArrayList<>(21);
         for (int i = 0; i < 21; i++) {
@@ -376,18 +369,23 @@ public class PlayBoard extends Application {
         return legal;
     }
 
+    /**
+     * @param move 4 character String indicating next move
+     * Updates GUI with new move from text box.
+     * Made by Jack Adamson
+     */
     void movePiece(String move){
         Tile current = Players.get(currentTurn).get(move.charAt(0)-'A');
         int rotation = move.charAt(1)-'A';
         if(rotation >= 4) {
             rotation -= 4;
-            for (Node c : current.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+            for (Node c : current.getChildren().filtered(Cell.class::isInstance)) {
                 Cell d = (Cell) c;
                 d.setX(current.original_x - (d.getX() - current.original_x));
             }
         }
         for (int i = 0; i < rotation; i++) {
-            for (Node c : current.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+            for (Node c : current.getChildren().filtered(Cell.class::isInstance)) {
                 Cell d = (Cell) c;
                 double temp = d.getX() - current.original_x;
                 d.setX(current.original_x - (d.getY() - current.original_y));
@@ -429,9 +427,7 @@ public class PlayBoard extends Application {
         madeBy.setLayoutY(140);
         madeBy.setFill(Color.WHITE);
         root_menu.getChildren().addAll(launchGame, blokusTitle, madeBy);
-        launchGame.setOnAction(event -> {
-            primaryStage.setScene(main);
-        });
+        launchGame.setOnAction(event -> primaryStage.setScene(main));
         primaryStage.setScene(menu);
         primaryStage.show();
 
@@ -470,33 +466,31 @@ public class PlayBoard extends Application {
         field.setPromptText("Enter your game piece...");
         field.setLayoutX(300);
         field.setLayoutY(650);
-        field.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent e) {
-                if (e.getCode() == KeyCode.ENTER) {
-                    if (BlokGUI.isValidEncoding(field.getText())) {
-                        if (BlokGame.legitimateGame(game + (game.equals("")? "":" ") +field.getText())) {
-                            if (game == "") {
-                                game += field.getText();
-                            } else {
-                                game += " " + field.getText(); //add piece to game
-                            }
-                            movePiece(field.getText());
-                            nextTurn();
+        field.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                if (BlokGUI.isValidEncoding(field.getText())) {
+                    if (BlokGame.legitimateGame(game + (game.equals("")? "":" ") +field.getText())) {
+                        if (Objects.equals(game, "")) {
+                            game += field.getText();
                         } else {
-                            System.out.println(field.getText() + " is not a valid move!");
+                            game += " " + field.getText(); //add piece to game
                         }
+                        movePiece(field.getText());
+                        nextTurn();
                     } else {
-                        System.out.println(field.getText() + " is an invalid encoding!");
+                        System.out.println(field.getText() + " is not a valid move!");
                     }
-                    System.out.println("So far the game is '" + game + "' and it is " + getCurrentPlayer(game) + "'s turn!");
-                    System.out.println("Suggested moves are:" + AIplayer.getMove(game));
-                    field.clear();
+                } else {
+                    System.out.println(field.getText() + " is an invalid encoding!");
                 }
+                System.out.println("So far the game is '" + game + "' and it is " + getCurrentPlayer(game) + "'s turn!");
+                System.out.println("Suggested moves are:" + AIplayer.getMove(game));
+                field.clear();
             }
         });
         root.getChildren().add(field);
 
+        //Populate each players side panel with each piece
         for (int currentPlayer = 0;currentPlayer < 4; currentPlayer++){
             ArrayList<Tile> PlayerTiles = new ArrayList<>();
             Tile t1 = new Tile(currentPlayer, 500,0, gameTiles.Pieces.get(0),this,0);
@@ -547,14 +541,12 @@ public class PlayBoard extends Application {
 
         //Draw all the playable pieces
         for (ArrayList<Tile> playersTile : Players){
-            for (Tile t : playersTile){
-                t.Deactivate();
-            }
+            playersTile.forEach(PlayBoard.Tile::Deactivate);
         }
 
-        for (Tile t : Players.get(currentTurn)){
-            t.Activate();
-        }
+        //Get player 1's turn ready
+        Players.get(currentTurn).forEach(PlayBoard.Tile::Activate);
+        //Disable Player 1's only unplayable piece
         Players.get(currentTurn).get(20).Grey();
     }
 
