@@ -265,8 +265,14 @@ public class PlayBoard extends Application {
             t.Deactivate();
         }
         currentTurn = (currentTurn + 1) % 4;
+        ArrayList<Boolean> playable = legalPieces();
         for(Tile t : Players.get(currentTurn)){
             t.Activate();
+        }
+        for (int i = 0; i < Players.get(currentTurn).size(); i++) {
+            if(!playable.get(i)){
+                Players.get(currentTurn).get(i).Deactivate();
+            }
         }
     }
 
@@ -310,6 +316,40 @@ public class PlayBoard extends Application {
             case 20: rotation_code = "U"; break;
         }
         return rotation_code;
+    }
+
+    ArrayList<Boolean> legalPieces(){
+        ArrayList<Boolean> legal = new ArrayList<>(21);
+        for (int i = 0; i < 21; i++) {
+            legal.add(false);
+        }
+        int turn = 0;
+        String[] tilesPLaced = game.split("\\s+");
+        int[] board0 = new int[400];
+        boolean initial = game.length() <= 19;
+        for (String s: tilesPLaced) {
+            Legit.draw(s, board0,turn);
+            turn = Legit.incrementTurn(turn);
+        }
+        //ArrayList<Point> corners = Legit.findCorners(game);
+
+        for (char piece = 'A'; piece <= 'U'; piece++) {
+            if(Players.get(currentTurn).get(piece - 'A').played){
+                legal.set(piece-'A',true);
+                continue;
+            }
+            for (char rotate = 'A'; rotate <= 'H' && ! legal.get(piece-'A'); rotate++){
+                for (char x = 'A'; x < 'A'+20 && ! legal.get(piece-'A'); x++){
+                    for (char y = 'A'; y < 'A' + 20 && ! legal.get(piece-'A'); y++){
+                        if(Legit.checkLegitForTile (board0, "" + piece + rotate + x + y, initial, currentTurn) ){
+                            legal.set(piece-'A',true);
+                        }
+                    }
+                }
+            }
+        }
+
+        return legal;
     }
 
     void movePiece(String move){

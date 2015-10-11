@@ -148,7 +148,7 @@ public class Menu extends Scene {
                             Player4Label.setVisible(true);
                             Player4.setVisible(true);
                         }});
-
+            selectNumber.setValue(4);
             StringBuilder gameVariation = new StringBuilder("    ");
 
             confirm.setOnAction(event -> {
