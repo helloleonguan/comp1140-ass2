@@ -312,6 +312,30 @@ public class PlayBoard extends Application {
         return rotation_code;
     }
 
+    void movePiece(String move){
+        Tile current = Players.get(currentTurn).get(move.charAt(0)-'A');
+        int rotation = move.charAt(1)-'A';
+        if(rotation >= 4) {
+            rotation -= 4;
+            for (Node c : current.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+                Cell d = (Cell) c;
+                d.setX(current.original_x - (d.getX() - current.original_x));
+            }
+        }
+        for (int i = 0; i < rotation; i++) {
+            for (Node c : current.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+                Cell d = (Cell) c;
+                double temp = d.getX() - current.original_x;
+                d.setX(current.original_x - (d.getY() - current.original_y));
+                d.setY(temp + current.original_y);
+            }
+        }
+        current.setLayoutX(25 * (move.charAt(2)-'A') - current.original_x);
+        System.out.println(25*(move.charAt(2)-'A'));
+        System.out.println("Moved to X:" + (25 * (move.charAt(2)-'A') - current.original_x) + " y: "+ (25 * (move.charAt(3)-'A') - current.original_y));
+        current.setLayoutY(25 * (move.charAt(3)-'A') - current.original_y);
+        current.played = true;
+    }
 
     @Override
     // The start method. (Written by the the whole group: Faizan, Jack, Liyang(Leon))
@@ -393,6 +417,8 @@ public class PlayBoard extends Application {
                             } else {
                                 game += " " + field.getText(); //add piece to game
                             }
+                            movePiece(field.getText());
+                            nextTurn();
                         } else {
                             System.out.println(field.getText() + " is not a valid move!");
                         }
