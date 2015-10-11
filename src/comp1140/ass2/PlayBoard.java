@@ -316,7 +316,7 @@ public class PlayBoard extends Application {
         ArrayList<Boolean> playable = legalPieces();
         Players.get(currentTurn).forEach(PlayBoard.Tile::Activate);
         for (int i = 0; i < Players.get(currentTurn).size(); i++) {
-            if(!playable.get(i)){
+            if(!playable.get(i) && !Players.get(currentTurn).get(i).played){
                 Players.get(currentTurn).get(i).Grey();
             }else{
                 Players.get(currentTurn).get(i).Ungrey();
@@ -347,7 +347,7 @@ public class PlayBoard extends Application {
         }
 
         if (!playable.contains(true)){
-            if(passes >= 3){
+            if(passes > 3){
                 passes++;
                 game += " .";
 
@@ -377,7 +377,7 @@ public class PlayBoard extends Application {
                     int max_score_player = max_score(list)[1];
                     messageBox.renew("Game Over! \nPlayer" + max_score_player + " win the game with a overall score:" + max_score + ".");
                 }
-
+                return;
             } else {
                 passes++;
                 game += " .";
@@ -455,7 +455,7 @@ public class PlayBoard extends Application {
         }
         for (char piece = 'A'; piece <= 'U'; piece++) {
             if(Players.get(currentTurn).get(piece - 'A').played){
-                legal.set(piece-'A',true);
+                legal.set(piece-'A',false);
                 continue;
             }
             for (char rotate = 'A'; rotate <= 'H' && ! legal.get(piece-'A'); rotate++){
@@ -601,20 +601,12 @@ public class PlayBoard extends Application {
                 }
             } else if (game_mode.length() == 3) {
                 for (int i = 0; i < 3; i++) {
-                    if (game_mode.charAt(i) == 'H') {
-                        isHuman[i] = true;
-                    } else {
-                        isHuman[i] = false;
-                    }
+                    isHuman[i] = game_mode.charAt(i) == 'H';
                 }
                 isHuman[3] = isHuman[0];
             } else if (game_mode.length() == 4) {
                 for (int i = 0; i < 4; i++) {
-                    if (game_mode.charAt(i) == 'H') {
-                        isHuman[i] = true;
-                    } else {
-                        isHuman[i] = false;
-                    }
+                    isHuman[i] = game_mode.charAt(i) == 'H';
                 }
             }
             primaryStage.setScene(main);
