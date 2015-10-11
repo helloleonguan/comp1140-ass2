@@ -158,6 +158,20 @@ public class PlayBoard extends Application {
         String encodingOfTile;
         String encodingTile = "";
 
+        public void Grey(){
+            for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+                Cell d = (Cell) c;
+                d.setFill(setColor(owner).darker());
+            }
+        }
+
+        public void Ungrey(){
+            for (Node c : this.getChildren().filtered(p -> Cell.class.isInstance(p))) {
+                Cell d = (Cell) c;
+                d.setFill(setColor(owner));
+            }
+        }
+
         public void Deactivate(){ //Called whenever it is no longer the owners turn.
             this.setDisable(true);
             if (!played)this.setVisible(false);
@@ -272,7 +286,9 @@ public class PlayBoard extends Application {
         }
         for (int i = 0; i < Players.get(currentTurn).size(); i++) {
             if(!playable.get(i)){
-                Players.get(currentTurn).get(i).Deactivate();
+                Players.get(currentTurn).get(i).Grey();
+            }else{
+                Players.get(currentTurn).get(i).Ungrey();
             }
         }
         if (!playable.contains(true)){
