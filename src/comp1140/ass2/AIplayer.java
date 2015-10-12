@@ -10,14 +10,40 @@ import java.util.Collections;
 // (All written by Liyang(Leon) )
 public class AIplayer {
 
+    public static int scoreFunction(int[] scores, Player player) {
+        int promisingValue = 0;
+
+        for (int i = 0; i < 4; i++) {
+            if (i == player.toInt()) {
+                promisingValue += scores[i];
+            } else {
+                promisingValue -= scores[i];
+            }
+        }
+        return promisingValue;
+    }
+
     public static String getMove(String game) {
+        int turn = 1;
         String[] tilesPLaced = game.split("\\s+");
+        int[] board0 = new int[400];
+
+        for (String s: tilesPLaced) {
+            Legit.draw(s, board0,turn);
+            turn = Legit.incrementTurn(turn);
+        }
+
         Player currentPlayer = Player.getPlayer(tilesPLaced.length % 4);
 
-        String[] tile = currentPlayer.remainingTiles(game);
+        // Only choose a certian amount of Pieces.
+        ArrayList<String> tile = new ArrayList<>();
+        String[] leftTiles = currentPlayer.remainingTiles(game);
+        for (String s : leftTiles) {
+            tile.add(s);
+        }
+
         String[] rotation = {"A", "B", "C", "D", "E", "F", "G", "H"};
         String[] position = new String[400];
-
 
 
         for (int i = 0; i < 400; i++) {
@@ -26,28 +52,33 @@ public class AIplayer {
 
         ArrayList<String> candidates = new ArrayList<>();
 
-        for (int i = 0; i < tile.length; i++) {
+        for (int i = 0; i < tile.size(); i++) {
             for (int j = 0; j < rotation.length; j++) {
                 for (int k = 0; k < position.length; k++) {
-                    if (BlokGame.legitimateGame(game + " " + tile[i] + rotation[j] + position[k])) {
-                        candidates.add(tile[i] + rotation[j] + position[k]);
+
+                    if ( Legit.checkLegitForTile(board0,tile.get(i) + rotation[j] + position[k],tilesPLaced.length < 4, turn) ) {
+                        if ((tile.get(i) + rotation[j] + position[k]).equals("UHAS")) {
+
+                            System.out.println(Legit.checkLegitForTile(board0, tile.get(i) + rotation[j] + position[k], tilesPLaced.length < 4, turn));
+                        }
+                        candidates.add(tile.get(i) + rotation[j] + position[k]);
                     }
                 }
             }
         }
 
-        String result = null;
+        if (candidates.size() == 0) {
+            return " .";
+        }
+        String result;
 
         // greedy solution.
-        if (candidates.size() == 0)
-            result = ".";
-        else {
+
             Collections.sort(candidates);
             Collections.reverse(candidates);
             result = candidates.get(0);
-        }
 
-        return result;
+        return " "+result;
     }
 
 }

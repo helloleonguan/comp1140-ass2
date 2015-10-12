@@ -5,20 +5,30 @@ package comp1140.ass2;
 
 import java.awt.*;
 import java.util.ArrayList;
-
+// (All written by Liyang(Leon) )
 public class Legit {
-    public static int turn = 1;
-    static int[] board = new int[400];
-    static Tiles mytiles = new Tiles();
+    public static Tiles mytiles;
+
+    public static int incrementTurn(int currentTurn) {
+        currentTurn++;
+        if (currentTurn == 5) {
+            currentTurn = 1;
+        }
+        return currentTurn;
+    }
 
     public static boolean legitimateGame(String game) {
+        mytiles = new Tiles();
+        int turn = 1;
+        int[] board = new int[400];
         boolean legit = false;
         String[] tilesPLaced = game.split("\\s+");
         if (tilesPLaced.length <= 4) {
             for (int i = 0; i < tilesPLaced.length; i++) {
-                legit = isStarter(tilesPLaced[i]) && onBoard(tilesPLaced[i]);
+                legit = isStarter(tilesPLaced[i]) && onBoard(tilesPLaced[i]) && noOverlapping(tilesPLaced[i],board);
                 if (legit) {
-                    draw(tilesPLaced[i]);
+                    draw(tilesPLaced[i], board, turn);
+                    turn = incrementTurn(turn);
                 } else {
                     break;
                 }
@@ -27,53 +37,59 @@ public class Legit {
             boolean start = isStarter(tilesPLaced[0]) && isStarter(tilesPLaced[1]) && isStarter(tilesPLaced[2]) && isStarter(tilesPLaced[3])
                     && onBoard(tilesPLaced[0]) && onBoard(tilesPLaced[1]) && onBoard(tilesPLaced[2]) && onBoard(tilesPLaced[3]);
             if (start) {
-                draw(tilesPLaced[0]);
-                draw(tilesPLaced[1]);
-                draw(tilesPLaced[2]);
-                draw(tilesPLaced[3]);
+                draw(tilesPLaced[0], board, turn);
+                turn = incrementTurn(turn);
+                draw(tilesPLaced[1], board, turn);
+                turn = incrementTurn(turn);
+                draw(tilesPLaced[2], board, turn);
+                turn = incrementTurn(turn);
+                draw(tilesPLaced[3], board, turn);
+                turn = incrementTurn(turn);
             }
             for (int i = 4; i < tilesPLaced.length; i++) {
-                legit = start && onBoard(tilesPLaced[i]) && noOverlapping(tilesPLaced[i]) &&
-                        cornerContactWithSameColor(tilesPLaced[i]) && noEdgeContactWithSameColor(tilesPLaced[i]);
+                legit = start && onBoard(tilesPLaced[i]) && noOverlapping(tilesPLaced[i],board) &&
+                        cornerContactWithSameColor(tilesPLaced[i],board,turn) && noEdgeContactWithSameColor(tilesPLaced[i], board,turn);
 
                 if (legit) {
-                    draw(tilesPLaced[i]);
+                    draw(tilesPLaced[i], board, turn);
+                    turn = incrementTurn(turn);
                 } else {
                     break;
                 }
             }
 
         }
-        //clear static objects
-        turn = 1;
-        for (int i =0; i< 400; i++) {
-            board[i] =0;
-        }
         return legit;
     }
 
-    public static int[] draw(String tile) {
+    // It takes in a int[400] as a board, the tile you want to place and a boolean indicates whether it is a initial board
+    // (i.e. Have all 4 players place their first tiles. OR whether there are less than 4 tiles already on board).
+    public static boolean checkLegitForTile (int[] tempBoard, String tile, boolean initial, int turn) {
+        mytiles = new Tiles();
+        boolean result;
+        if (initial) {
+            result = isStarter(tile) && onBoard(tile) && noOverlapping(tile, tempBoard);
+        } else {
+            result = onBoard(tile) && noEdgeContactWithSameColor(tile, tempBoard, turn) && noOverlapping(tile, tempBoard) && cornerContactWithSameColor(tile, tempBoard, turn);
+        }
+        return result;
+    }
+
+
+    public static int[] draw(String tile, int[] b, int turn) {
+        mytiles = new Tiles();
         int[] codes = analyseTile(tile);
         if (codes == null) {
-            turn++;
-            if (turn == 5) {
-                turn = 1;
-            }
-            return board;
+            return b;
         }
         Tiles.Rotate(mytiles.Pieces.get(codes[0]), codes[1]);
 
         for (Point p:mytiles.Pieces.get(codes[0])) {
             int pos = codes[2] + codes[3] * 20 + p.x + p.y*20;
-            board[pos] = turn;
-        }
-
-        turn++;
-        if (turn == 5) {
-            turn = 1;
+            b[pos] = turn;
         }
         mytiles = new Tiles();
-        return board;
+        return b;
     }
 
     public static int[] analyseTile(String tile) {
@@ -96,7 +112,6 @@ public class Legit {
             return true;
         }
         Tiles.Rotate(mytiles.Pieces.get(codes[0]), codes[1]);
-
         for (Point p:mytiles.Pieces.get(codes[0])) {
             int pos = codes[2] + codes[3] * 20 + p.x + p.y*20;
             if (pos == 0 || pos == 19 || pos == 380 || pos == 399 ) {
@@ -130,7 +145,7 @@ public class Legit {
         return flag;
     }
 
-    public static boolean noOverlapping (String tile) {
+    public static boolean noOverlapping (String tile, int[] currentBoard) {
         boolean flag = true;
         int[] codes = analyseTile(tile);
         if (codes == null) {
@@ -145,7 +160,7 @@ public class Legit {
             int pos = codes[2] + codes[3] * 20 + p.x + p.y * 20;
             if (pos < 0 || pos > 399)
                 continue;
-            if (board[pos] != 0) {
+            if (currentBoard[pos] != 0) {
                 flag = false;
                 break;
             }
@@ -194,7 +209,7 @@ public class Legit {
         return corners;
     }
 
-    public static boolean cornerContactWithSameColor (String tile) {
+    public static boolean cornerContactWithSameColor (String tile, int[] currentBoard, int turn) {
         boolean flag = false;
         int[] codes = analyseTile(tile);
         if (codes == null) {
@@ -210,7 +225,7 @@ public class Legit {
             int pos = codes[2] + codes[3] * 20 + p.x + p.y * 20;
             if (pos < 0 || pos > 399)
                 continue;
-            if (board[pos] == turn) {
+            if (currentBoard[pos] == turn) {
                 flag = true;
                 break;
             }
@@ -220,7 +235,7 @@ public class Legit {
         return flag;
     }
 
-    public static boolean noEdgeContactWithSameColor (String tile){
+    public static boolean noEdgeContactWithSameColor (String tile, int[] currentBoard, int turn){
         boolean flag = true;
         int[] codes = analyseTile(tile);
         if (codes == null) {
@@ -236,7 +251,7 @@ public class Legit {
             int pos = codes[2] + codes[3] * 20 + p.x + p.y * 20;
             if (pos < 0 || pos > 399)
                 continue;
-            if (board[pos] == turn) {
+            if (currentBoard[pos] == turn) {
                 flag = false;
                 break;
             }
