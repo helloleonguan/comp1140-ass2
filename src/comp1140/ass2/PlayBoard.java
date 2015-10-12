@@ -195,7 +195,6 @@ public class PlayBoard extends Application {
             original_x = x;
             original_y = y;
             this.shape_encoding = pieceNumber;
-            this.rotation_encoding = 0;
             this.board = board;
             this.owner = currentPlayer;
 
@@ -248,7 +247,7 @@ public class PlayBoard extends Application {
                 }
             });
 
-            this.setOnMouseClicked(event -> {
+            this.setOnMousePressed(event -> {
                 if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) { //Rotate piece 90 deg Clockwise
                     for (Node c : this.getChildren().filtered(Cell.class::isInstance)) {
                         Cell d = (Cell) c;
@@ -257,12 +256,17 @@ public class PlayBoard extends Application {
                         d.setY(temp + original_y);
                     }
                     this.rotation_encoding = (this.rotation_encoding + 1) % 4;
+                    System.out.println(this.rotation_encoding + " " + flipped);
                 } else if (event.getButton().equals(MouseButton.SECONDARY)) { //Flip piece along Y axis
+                    if (this.rotation_encoding % 2 == 1) {
+                        this.rotation_encoding = 4 - this.rotation_encoding;
+                    }
                     flipped = !flipped;
                     for (Node c : this.getChildren().filtered(Cell.class::isInstance)) {
                         Cell d = (Cell) c;
                         d.setX(original_x - (d.getX() - original_x));
                     }
+                    System.out.println(this.rotation_encoding + " " + flipped);
                 }
             });
         }
@@ -395,10 +399,15 @@ public class PlayBoard extends Application {
 
         if (!isHuman[currentTurn]) {
             String agentChoice = AIplayer.getMove(game);
-            movePiece(agentChoice);
-            game += agentChoice;
-            scores.update(BlokGame.scoreGame(game)[0], BlokGame.scoreGame(game)[1], BlokGame.scoreGame(game)[2], BlokGame.scoreGame(game)[3]);
-            nextTurn();
+            if (agentChoice.equals(" .")) {
+                game += agentChoice;
+                nextTurn();
+            } else {
+                movePiece(agentChoice);
+                game += agentChoice;
+                scores.update(BlokGame.scoreGame(game)[0], BlokGame.scoreGame(game)[1], BlokGame.scoreGame(game)[2], BlokGame.scoreGame(game)[3]);
+                nextTurn();
+            }
         }
     }
 
