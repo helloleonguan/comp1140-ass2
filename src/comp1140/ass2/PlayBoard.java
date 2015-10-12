@@ -319,7 +319,7 @@ public class PlayBoard extends Application {
                 counter = 0;
             }
         }
-        return (counter == 3);
+        return (counter >= 3);
     }
     /**
      * Activate all tiles for current turn and deactivate the others, present the player info and detect endgame. .
@@ -393,6 +393,8 @@ public class PlayBoard extends Application {
         } else {
             if ( !playable.contains(true) ) {
                 game += " .";
+                System.out.println("~");
+                System.out.println(game);
                 nextTurn();
             }
         }
