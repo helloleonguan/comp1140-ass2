@@ -195,6 +195,7 @@ public class PlayBoard extends Application {
             original_x = x;
             original_y = y;
             this.shape_encoding = pieceNumber;
+            this.rotation_encoding = 0;
             this.board = board;
             this.owner = currentPlayer;
 
@@ -237,19 +238,13 @@ public class PlayBoard extends Application {
                         //update the scores for each player
                         scores.update(BlokGame.scoreGame(game)[0], BlokGame.scoreGame(game)[1], BlokGame.scoreGame(game)[2], BlokGame.scoreGame(game)[3]);
                         board.nextTurn();
-                        /*TODO
-                        Need to handle players that need to pass or reaching an end of game state.
-
-                         */
                     } else {
+                        //if it is not a legitimate move then move the tile back to original coordinates
                         System.out.println("Bad move " + encodingOfTile);
                         this.setLayoutX(0);
                         this.setLayoutY(0);
                     }
 
-                    //if it is not a legitimate move then move the tile back to original coordinates
-                    //if it move outside the board then move the tile back to original coordinates
-                    // else place on board and change the encoding game string.
                 }
             });
 
