@@ -249,7 +249,7 @@ public class PlayBoard extends Application {
             });
 
             this.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2) { //Rotate piece 90 deg Clockwise
+                if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) { //Rotate piece 90 deg Clockwise
                     for (Node c : this.getChildren().filtered(Cell.class::isInstance)) {
                         Cell d = (Cell) c;
                         double temp = d.getX() - original_x;
