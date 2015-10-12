@@ -170,9 +170,6 @@ public class Legit {
         return flag;
     }
 
-    public static void main(String[] args) {
-        System.out.println(legitimateGame("RAAA TGAT TFTT TETA TADD UHDR UHQP UHQE UAFG SHGQ SHRL SHPG QCIL RHJQ RHOR RHOI PBJN QHLQ QHNM QHNB MBGP PHMO PHRJ PHLG SABL OGLN OGML OHJE KFJC NHBO MFTG NHIH LBMB MHEN LDNE MGHG GAEA LHCL NHKC DEFC EAKJ KHAJ KGQD LBIB DBMH JGCH JHJT FGDC BANI IHPQ IHOG BHNL IAIF GGAD BHLF AHTF JBMP CHIO AHTQ . HANC BHFT . . AAOK FEQN"));
-    }
     public static ArrayList<Point> findAdjacent (ArrayList<Point> points) {
         ArrayList<Point> adjacents = new ArrayList<>();
         for (Point p: points) {

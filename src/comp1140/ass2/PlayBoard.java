@@ -31,7 +31,6 @@ public class PlayBoard extends Application {
     String game = "";
     Tiles gameTiles = new Tiles();
     int currentTurn = 0;
-    int passes = 0;
     Scoreboard scores = new Scoreboard();
     String game_mode = "";
     boolean[] isHuman = new boolean[4];
@@ -308,6 +307,22 @@ public class PlayBoard extends Application {
         return rst;
     }
     /**
+     * Detect whether the game has consecutive 3 passes.
+     * @return If there is 3 consecutive passes at the end of the game return true..
+     * (Written by Liyang(Leon)) */
+    boolean endgameDetection(String game) {
+        int counter = 0;
+        String[] tilesPLaced = game.split("\\s+");
+        for (String s:tilesPLaced) {
+            if (s.equals(".")) {
+                counter++;
+            } else {
+                counter = 0;
+            }
+        }
+        return (counter == 3);
+    }
+    /**
      * Activate all tiles for current turn and deactivate the others, present the player info and detect endgame. .
      * (Written by Jack and Liyang(Leon)) */
     void nextTurn(){
@@ -346,9 +361,7 @@ public class PlayBoard extends Application {
             messageBox.renew("It's Player" + (currentTurn + 1) + "'s turn.");
         }
 
-        if (!playable.contains(true)){
-            if(passes > 3){
-                passes++;
+        if (!playable.contains(true) && endgameDetection(game)){
                 game += " .";
 
                 //End of the game message.
@@ -378,8 +391,8 @@ public class PlayBoard extends Application {
                     messageBox.renew("Game Over! \nPlayer" + max_score_player + " win the game with a overall score:" + max_score + ".");
                 }
                 return;
-            } else {
-                passes++;
+        } else {
+            if ( !playable.contains(true) ) {
                 game += " .";
                 nextTurn();
             }
@@ -401,7 +414,7 @@ public class PlayBoard extends Application {
      *(Written by Liyang(Leon))*/
     Player getCurrentPlayer (String game) {
         String[] tilesPLaced = game.split("\\s+");
-        return Player.getPlayer((tilesPLaced.length - 1) % 4);
+        return Player.getPlayer((tilesPLaced.length) % 4);
     }
 
     /**
