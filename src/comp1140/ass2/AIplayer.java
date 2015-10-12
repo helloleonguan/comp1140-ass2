@@ -27,10 +27,11 @@ public class AIplayer {
         int turn = 1;
         String[] tilesPLaced = game.split("\\s+");
         int[] board0 = new int[400];
-
-        for (String s: tilesPLaced) {
-            Legit.draw(s, board0,turn);
-            turn = Legit.incrementTurn(turn);
+        if (game.length()>0) {
+            for (String s : tilesPLaced) {
+                Legit.draw(s, board0, turn);
+                turn = Legit.incrementTurn(turn);
+            }
         }
 
         Player currentPlayer = Player.getPlayer(tilesPLaced.length % 4);
@@ -78,7 +79,7 @@ public class AIplayer {
             Collections.reverse(candidates);
             result = candidates.get(0);
 
-        return " "+result;
+        return result;
     }
 
 }

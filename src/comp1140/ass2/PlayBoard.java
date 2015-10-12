@@ -31,6 +31,7 @@ public class PlayBoard extends Application {
     String game = "";
     Tiles gameTiles = new Tiles();
     int currentTurn = 0;
+    int consecutivePass = 0;
     Scoreboard scores = new Scoreboard();
     String game_mode = "";
     boolean[] isHuman = new boolean[4];
@@ -324,15 +325,15 @@ public class PlayBoard extends Application {
     /**
      * Activate all tiles for current turn and deactivate the others, present the player info and detect endgame. .
      * (Written by Jack and Liyang(Leon)) */
-    void nextTurn(){
+    void nextTurn() {
         Players.get(currentTurn).forEach(PlayBoard.Tile::Deactivate);
         currentTurn = (currentTurn + 1) % 4;
         ArrayList<Boolean> playable = legalPieces();
         Players.get(currentTurn).forEach(PlayBoard.Tile::Activate);
         for (int i = 0; i < Players.get(currentTurn).size(); i++) {
-            if(!playable.get(i) && !Players.get(currentTurn).get(i).played){
+            if (!playable.get(i) && !Players.get(currentTurn).get(i).played) {
                 Players.get(currentTurn).get(i).Grey();
-            }else{
+            } else {
                 Players.get(currentTurn).get(i).Ungrey();
             }
         }
@@ -344,8 +345,8 @@ public class PlayBoard extends Application {
                 messageBox.renew("It's Player1's turn.");
             else
                 messageBox.renew("It's Player2's turn.");
-        } else if (game_mode.length() == 3){
-            fourth_player = (fourth_player+1) % 3;
+        } else if (game_mode.length() == 3) {
+            fourth_player = (fourth_player + 1) % 3;
             if (currentTurn == 0) {
                 messageBox.renew("It's Player1's turn.");
             } else if (currentTurn == 1) {
@@ -353,14 +354,17 @@ public class PlayBoard extends Application {
             } else if (currentTurn == 2) {
                 messageBox.renew("It's Player3's turn.");
             } else {
-                messageBox.renew("It's Player" + (fourth_player+1) + "'s turn.");
+                messageBox.renew("It's Player" + (fourth_player + 1) + "'s turn.");
                 isHuman[3] = isHuman[fourth_player];
             }
         } else {
             messageBox.renew("It's Player" + (currentTurn + 1) + "'s turn.");
         }
 
-        if (!playable.contains(true) && endgameDetection(game)){
+        //if (!playable.contains(true) && endgameDetection(game)){
+        if (!playable.contains(true)) {
+            consecutivePass++;
+            if(consecutivePass>20) {
                 game += " .";
 
                 //End of the game message.
@@ -368,9 +372,9 @@ public class PlayBoard extends Application {
                     int overall = scores.blue_score + scores.red_score + scores.green_score + scores.yellow_score;
                     messageBox.renew("Game Over! \nYou achieve an overall score: " + overall + "\n Try to achieve a higher score next time.");
                 } else if (game_mode.length() == 2) {
-                    int max_score = Math.max(scores.blue_score+scores.red_score, scores.green_score + scores.yellow_score);
-                    int player = (scores.blue_score+scores.red_score > scores.green_score + scores.yellow_score) ? 1 : 2;
-                    messageBox.renew("Game Over! \nPlayer" +player+" win the game with a overall score:" + max_score +".");
+                    int max_score = Math.max(scores.blue_score + scores.red_score, scores.green_score + scores.yellow_score);
+                    int player = (scores.blue_score + scores.red_score > scores.green_score + scores.yellow_score) ? 1 : 2;
+                    messageBox.renew("Game Over! \nPlayer" + player + " win the game with a overall score:" + max_score + ".");
                 } else if (game_mode.length() == 3) {
                     ArrayList<Integer> list = new ArrayList<>();
                     list.add(scores.blue_score);
@@ -378,7 +382,7 @@ public class PlayBoard extends Application {
                     list.add(scores.red_score);
                     int max_score = max_score(list)[0];
                     int max_score_player = max_score(list)[1];
-                    messageBox.renew("Game Over! \nPlayer" +max_score_player+" win the game with a overall score:" + max_score +".");
+                    messageBox.renew("Game Over! \nPlayer" + max_score_player + " win the game with a overall score:" + max_score + ".");
                 } else {
                     ArrayList<Integer> list = new ArrayList<>();
                     list.add(scores.blue_score);
@@ -390,21 +394,28 @@ public class PlayBoard extends Application {
                     messageBox.renew("Game Over! \nPlayer" + max_score_player + " win the game with a overall score:" + max_score + ".");
                 }
                 return;
-        } else {
-            if ( !playable.contains(true) ) {
-                game += " .";
-                nextTurn();
+            } else {
+                if (!playable.contains(true)) {
+                    game += " .";
+                    consecutivePass++;
+                    nextTurn();
+                }
             }
-        }
+            return;
+        } else consecutivePass = 0;
 
         if (!isHuman[currentTurn]) {
             String agentChoice = AIplayer.getMove(game);
             if (agentChoice.equals(" .")) {
-                game += agentChoice;
+                game += " " + agentChoice;
                 nextTurn();
             } else {
                 movePiece(agentChoice);
-                game += agentChoice;
+                if (game.length()>0){
+                    game += " " + agentChoice;
+                } else {
+                    game += agentChoice;
+                }
                 scores.update(BlokGame.scoreGame(game)[0], BlokGame.scoreGame(game)[1], BlokGame.scoreGame(game)[2], BlokGame.scoreGame(game)[3]);
                 nextTurn();
             }
@@ -465,7 +476,13 @@ public class PlayBoard extends Application {
         int turn = 1;
         String[] tilesPLaced = game.split("\\s+");
         int[] board0 = new int[400];
-        boolean initial = game.length() <= 18;
+        if(game.length() <= 18){
+            for (int i = 0; i < legal.size(); i++) {
+                legal.set(i,true);
+            }
+            legal.set(20,false);
+            return legal;
+        }
         for (String s: tilesPLaced) {
             Legit.draw(s, board0,turn);
             turn = Legit.incrementTurn(turn);
@@ -478,7 +495,7 @@ public class PlayBoard extends Application {
             for (char rotate = 'A'; rotate <= 'H' && ! legal.get(piece-'A'); rotate++){
                 for (char x = 'A'; x < 'A'+20 && ! legal.get(piece-'A'); x++){
                     for (char y = 'A'; y < 'A' + 20 && ! legal.get(piece-'A'); y++){
-                        if(Legit.checkLegitForTile (board0, "" + piece + rotate + x + y, initial, currentTurn + 1) ){
+                        if(Legit.checkLegitForTile (board0, "" + piece + rotate + x + y, false, currentTurn + 1) ){
                             legal.set(piece-'A',true);
                         }
                     }
@@ -517,8 +534,6 @@ public class PlayBoard extends Application {
             }
         }
         current.setLayoutX(25 * (move.charAt(2)-'A') - current.original_x);
-        System.out.println(25*(move.charAt(2)-'A'));
-        System.out.println("Moved to X:" + (25 * (move.charAt(2)-'A') - current.original_x) + " y: "+ (25 * (move.charAt(3)-'A') - current.original_y));
         current.setLayoutY(25 * (move.charAt(3)-'A') - current.original_y);
         current.played = true;
     }
@@ -627,6 +642,7 @@ public class PlayBoard extends Application {
                 }
             }
             primaryStage.setScene(main);
+            nextTurn();
         });
 
         Text blokusTitle = new Text("Blokus");
@@ -716,11 +732,8 @@ public class PlayBoard extends Application {
         for (ArrayList<Tile> playersTile : Players) {
             playersTile.forEach(PlayBoard.Tile::Deactivate);
         }
+        currentTurn = 3;
 
-        //Get player 1's turn ready
-        Players.get(currentTurn).forEach(PlayBoard.Tile::Activate);
-        //Disable Player 1's only unplayable piece
-        Players.get(currentTurn).get(20).Grey();
 
     }
 
