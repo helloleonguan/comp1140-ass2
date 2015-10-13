@@ -1,14 +1,22 @@
 package comp1140.ass2;
+
 /**
  * Created by Liyang(Leon) Guan on 2015/10/3.
  */
 
+// (All written by Liyang(Leon) )
+//This is a class to check the legitimacy of the string representation of the game.
 import java.awt.*;
 import java.util.ArrayList;
-// (All written by Liyang(Leon) )
+
 public class Legit {
     public static Tiles mytiles;
 
+    /**
+    * Increment the turn.
+    * @param currentTurn An int representing the current turn.
+    * @return An int representing the next turn.
+    * */
     public static int incrementTurn(int currentTurn) {
         currentTurn++;
         if (currentTurn == 5) {
@@ -17,6 +25,11 @@ public class Legit {
         return currentTurn;
     }
 
+    /**
+     * Parse a string representing a game state and determine whether it is legitimate.
+     * @param game A string representing the state of the game, as described in the assignment description.
+     * @return  True if the string represents a legitimate game state. Otherwise, it returns false.
+     * */
     public static boolean legitimateGame(String game) {
         mytiles = new Tiles();
         int turn = 1;
@@ -62,8 +75,14 @@ public class Legit {
         return legit;
     }
 
-    // It takes in a int[400] as a board, the tile you want to place and a boolean indicates whether it is a initial board
-    // (i.e. Have all 4 players place their first tiles. OR whether there are less than 4 tiles already on board).
+    /**
+     * Given a game state, check the legitimacy for the adding tile. It is more efficient for filtering legitimate moves.
+     * @param tempBoard An int[400] representing the current game state..
+     * @param tile A string representation of the tile you want to add to the current board.
+     * @param initial A boolean determine whether it is at the start of the game. (i.e. Have all 4 players place their first tiles? If yea, then it is not the start of the game.)
+     * @param turn An int indicating whose turn is it now..
+     * @return True if the tile is legitimate. Otherwise, it returns false.
+     * */
     public static boolean checkLegitForTile (int[] tempBoard, String tile, boolean initial, int turn) {
         mytiles = new Tiles();
         boolean result;
@@ -75,7 +94,13 @@ public class Legit {
         return result;
     }
 
-
+    /**
+     * Add a tile to our current board (a 20*20 2-dimensional array).
+     * @param tile The tile you want to add to the board.
+     * @param b The current board.
+     * @param turn An int indicating whose turn is it now.
+     * @return The board with the tile on it.
+     * */
     public static int[] draw(String tile, int[] b, int turn) {
         mytiles = new Tiles();
         int[] codes = analyseTile(tile);
@@ -92,6 +117,11 @@ public class Legit {
         return b;
     }
 
+    /**
+     * Parse a 4-letter string to a int array which stores the 4 key info about the tile.
+     * @param tile The string representation of the tile you want to parse.
+     * @return An array of 4 ints OR null if it is not a tile.
+     * */
     public static int[] analyseTile(String tile) {
         int[] codes = new int[4];
         if (tile.equals(".")) {
@@ -105,6 +135,11 @@ public class Legit {
         return codes;
     }
 
+    /**
+     * Check whether a tile is a starting tile or not (i.e. the first tile each player places on the board).
+     * @param tile The string representation of the tile.
+     * @return True if it is a starting tile. Otherwise, it returns false.
+     * */
     public static boolean isStarter(String tile) {
         boolean flag = false;
         int[] codes = analyseTile(tile);
@@ -123,6 +158,11 @@ public class Legit {
         return flag;
     }
 
+    /**
+     * Check whether all little square cells of a tile are on board or not.
+     * @param tile The string representation of the tile.
+     * @return True if they are all on board. Otherwise, it returns false.
+     * */
     public static boolean onBoard (String tile) {
         boolean flag = true;
         int[] codes = analyseTile(tile);
@@ -145,6 +185,12 @@ public class Legit {
         return flag;
     }
 
+    /**
+     * Check a whether a tile has overlapping with other tiles on board.
+     * @param tile The string representation of the tile.
+     * @param currentBoard The current state of the board.
+     * @return True if there is no overlapping. Otherwise, it returns false.
+     * */
     public static boolean noOverlapping (String tile, int[] currentBoard) {
         boolean flag = true;
         int[] codes = analyseTile(tile);
@@ -170,7 +216,12 @@ public class Legit {
         return flag;
     }
 
-    public static ArrayList<Point> findAdjacent (ArrayList<Point> points) {
+    /**
+     * Find all the adjacent (those squares have edge-to-edge contact with the tile) coordinates around a Tile.
+     * @param points The coordinates of a tile.
+     * @return An arraylist containing all adjacent coordinates.
+     * */
+    public static ArrayList<Point> findAdjacents(ArrayList<Point> points) {
         ArrayList<Point> adjacents = new ArrayList<>();
         for (Point p: points) {
             if ((!points.contains(new Point(p.x+1,p.y))) && (!adjacents.contains(new Point(p.x+1,p.y)))) {
@@ -189,8 +240,13 @@ public class Legit {
         return adjacents;
     }
 
+    /**
+     * Find all the corner (those squares have only corner-to-corner contact with the tile) coordinates around a Tile.
+     * @param points The coordinates of a tile.
+     * @return An arraylist containing all corner coordinates.
+     * */
     public static ArrayList<Point> findCorners (ArrayList<Point> points) {
-        ArrayList<Point> adjacents = findAdjacent(points);
+        ArrayList<Point> adjacents = findAdjacents(points);
         ArrayList<Point> corners = new ArrayList<>();
         for (Point p: points) {
             if ((!points.contains(new Point(p.x-1,p.y-1))) && (!adjacents.contains(new Point(p.x-1,p.y-1))) && (!corners.contains(new Point(p.x-1,p.y-1)))) {
@@ -209,6 +265,13 @@ public class Legit {
         return corners;
     }
 
+    /**
+     * Check whether a tile has corner contact with other tiles that share the same color.
+     * @param tile The string representation of the tile.
+     * @param currentBoard The current state of the board.
+     * @param turn An int indicating whose turn is it now.
+     * @return True, if there is corner contact with same color tile(s). Otherwise, it returns false.
+     * */
     public static boolean cornerContactWithSameColor (String tile, int[] currentBoard, int turn) {
         boolean flag = false;
         int[] codes = analyseTile(tile);
@@ -235,6 +298,13 @@ public class Legit {
         return flag;
     }
 
+    /**
+     * Check whether a tile has cedge contact with other tiles that share the same color.
+     * @param tile The string representation of the tile.
+     * @param currentBoard The current state of the board.
+     * @param turn An int indicating whose turn is it now.
+     * @return True, if there is no edge contact with same color tile(s). Otherwise, it returns false.
+     * */
     public static boolean noEdgeContactWithSameColor (String tile, int[] currentBoard, int turn){
         boolean flag = true;
         int[] codes = analyseTile(tile);
@@ -242,7 +312,7 @@ public class Legit {
             return true;
         }
         Tiles.Rotate(mytiles.Pieces.get(codes[0]), codes[1]);
-        ArrayList<Point> adjacents = findAdjacent(mytiles.Pieces.get(codes[0]));
+        ArrayList<Point> adjacents = findAdjacents(mytiles.Pieces.get(codes[0]));
 
         for (Point p: adjacents) {
             if (codes[2]+p.x > 19 || codes[2]+p.x < 0 || codes[3]+p.y > 19 || codes[3] < 0) {
