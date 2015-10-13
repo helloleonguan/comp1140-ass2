@@ -215,7 +215,7 @@ public class PlayBoard extends Application {
                     toFront();
                 }
             });
-
+            //No comment
             flipped = false;
             rotation_encoding = 0;
             this.setOnMouseReleased(event -> { //Handles encoding of piece and snapping to grid.
