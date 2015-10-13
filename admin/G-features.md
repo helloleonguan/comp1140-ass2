@@ -28,6 +28,8 @@ additional features...
 
 X Nice messageboard to the player.
 
+X Elegant menu to select game mode.
+
 X Elegant design.
 
 X Good comments and descriptions.
