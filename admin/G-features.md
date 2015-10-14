@@ -1,9 +1,32 @@
-Our project implements the following features.
+Our project implements the following features.  _(delete those not complete)_
 
-('X' indicates implemented, '-' indicates unimplemented).
+### Part One
 
- - 
+**Pass**
+* Successfully implement `BlokGame.legitimateGame()`.
 
-additional features...
+**Distinction**
+* Successfully implement `BlokGame.scoreGame()`.
+* Successfully implement `BlokGame.makeMove()` (it should be functionally correct, but it need not make good moves).
+
+### Part Two
+
+**Pass**
+* A working implementation of a basic Blokus game implemented in JavaFX (supporting just the normal four players).
+* Executable on a standard lab computer from a runnable jar file, `game.jar`, which resides in the root level of your group repo.
+* Successfully implements `BlokGame.legitimateGame()` and during the game prevents the player from making illegal moves.
+* Successfully implements `BlokGame.scoreGame()`, and correctly presents the score for the game.
+
+**Credit**
+* The game supports two, three, and four human players, following the suggestions in the [rules](http://www.boardgamecapital.com/game_rules/blokus.pdf) for two and three player games.
+* Successfully implements `BlokGame.makeMove()`,  providing an basic computer opponent (need not be a strong player).
+
+**Distinction**
+* The game allows a single player to play the *eighty four* game described in the [rules](http://www.boardgamecapital.com/game_rules/blokus.pdf).
+* The game identifies all unplayable pieces when a turn is being taken (the unplayable pieces could be dimmed, indicating to the player that they are unplayable).  An unplayable piece is one that can't possibly be used in the given game state.   A given player's game ends once all of their unplaced tiles are unplayable.
+
+**High Distinction**
+* The game implements a good computer opponent.
 
 
+### Additional Features
