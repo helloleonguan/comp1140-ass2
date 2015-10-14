@@ -364,7 +364,7 @@ public class PlayBoard extends Application {
         //if (!playable.contains(true) && endgameDetection(game)){
         if (!playable.contains(true)) {
             consecutivePass++;
-            if(consecutivePass>20) {
+            if(consecutivePass>=3) {
                 game += " .";
 
                 //End of the game message.
