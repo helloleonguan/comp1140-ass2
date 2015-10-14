@@ -225,26 +225,5 @@ public class Menu extends Scene {
         return gameVariationState;
     }
 
-//    @Override
-//    public void start(Stage primaryStage) throws Exception {
-//        primaryStage.setTitle("Blokus!");
-//        Group root = new Group();
-//        Scene main = new Scene(root,700,700);
-//        primaryStage.setScene(main);
-//        primaryStage.show();
-//        menuStage = primaryStage;
-//
-//        root.getChildren().add(selectionPane);
-//        selectionPane.setLayoutX(150);
-//        selectionPane.setLayoutY(270);
-//
-//
-//        Text blokus = new Text("Blokus!");
-//        root.getChildren().add(blokus);
-//
-//
-//
-//    }
-
 
 }
