@@ -366,8 +366,7 @@ public class PlayBoard extends Application {
 
         //if (!playable.contains(true) && endgameDetection(game)){
         if (!playable.contains(true)) {
-            consecutivePass++;
-            if(consecutivePass>3) {
+            if(consecutivePass>=3) {
                 game += " .";
 
                 //End of the game message.
@@ -398,13 +397,10 @@ public class PlayBoard extends Application {
                 }
                 return;
             } else {
-                if (!playable.contains(true)) {
                     game += " .";
                     consecutivePass++;
                     nextTurn();
-                }
             }
-            return;
         } else consecutivePass = 0;
 
         if (!isHuman[currentTurn]) {
