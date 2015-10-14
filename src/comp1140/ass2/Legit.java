@@ -203,6 +203,7 @@ public class Legit {
             if (codes[2]+p.x > 19 || codes[2]+p.x < 0 || codes[3]+p.y > 19 || codes[3] < 0) {
                 continue;
             }
+
             int pos = codes[2] + codes[3] * 20 + p.x + p.y * 20;
             if (pos < 0 || pos > 399)
                 continue;

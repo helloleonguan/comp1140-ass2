@@ -8,16 +8,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -256,6 +258,7 @@ public class PlayBoard extends Application {
                         d.setX(original_x - (d.getY() - original_y));
                         d.setY(temp + original_y);
                     }
+
                     this.rotation_encoding = (this.rotation_encoding + 1) % 4;
                     System.out.println(this.rotation_encoding + " " + flipped);
                 } else if (event.getButton().equals(MouseButton.SECONDARY)) { //Flip piece along Y axis
@@ -639,7 +642,9 @@ public class PlayBoard extends Application {
         menu.selectionPane.setLayoutY(270);
         root_menu.getChildren().add(menu.selectionPane);
         menu.confirm.toFront();
-        root_menu.setStyle(" -fx-background-image: url('comp1140/ass2/menu_background.png'); -fx-background-repeat: stretch;");
+
+
+        root_menu.setStyle(" -fx-background-image: url('file:assets/menu_background.png'); -fx-background-repeat: stretch;");
 
         Button launchGame = new Button("Launch Game!");
         launchGame.setLayoutX(200);
