@@ -516,7 +516,7 @@ public class PlayBoard extends Application {
         if (move.length() == 5)
             move = move.substring(1,5);
 
-        Tile current = Players.get(currentTurn).get(move.charAt(0)-'A');
+        Tile current = Players.get(currentTurn).get(move.charAt(0) - 'A');
         int rotation = move.charAt(1)-'A';
         if(rotation >= 4) {
             rotation -= 4;
@@ -585,6 +585,45 @@ public class PlayBoard extends Application {
             PlayerTiles.add(t21);
             Players.add(PlayerTiles);
         }
+    }
+
+    /** Created by Faizan:
+     * A class function I am planning to use later, which will be called by the gameToBoard function, to check if the user-inputted game piece doesn't
+     * contain any illegal characters such as numbers, expressions etc, and only contains letters.
+     */
+    public static boolean isOnlyAlpha(String gamepiece) {
+        char[] chars = gamepiece.toCharArray();
+        for (char c : chars) {
+            if(!Character.isLetter(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Created by Faizan:
+     * A class function I am planning to use later, which will be called by the gameToBoard function, to check if the user-inputted game piece
+     * has only 4 characters.
+     */
+    public static boolean isLengthOnlyFour (String gamepiece) {
+        return (gamepiece.length() == 4);
+    }
+
+    /** Created by Faizan:
+     * A class function I am planning to use later, which will be called by the gameToBoard function, to check if the user-inputted game piece
+     * has the valid encoding specifications. Even though this function should be able to do the job of isLengthOnlyFour and isOnlyAlpha, the way
+     * I have written isValidEncoding is that it can only correctly check a string of exactly four alphabets
+     */
+    public static boolean isValidEncoding (String gamepiece) {
+
+        return  (
+                isOnlyAlpha(gamepiece) && //checks if gamepiece contains only alphabetical values THEN
+                        isLengthOnlyFour(gamepiece)) && //checks if gamepiece is of length 4 THEN
+                ((gamepiece.substring(0, 1).matches("[A-Ua-u]")) &&  //checks if game piece corresponds to an actual tile THEN
+                        (gamepiece.substring(1, 2).matches("[A-Ha-h]"))  &&  //checks if  game piece corresponds to a correct rotation THEN
+                        (gamepiece.substring(2, 3).matches("[A-Ta-t]"))  &&  //checks if  game piece corresponds to an actual X coordinate THEN
+                        (gamepiece.substring(3, 4).matches("[A-Ta-t]")));   //checks if  game piece corresponds to an actual  Y coordinate
+
     }
 
     @Override
@@ -698,7 +737,7 @@ public class PlayBoard extends Application {
         field.setLayoutY(650);
         field.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                if (BlokGUI.isValidEncoding(field.getText())) {
+                if (isValidEncoding(field.getText())) {
                     if (BlokGame.legitimateGame(game + (game.equals("") ? "" : " ") + field.getText())) {
                         if (Objects.equals(game, "")) {
                             game += field.getText();
