@@ -30,13 +30,13 @@ public class PlayBoard extends Application {
     ArrayList<ArrayList<Tile>> Players = new ArrayList<>();
     String game = "";
     Tiles gameTiles = new Tiles();
-    int currentTurn = 0;
+    int currentTurn;
     int consecutivePass = 0;
     Scoreboard scores = new Scoreboard();
     String game_mode = "";
     boolean[] isHuman = new boolean[4];
     MessageContainer messageBox = new MessageContainer(25,615,"");
-    int fourth_player = 0; // This is only for 3-player game mode.
+    int fourth_player = 2; // This is only for 3-player game mode.
 
     //Put all inner classes here, and those events inside the object.
     //Class for the MessageBox to present the info to the user. (Written by Liyang(Leon))
@@ -346,7 +346,6 @@ public class PlayBoard extends Application {
             else
                 messageBox.renew("It's Player2's turn.");
         } else if (game_mode.length() == 3) {
-            fourth_player = (fourth_player + 1) % 3;
             if (currentTurn == 0) {
                 messageBox.renew("It's Player1's turn.");
             } else if (currentTurn == 1) {
@@ -354,6 +353,7 @@ public class PlayBoard extends Application {
             } else if (currentTurn == 2) {
                 messageBox.renew("It's Player3's turn.");
             } else {
+                fourth_player = (fourth_player + 1) % 3;
                 messageBox.renew("It's Player" + (fourth_player + 1) + "'s turn.");
                 isHuman[3] = isHuman[fourth_player];
             }
@@ -364,7 +364,7 @@ public class PlayBoard extends Application {
         //if (!playable.contains(true) && endgameDetection(game)){
         if (!playable.contains(true)) {
             consecutivePass++;
-            if(consecutivePass>=3) {
+            if(consecutivePass>3) {
                 game += " .";
 
                 //End of the game message.
