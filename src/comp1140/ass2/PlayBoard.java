@@ -648,7 +648,6 @@ public class PlayBoard extends Application {
         // parse the game mode and go to the main scene.
         launchGame.setOnAction(event -> {
             game_mode = Menu.gameVariationState;
-            messageBox.renew("Welcome to " + game_mode.length() + "-player game mode! Enjoy your time playing Blokus! \nIt's Player1's turn.");
             if (game_mode.length() == 1) {
                 isHuman[0] = true;
                 isHuman[1] = true;
@@ -683,6 +682,7 @@ public class PlayBoard extends Application {
             }
             primaryStage.setScene(main);
             nextTurn();
+            messageBox.renew("Welcome to " + game_mode.length() + "-player game mode! Enjoy your time playing Blokus! \nIt's Player1's turn.");
         });
 
         Text blokusTitle = new Text("Blokus");
