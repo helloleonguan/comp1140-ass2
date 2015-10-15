@@ -101,6 +101,9 @@ public class Menu extends Scene {
 
             confirm = new Button("Confirm your selection");
 
+
+            /* This is a listener for the selectNumber choicebox. Based of the selections in this choicebox, it will show or hide the Player1, Player2, Player3 and Player4 choiceboxes */
+
             selectNumber.getSelectionModel().selectedItemProperty()
                     .addListener((ObservableValue observable ,
                                   Object oldValue, Object newValue) -> {
@@ -152,6 +155,9 @@ public class Menu extends Scene {
             selectNumber.setValue(4);
             StringBuilder gameVariation = new StringBuilder("    ");
 
+            /* The button confirm, once clicked, executes an event, which based of the selections of the Player1, Player2, Player3 and Player4 choiceboxes, it will create a string that encodes
+             * the game variation state. For example, if only two humans are playing it will output HH. If Player1 and Player 3 are humans, and Player2 and Player4 is a computer, it will output HCHC*/
+
             confirm.setOnAction(event -> {
                 if (Player1.getValue().equals("Human Player")) {
                     gameVariation.setCharAt(0, 'H');
@@ -185,6 +191,8 @@ public class Menu extends Scene {
                     gameVariation.setCharAt(3, 'C');
                 }
 
+
+                //This line only encodes the 4 character string, into the n number of characters, where n is the number of players, based of the selection in selectNumber
                 gameVariationState = gameVariation.substring(0, Integer.parseInt(selectNumber.getValue().toString()));
 
                 System.out.println(gameVariationState);
