@@ -586,9 +586,9 @@ public class PlayBoard extends Application {
         }
     }
 
-    /** Created by Faizan:
-     * A class function I am planning to use later, which will be called by the gameToBoard function, to check if the user-inputted game piece doesn't
-     * contain any illegal characters such as numbers, expressions etc, and only contains letters.
+    /** To be called by isValidEncoding. Given a user-inputted game string, check if it doesn't contain any illegal characters such as numbers,
+     * expressions etc, and only contains letters.
+     * Made by Faizan
      */
     public static boolean isOnlyAlpha(String gamepiece) {
         char[] chars = gamepiece.toCharArray();
@@ -601,17 +601,17 @@ public class PlayBoard extends Application {
     }
 
     /** Created by Faizan:
-     * A class function I am planning to use later, which will be called by the gameToBoard function, to check if the user-inputted game piece
-     * has only 4 characters.
+     *To be called by isValidEncoding. Given a user-inputted game string, check if the user-inputted game piece has only 4 characters.
+     * Made by Faizan
      */
     public static boolean isLengthOnlyFour (String gamepiece) {
         return (gamepiece.length() == 4);
     }
 
     /** Created by Faizan:
-     * A class function I am planning to use later, which will be called by the gameToBoard function, to check if the user-inputted game piece
-     * has the valid encoding specifications. Even though this function should be able to do the job of isLengthOnlyFour and isOnlyAlpha, the way
-     * I have written isValidEncoding is that it can only correctly check a string of exactly four alphabets
+     * Check if the user-inputted game piece has the valid encoding specifications. Even though this function should be able to do the job
+     * of isLengthOnlyFour and isOnlyAlpha, the way I have written isValidEncoding is that it can only correctly check a string of exactly
+     * four alphabets
      */
     public static boolean isValidEncoding (String gamepiece) {
 
@@ -640,10 +640,12 @@ public class PlayBoard extends Application {
         menu.confirm.toFront();
 
 
+        /*Background image for the menu made by Faizan, on Photoshop, by taking a screenshot of the game, rotating and pushing it back in the z-axis using
+        3D transform tool, and then added some space starry background using noise and gaussian blur*/
         root_menu.setStyle(" -fx-background-image: url('file:assets/menu_background.png'); -fx-background-repeat: stretch;");
 
         Button launchGame = new Button("Launch Game!");
-        launchGame.setLayoutX(200);
+        launchGame.setLayoutX(250);
         launchGame.setLayoutY(520);
         // parse the game mode and go to the main scene.
         launchGame.setOnAction(event -> {

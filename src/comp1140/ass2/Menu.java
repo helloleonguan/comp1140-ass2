@@ -85,6 +85,7 @@ public class Menu extends Scene {
             Player4.setMinWidth(150);
             Player4.setItems(FXCollections.observableArrayList("Human Player", "Computer Player"));
 
+            //All player selection choice's visibility is set to false, so as to be hidden when opening the game, and will only show once the number of players is selected
             Player1Label.setVisible(false);
             Player1.setVisible(false);
             Player2Label.setVisible(false);
@@ -103,7 +104,6 @@ public class Menu extends Scene {
 
 
             /* This is a listener for the selectNumber choicebox. Based of the selections in this choicebox, it will show or hide the Player1, Player2, Player3 and Player4 choiceboxes */
-
             selectNumber.getSelectionModel().selectedItemProperty()
                     .addListener((ObservableValue observable ,
                                   Object oldValue, Object newValue) -> {
