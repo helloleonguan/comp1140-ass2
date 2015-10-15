@@ -66,7 +66,7 @@ public class BlokGame {
      * @return A four-character string representing the next move.
      * (written by Liyang(Leon))*/
     public static String makeMove(String game) {
-        return " "+AIplayer.getMove(game);
+        return " "+AIplayer.getMove(game.trim());
     }
 
     /* (Written by Jack) */
