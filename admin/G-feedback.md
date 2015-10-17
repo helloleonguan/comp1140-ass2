@@ -1,12 +1,11 @@
-Final mark:  /11
+### Final mark:  /11
 
-Comments:
+### Comments:
 
 
+### Key:  'Y' - yes, 'N' - no, '~' - partial compliance
 
-Key:  'Y' - yes, 'N' - no, '~' - partial compliance
-
-## Criteria for gaining 4 / 11
+### Criteria for gaining 4 / 11
 
 * All of the required files are correct and have been committed and pushed.
  * admin/originality-G.md
@@ -17,10 +16,10 @@ Key:  'Y' - yes, 'N' - no, '~' - partial compliance
  * game.jar
  * presentation.pdf
 * Authorship of each class needs to be clearly stated in a comment of each class. (Note: 'authorship details' is fairly open-ended. It may mean stating that the code was written by the group, or by one or two members, or that it was heavily adapted from some third party. Either way, it should be absolutely clear to the reader which person or persons were responsible for the code and the ideas behind it.).
-* Mercurial logs must indicate appropriate use of version control.
+* Git logs must indicate appropriate use of version control.
 * The program must compile and run (from the .jar file).
 
-## Criteria for gaining 6 / 11
+### Criteria for gaining 6 / 11
 
 *The previous criteria plus...*
 * Your game must have at least pass-level functionality.
@@ -31,7 +30,7 @@ Key:  'Y' - yes, 'N' - no, '~' - partial compliance
 * You have made appropriate use of object-oriented features such as inheritence and enum types.
 * Your presentation pdf must have all required components.
 
-## Criteria for gaining 7-8 / 11
+### Criteria for gaining 7-8 / 11
 
 *The previous criteria plus...*
 * The program is well designed.
@@ -42,7 +41,7 @@ Key:  'Y' - yes, 'N' - no, '~' - partial compliance
 * Your coding style is good.
 * You make good / appropriate use of JUnit tests throughout the project.
 
-## Criteria for gaining 9-11 / 11
+### Criteria for gaining 9-11 / 11
 
 *The previous criteria plus...*
 * Your design and code must be of very high quality.
