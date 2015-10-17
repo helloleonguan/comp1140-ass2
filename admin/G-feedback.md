@@ -3,7 +3,7 @@
 ### Comments:
 
 
-### Key:  'Y' - yes, 'N' - no, '~' - partial compliance
+**Key:  'Y' - yes, 'N' - no, '~' - partial compliance**
 
 ### Criteria for gaining 4 / 11
 
@@ -50,6 +50,6 @@
  * The game allows a single player to play the *eighty four* game described in the [rules](http://www.boardgamecapital.com/game_rules/blokus.pdf).
  * The game identifies all unplayable pieces when a turn is being taken (the unplayable pieces could be dimmed, indicating to the player that they are unplayable).  An unplayable piece is one that can't possibly be used in the given game state.   A given player's game ends once all of their unplaced tiles are unplayable.
 * Your game works well and is easy for a new user to run.
-* Your game must have at least high-distinction-level functionality.
+* Your game has high-distinction-level functionality.
  * The game implements a good computer opponent.
 
